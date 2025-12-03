@@ -1,0 +1,838 @@
+{
+    "pages": [
+        {
+            "id": "2b3c862d-9b35-8076-9a0a-fe1d79e23e84",
+            "name": "Título @",
+            "iconEmoji": "📦",
+            "visitedAt": 1763989873520
+        },
+        {
+            "id": "298c862d-9b35-8009-b9ab-d3472b592d03",
+            "name": "Playground",
+            "fullPageCoverUrl": "https://www.notion.so/images/page-cover/nasa_transonic_tunnel.jpg",
+            "visitedAt": 1763989867499
+        }
+    ],
+    "spaceRole": "editor",
+    "recordMap": {
+        "__version__": 3,
+        "block": {
+            "2b3c862d-9b35-8076-9a0a-fe1d79e23e84": {
+                "spaceId": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                "value": {
+                    "value": {
+                        "id": "2b3c862d-9b35-8076-9a0a-fe1d79e23e84",
+                        "version": 46,
+                        "type": "page",
+                        "properties": {
+                            "title": [
+                                [
+                                    "Título @"
+                                ]
+                            ]
+                        },
+                        "content": [
+                            "2b3c862d-9b35-80da-9491-c0c32847a1c6",
+                            "2b3c862d-9b35-80df-974a-d371d5dd65d0",
+                            "2b4c862d-9b35-8036-8af7-c2c236b7d3c3",
+                            "2b4c862d-9b35-8013-bd7a-e88409febb1e",
+                            "2b4c862d-9b35-8017-8cad-d1ddfb582aaa",
+                            "2b5c862d-9b35-80ae-84aa-ea5d80f63615",
+                            "2b4c862d-9b35-8022-afd9-c632c6b70003",
+                            "2b5c862d-9b35-80d3-b823-e2695d8bd1fa"
+                        ],
+                        "format": {
+                            "page_icon": "📦"
+                        },
+                        "permissions": [
+                            {
+                                "role": "editor",
+                                "type": "user_permission",
+                                "user_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22"
+                            }
+                        ],
+                        "created_time": 1763822692146,
+                        "last_edited_time": 1763989936336,
+                        "parent_id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "parent_table": "space",
+                        "alive": true,
+                        "created_by_table": "notion_user",
+                        "created_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "last_edited_by_table": "notion_user",
+                        "last_edited_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "space_id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "crdt_format_version": 1,
+                        "crdt_data": {
+                            "title": {
+                                "r": "FnwS7u3-ypjGRLWtLcmEXA,\"start\",\"end\"",
+                                "n": {
+                                    "FnwS7u3-ypjGRLWtLcmEXA,\"start\",\"end\"": {
+                                        "s": {
+                                            "x": "FnwS7u3-ypjGRLWtLcmEXA",
+                                            "i": [
+                                                {
+                                                    "t": "s"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "bSWhG9QGMq6m",
+                                                        1
+                                                    ],
+                                                    "o": "start",
+                                                    "l": 1,
+                                                    "c": "T"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "bSWhG9QGMq6m",
+                                                        7
+                                                    ],
+                                                    "o": [
+                                                        "bSWhG9QGMq6m",
+                                                        1
+                                                    ],
+                                                    "l": 2,
+                                                    "c": "ít"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "bSWhG9QGMq6m",
+                                                        2
+                                                    ],
+                                                    "o": [
+                                                        "bSWhG9QGMq6m",
+                                                        1
+                                                    ],
+                                                    "l": -2
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "bSWhG9QGMq6m",
+                                                        4
+                                                    ],
+                                                    "o": [
+                                                        "bSWhG9QGMq6m",
+                                                        3
+                                                    ],
+                                                    "l": 3,
+                                                    "c": "ulo"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "bSWhG9QGMq6m",
+                                                        9
+                                                    ],
+                                                    "o": [
+                                                        "bSWhG9QGMq6m",
+                                                        6
+                                                    ],
+                                                    "l": 2,
+                                                    "c": " @"
+                                                },
+                                                {
+                                                    "t": "e"
+                                                }
+                                            ],
+                                            "l": ""
+                                        },
+                                        "c": []
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "role": "editor"
+                }
+            },
+            "298c862d-9b35-8009-b9ab-d3472b592d03": {
+                "spaceId": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                "value": {
+                    "value": {
+                        "id": "298c862d-9b35-8009-b9ab-d3472b592d03",
+                        "version": 1109,
+                        "type": "page",
+                        "properties": {
+                            "title": [
+                                [
+                                    "Playground"
+                                ]
+                            ]
+                        },
+                        "content": [
+                            "2b1c862d-9b35-80be-94b6-e2cc2716c0fc",
+                            "29fc862d-9b35-80fa-8d4d-ef4cbd981226",
+                            "2a0c862d-9b35-8043-ab0f-ff3dec9b16d9",
+                            "2b1c862d-9b35-8092-9ca0-f0cda7406427",
+                            "2b1c862d-9b35-8037-8bdc-e12d75c33ce0",
+                            "2a0c862d-9b35-80bd-b88b-ecd407de9773",
+                            "2a0c862d-9b35-80f9-a7be-e088f51f112f",
+                            "2a5c862d-9b35-8063-8ba8-c0fad4ef2fe8",
+                            "2a0c862d-9b35-800a-92f3-e990cfdb577e",
+                            "2a9c862d-9b35-8063-8df4-de204285d5b0",
+                            "2a9c862d-9b35-804d-b293-f22ef4859e84",
+                            "2a9c862d-9b35-801e-8191-f56e87231cd2",
+                            "2a0c862d-9b35-80e4-8729-c7b54bc58641",
+                            "2aac862d-9b35-8002-ab1f-d4c641bd34bb",
+                            "2a9c862d-9b35-808a-843e-e82770a3e8e5",
+                            "2a9c862d-9b35-80ba-8565-ca1680957b0a",
+                            "2b3c862d-9b35-80aa-bcf0-f0751f791222",
+                            "2a9c862d-9b35-8069-90dd-e3b50723c7a8",
+                            "2a9c862d-9b35-8069-9b65-dbda2db255b9",
+                            "2a9c862d-9b35-8083-b292-c0462c55d82a",
+                            "2a9c862d-9b35-8038-976c-de346532a5ad",
+                            "2a9c862d-9b35-80d7-a06d-c0a420a84369",
+                            "2a9c862d-9b35-806b-97d5-ce9211408f3f",
+                            "2a9c862d-9b35-80fb-ba1d-ca8f2063f6dc",
+                            "2a4c862d-9b35-80e5-a3cf-f2e10c37d413",
+                            "2a9c862d-9b35-80b7-851d-c0bef88ed3f6",
+                            "2b1c862d-9b35-80de-83d1-cdbfb0f5150f",
+                            "2b1c862d-9b35-80eb-900e-f51feedd299b",
+                            "2b1c862d-9b35-806d-889d-c86110e88ebb",
+                            "2b1c862d-9b35-803d-9513-f64e948fd955",
+                            "2b1c862d-9b35-80b8-8eac-e36c84155218",
+                            "2b1c862d-9b35-80c3-a580-d8ab501ff119",
+                            "2b1c862d-9b35-80cf-985c-f5a98ead24d6",
+                            "2afc862d-9b35-80e1-a7ac-cb16924f2631",
+                            "2afc862d-9b35-80aa-9562-dc98447a93a7",
+                            "2afc862d-9b35-8061-9992-cc54f5db7582",
+                            "2afc862d-9b35-80c3-a04b-db669067d4f2",
+                            "2afc862d-9b35-80ff-a06e-c1798b1ec40d",
+                            "2afc862d-9b35-80f9-82d7-fc997fa1cbcb",
+                            "2a9c862d-9b35-80c3-a95c-f0b20d0d82f9",
+                            "2a9c862d-9b35-8088-8b48-fe9517231232",
+                            "2a9c862d-9b35-807b-8e9c-c9db21c9bd98",
+                            "2aac862d-9b35-803e-b07e-da1789503d8b",
+                            "299c862d-9b35-8008-8a84-f50e389b4b8a",
+                            "2a9c862d-9b35-80a7-8584-f25a642907b3",
+                            "2aac862d-9b35-80a2-a750-ffe0ad15eff8",
+                            "2aac862d-9b35-802c-b34d-f14bab181997",
+                            "2adc862d-9b35-806a-91db-ddc109f72355",
+                            "2afc862d-9b35-8089-aece-c237982c268e",
+                            "2b1c862d-9b35-80b0-9c14-fc40cb198ffa",
+                            "2b1c862d-9b35-80a5-b341-f563afd85496",
+                            "2b1c862d-9b35-8064-9bfb-ec6b0964d2b4",
+                            "2b1c862d-9b35-80af-b7e3-d2654addfbb3",
+                            "2b1c862d-9b35-8026-a989-eb8887a0bc58"
+                        ],
+                        "format": {
+                            "page_cover": "/images/page-cover/nasa_transonic_tunnel.jpg",
+                            "page_cover_position": 0.4
+                        },
+                        "created_time": 1761489698918,
+                        "last_edited_time": 1763820742536,
+                        "parent_id": "27bc862d-9b35-8074-a48f-df4ec430a634",
+                        "parent_table": "block",
+                        "alive": true,
+                        "created_by_table": "notion_user",
+                        "created_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "last_edited_by_table": "notion_user",
+                        "last_edited_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "space_id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "crdt_format_version": 1,
+                        "crdt_data": {
+                            "title": {
+                                "r": "il7JdiMu6BsqBZPozAu-tA,\"start\",[\"TyeZfeOVCrQl\",61]",
+                                "n": {
+                                    "il7JdiMu6BsqBZPozAu-tA,\"start\",[\"TyeZfeOVCrQl\",61]": {
+                                        "s": {
+                                            "x": "il7JdiMu6BsqBZPozAu-tA",
+                                            "i": [
+                                                {
+                                                    "t": "s"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "VHOAPpeeGY1Z",
+                                                        13
+                                                    ],
+                                                    "o": "start",
+                                                    "l": -12
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "VHOAPpeeGY1Z",
+                                                        32
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        24
+                                                    ],
+                                                    "l": -3
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "TyeZfeOVCrQl",
+                                                        58
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        34
+                                                    ],
+                                                    "l": -1
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "TyeZfeOVCrQl",
+                                                        62
+                                                    ],
+                                                    "o": [
+                                                        "TyeZfeOVCrQl",
+                                                        58
+                                                    ],
+                                                    "l": -1
+                                                },
+                                                {
+                                                    "t": "p",
+                                                    "i": [
+                                                        "TyeZfeOVCrQl",
+                                                        61
+                                                    ],
+                                                    "o": [
+                                                        "TyeZfeOVCrQl",
+                                                        58
+                                                    ]
+                                                }
+                                            ],
+                                            "l": "L"
+                                        },
+                                        "c": [
+                                            "QxaHSel0BBedByjpHVmitA,[\"TyeZfeOVCrQl\",21],\"end\""
+                                        ]
+                                    },
+                                    "QxaHSel0BBedByjpHVmitA,[\"TyeZfeOVCrQl\",21],\"end\"": {
+                                        "s": {
+                                            "x": "QxaHSel0BBedByjpHVmitA",
+                                            "i": [
+                                                {
+                                                    "t": "p",
+                                                    "i": [
+                                                        "TyeZfeOVCrQl",
+                                                        21
+                                                    ],
+                                                    "o": "start"
+                                                },
+                                                {
+                                                    "t": "e"
+                                                }
+                                            ],
+                                            "l": "l"
+                                        },
+                                        "c": [
+                                            "il7JdiMu6BsqBZPozAu-tA,[\"TyeZfeOVCrQl\",61],\"end\""
+                                        ]
+                                    },
+                                    "il7JdiMu6BsqBZPozAu-tA,[\"TyeZfeOVCrQl\",61],\"end\"": {
+                                        "s": {
+                                            "x": "il7JdiMu6BsqBZPozAu-tA",
+                                            "i": [
+                                                {
+                                                    "t": "p",
+                                                    "i": [
+                                                        "TyeZfeOVCrQl",
+                                                        61
+                                                    ],
+                                                    "o": [
+                                                        "TyeZfeOVCrQl",
+                                                        58
+                                                    ]
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "TyeZfeOVCrQl",
+                                                        59
+                                                    ],
+                                                    "o": [
+                                                        "TyeZfeOVCrQl",
+                                                        58
+                                                    ],
+                                                    "l": -2
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "VHOAPpeeGY1Z",
+                                                        35
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        34
+                                                    ],
+                                                    "l": -22
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "7haob9-M90qK",
+                                                        57
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        56
+                                                    ],
+                                                    "l": -1
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "VHOAPpeeGY1Z",
+                                                        31
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        24
+                                                    ],
+                                                    "l": -1
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "VHOAPpeeGY1Z",
+                                                        26
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        24
+                                                    ],
+                                                    "l": -5
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "VHOAPpeeGY1Z",
+                                                        25
+                                                    ],
+                                                    "o": [
+                                                        "VHOAPpeeGY1Z",
+                                                        24
+                                                    ],
+                                                    "l": -1
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "lypTXa2GksCh",
+                                                        1
+                                                    ],
+                                                    "o": "start",
+                                                    "l": -12
+                                                },
+                                                {
+                                                    "t": "e"
+                                                }
+                                            ],
+                                            "l": "l"
+                                        },
+                                        "c": [
+                                            "yj7RYI4KIgunBH5SShgViQ,[\"UFsikXFYpCqn\",21],\"end\""
+                                        ]
+                                    },
+                                    "yj7RYI4KIgunBH5SShgViQ,[\"UFsikXFYpCqn\",21],\"end\"": {
+                                        "s": {
+                                            "x": "yj7RYI4KIgunBH5SShgViQ",
+                                            "i": [
+                                                {
+                                                    "t": "p",
+                                                    "i": [
+                                                        "UFsikXFYpCqn",
+                                                        21
+                                                    ],
+                                                    "o": "start"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "L8D0LG4vOqP8",
+                                                        22
+                                                    ],
+                                                    "o": [
+                                                        "UFsikXFYpCqn",
+                                                        21
+                                                    ],
+                                                    "l": 5,
+                                                    "c": "Playg"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "L8D0LG4vOqP8",
+                                                        30
+                                                    ],
+                                                    "o": [
+                                                        "L8D0LG4vOqP8",
+                                                        26
+                                                    ],
+                                                    "l": 5,
+                                                    "c": "round"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "L8D0LG4vOqP8",
+                                                        27
+                                                    ],
+                                                    "o": [
+                                                        "L8D0LG4vOqP8",
+                                                        26
+                                                    ],
+                                                    "l": -3
+                                                },
+                                                {
+                                                    "t": "e"
+                                                }
+                                            ],
+                                            "l": "l"
+                                        },
+                                        "c": []
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "role": "editor"
+                }
+            },
+            "27bc862d-9b35-8074-a48f-df4ec430a634": {
+                "spaceId": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                "value": {
+                    "value": {
+                        "id": "27bc862d-9b35-8074-a48f-df4ec430a634",
+                        "version": 273,
+                        "type": "page",
+                        "properties": {
+                            "title": [
+                                [
+                                    "React Native Blocks"
+                                ]
+                            ]
+                        },
+                        "content": [
+                            "285c862d-9b35-8045-9e66-df00589d2d5f",
+                            "28bc862d-9b35-8045-a6d1-f7f8ee82d878",
+                            "28cc862d-9b35-800e-bb9c-f956f7147e10",
+                            "28cc862d-9b35-800e-a16c-f334690ccf94",
+                            "27bc862d-9b35-8039-984a-f40ffacc5a61",
+                            "285c862d-9b35-8013-bc6a-f5b4efd7e956",
+                            "284c862d-9b35-8043-8ef7-e16d94435cef",
+                            "285c862d-9b35-808f-8645-e5feba35ed22",
+                            "287c862d-9b35-804b-ac22-dcf84b5c6636",
+                            "298c862d-9b35-80c1-9657-c0242b8b1ae1",
+                            "298c862d-9b35-8009-b9ab-d3472b592d03"
+                        ],
+                        "format": {
+                            "page_icon": "notion://custom_emoji/e2f49844-8625-4b1a-900f-d1e7ddaa9af1/285c862d-9b35-80cb-ab5a-007a314eee0c",
+                            "page_cover": "attachment:b184f5e3-fea8-45de-b66e-42742012026b:Frame_16.png",
+                            "block_locked": false,
+                            "block_locked_by": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                            "page_cover_position": 0.5
+                        },
+                        "permissions": [
+                            {
+                                "role": "editor",
+                                "type": "user_permission",
+                                "user_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22"
+                            }
+                        ],
+                        "created_time": 1758979770148,
+                        "last_edited_time": 1761489698924,
+                        "parent_id": "9f854241-8679-42c0-a9a7-5ee0679a8f53",
+                        "parent_table": "block",
+                        "alive": true,
+                        "file_ids": [
+                            "86524885-ae5d-4fec-9130-d78ef2951803",
+                            "946a0c53-d066-4653-8988-3e8fbe711191",
+                            "a900a923-37fa-499b-be6a-a4d70971b69f",
+                            "ed03cb15-7334-401e-ade6-34242c22418e",
+                            "616cc0b6-7c79-4f00-b787-32875e366523",
+                            "b184f5e3-fea8-45de-b66e-42742012026b"
+                        ],
+                        "created_by_table": "notion_user",
+                        "created_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "last_edited_by_table": "notion_user",
+                        "last_edited_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "space_id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "crdt_format_version": 1,
+                        "crdt_data": {
+                            "title": {
+                                "r": "6Tjz23z78VF-UCXHwifP7A,\"start\",\"end\"",
+                                "n": {
+                                    "6Tjz23z78VF-UCXHwifP7A,\"start\",\"end\"": {
+                                        "s": {
+                                            "x": "6Tjz23z78VF-UCXHwifP7A",
+                                            "i": [
+                                                {
+                                                    "t": "s"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "C4gdOBBs7gYL",
+                                                        7
+                                                    ],
+                                                    "o": "start",
+                                                    "l": 1,
+                                                    "c": "R"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "C4gdOBBs7gYL",
+                                                        9
+                                                    ],
+                                                    "o": [
+                                                        "C4gdOBBs7gYL",
+                                                        7
+                                                    ],
+                                                    "l": 7,
+                                                    "c": "eact Na"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "C4gdOBBs7gYL",
+                                                        19
+                                                    ],
+                                                    "o": [
+                                                        "C4gdOBBs7gYL",
+                                                        15
+                                                    ],
+                                                    "l": 1,
+                                                    "c": "t"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "C4gdOBBs7gYL",
+                                                        16
+                                                    ],
+                                                    "o": [
+                                                        "C4gdOBBs7gYL",
+                                                        15
+                                                    ],
+                                                    "l": 3,
+                                                    "c": "ive"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "C4gdOBBs7gYL",
+                                                        20
+                                                    ],
+                                                    "o": [
+                                                        "C4gdOBBs7gYL",
+                                                        18
+                                                    ],
+                                                    "l": 1,
+                                                    "c": " "
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "C4gdOBBs7gYL",
+                                                        8
+                                                    ],
+                                                    "o": [
+                                                        "C4gdOBBs7gYL",
+                                                        7
+                                                    ],
+                                                    "l": -1
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "cbcfQFGEbdXl",
+                                                        1
+                                                    ],
+                                                    "o": "start",
+                                                    "l": 6,
+                                                    "c": "Blocks"
+                                                },
+                                                {
+                                                    "t": "e"
+                                                }
+                                            ],
+                                            "l": ""
+                                        },
+                                        "c": []
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "role": "editor"
+                }
+            },
+            "9f854241-8679-42c0-a9a7-5ee0679a8f53": {
+                "spaceId": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                "value": {
+                    "value": {
+                        "id": "9f854241-8679-42c0-a9a7-5ee0679a8f53",
+                        "version": 309,
+                        "type": "page",
+                        "properties": {
+                            "title": [
+                                [
+                                    "My Projects"
+                                ]
+                            ]
+                        },
+                        "content": [
+                            "40088970-12aa-4693-ab38-f41c04ff0625",
+                            "24ec862d-9b35-80d9-aa59-c5aa179ed7ae",
+                            "24ec862d-9b35-8008-b82e-c91c6e0062c0",
+                            "24ec862d-9b35-80b0-91a0-cb17b5f5ca68",
+                            "df21ed97-68f5-4e2b-bf96-b88165bfeeb1",
+                            "80db3572-7f9d-46eb-8727-14d5075b9672",
+                            "410fe5ae-673f-41a5-bfe0-75526867a86f",
+                            "0417695e-3e5f-4a71-a703-c9a273b81f63",
+                            "c04e0451-76d5-4798-8433-52640eddeb94",
+                            "1afef3c5-59fe-429e-a1c2-5b28bc6c274b",
+                            "9a189586-f45b-4446-9bbf-5b7752c4417d",
+                            "a6d29bd2-044b-4876-bbe8-6e4f9de8e318",
+                            "4543ddc8-5b8f-49ee-80ca-2c6d44108093",
+                            "8a12f7e1-50f3-4571-99f2-e78448f20baf",
+                            "1779334c-9b7b-4d18-897e-e31488ba8975",
+                            "42e71577-c487-45ae-ad2e-422248cd7b9a",
+                            "47bcd235-7143-432d-9b2a-2ed89334c6e4",
+                            "243915b5-a73a-45c6-9ad5-5bb7436c251b",
+                            "1dcc862d-9b35-8094-afac-e3c11edd12ea",
+                            "161c862d-9b35-8094-971f-ca67f5f518dd",
+                            "161c862d-9b35-803c-ab72-fad1050b0629",
+                            "161c862d-9b35-80b7-913a-c58f5058791e",
+                            "161c862d-9b35-802b-afdc-e844c2dec98b",
+                            "161c862d-9b35-806a-a088-f17bf8e8b6fd",
+                            "161c862d-9b35-804a-9744-ece6a6752c93",
+                            "264c862d-9b35-8093-8c27-cfc4a21b70f0",
+                            "264c862d-9b35-80e9-81e4-e0b44daa6e03",
+                            "264c862d-9b35-80b4-8f99-c37523718d87",
+                            "264c862d-9b35-8093-ace6-fdd472adf612",
+                            "264c862d-9b35-8038-a16f-cf4c7c3d9455",
+                            "264c862d-9b35-8098-8824-ec8d3ecc4e26",
+                            "283c862d-9b35-802d-8589-d62064a6884b",
+                            "27bc862d-9b35-8074-a48f-df4ec430a634",
+                            "283c862d-9b35-8066-b320-f55618b66188",
+                            "283c862d-9b35-8094-b406-c249f25201c1",
+                            "283c862d-9b35-80e8-a484-c11f99c722c7",
+                            "283c862d-9b35-8011-ab17-e7fb887fe749",
+                            "283c862d-9b35-80e8-bcda-d5dba26aabae",
+                            "283c862d-9b35-80ef-ba16-cffde075e424",
+                            "9c477607-55ae-4dfa-b2db-14cd4dc90df0",
+                            "283c862d-9b35-800a-a921-ff5aa40a46ac"
+                        ],
+                        "format": {
+                            "page_icon": "🧱"
+                        },
+                        "permissions": [
+                            {
+                                "role": "editor",
+                                "type": "user_permission",
+                                "user_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22"
+                            }
+                        ],
+                        "created_time": 1704977881476,
+                        "last_edited_time": 1760319788258,
+                        "parent_id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "parent_table": "space",
+                        "alive": true,
+                        "created_by_table": "notion_user",
+                        "created_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "last_edited_by_table": "notion_user",
+                        "last_edited_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "space_id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "crdt_format_version": 1,
+                        "crdt_data": {
+                            "title": {
+                                "r": "LkTDIBYUQINYiqeRPEsCrQ,\"start\",\"end\"",
+                                "n": {
+                                    "LkTDIBYUQINYiqeRPEsCrQ,\"start\",\"end\"": {
+                                        "s": {
+                                            "x": "LkTDIBYUQINYiqeRPEsCrQ",
+                                            "i": [
+                                                {
+                                                    "t": "s"
+                                                },
+                                                {
+                                                    "t": "t",
+                                                    "i": [
+                                                        "WrH2l_o64bq4",
+                                                        1
+                                                    ],
+                                                    "o": "start",
+                                                    "l": 11,
+                                                    "c": "My Projects"
+                                                },
+                                                {
+                                                    "t": "e"
+                                                }
+                                            ],
+                                            "l": ""
+                                        },
+                                        "c": []
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "role": "editor"
+                }
+            }
+        },
+        "space": {
+            "e2f49844-8625-4b1a-900f-d1e7ddaa9af1": {
+                "spaceId": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                "value": {
+                    "value": {
+                        "id": "e2f49844-8625-4b1a-900f-d1e7ddaa9af1",
+                        "version": 45,
+                        "name": "Pato Sala's Notion",
+                        "beta_enabled": false,
+                        "created_time": 1646916664162,
+                        "last_edited_time": 1745932598298,
+                        "created_by_table": "notion_user",
+                        "created_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "last_edited_by_table": "notion_user",
+                        "last_edited_by_id": "0aaca64b-9cd5-4937-b3e4-eb4f8c323a22",
+                        "plan_type": "team",
+                        "invite_link_enabled": true,
+                        "settings": {
+                            "crdt_status": "migrating",
+                            "grant_awards": [
+                                {
+                                    "id": "ai.limitedQnaRefresh",
+                                    "feature": "ai",
+                                    "received_at": 1715172418527
+                                }
+                            ],
+                            "is_teams_enabled": true,
+                            "space_survey_data": {
+                                "intent": {
+                                    "value": "personal",
+                                    "version": 1,
+                                    "collected_at": 1646916664162,
+                                    "collected_from": "onboarding"
+                                }
+                            },
+                            "is_personal_home_enabled": true,
+                            "sharded_entitlement_usage_tables": true,
+                            "ai_meeting_notes_free_credit_mins": 300,
+                            "ai_meeting_notes_free_credit_mins_v2": 120
+                        },
+                        "subscription_tier": "free",
+                        "short_id": 53790743349,
+                        "short_id_str": "53790743349"
+                    },
+                    "role": "editor"
+                }
+            }
+        }
+    }
+}
