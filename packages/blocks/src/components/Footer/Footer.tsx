@@ -1,14 +1,16 @@
-import { useEffect, useState, createContext, useContext, useRef, RefObject, SetStateAction } from "react";
-import { View, Text, StyleSheet, Pressable, Keyboard, FlatList } from "react-native";
-import { MaterialCommunityIcons, Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
-import { useKeyboardStatus } from "../../hooks/useKeyboardStatus";
+import { useEffect, useState, createContext, useContext, RefObject, SetStateAction } from "react";
+import { View, Text, StyleSheet, Pressable, Keyboard } from "react-native";
+import { Feather, FontAwesome6 } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 
 import InsertBlockSection from "./tabs/InsertBlockSection";
 import ReplaceBlockSection from "./tabs/ReplaceBlockSection";
-import { useBlocksContext } from "../BlocksContext";
-import { useTextBlocksContext } from "../TextBlocksProvider";
-import { findPrevTextBlockInContent } from "../../core";
+import {
+    findPrevTextBlockInContent,
+    useTextBlocksContext,
+    useBlocksContext,
+    useKeyboardStatus
+ } from "@react-native-blocks/core";
 
 interface FooterButtonProps {
     children: React.ReactNode;
@@ -45,7 +47,7 @@ export const useFooterContext = () => {
     return context;
 }
 
-Footer.ContextProvider = ({ children/* , refs, setShowSoftInputOnFocus */ }) => {
+Footer.ContextProvider = ({ children }) => {
     const [footerContext, setFooterContext] = useState({
         activeTab: "",
         hidden: true,
@@ -75,7 +77,7 @@ Footer.ContextProvider = ({ children/* , refs, setShowSoftInputOnFocus */ }) => 
     );
 };
 
-export default function Footer({
+export function Footer({
     children,
     style,
 } : FooterProps) {

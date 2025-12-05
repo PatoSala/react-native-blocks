@@ -11,7 +11,8 @@ import {
   CalloutBlock,
   QuoteBlock,
   CheckboxBlock,
-  BulletBlock
+  BulletBlock,
+  Footer
 } from '@react-native-blocks/blocks';
 
 const blankNote = {
@@ -42,6 +43,17 @@ export default function App() {
 
           // Experimental
           extractBlocks={extractBlocks}
+          ToolbarComponent={() => {
+            return (
+              <Footer.ContextProvider>
+                  <Footer>
+                      <Footer.AddBlock />
+                      <Footer.TurnBlockInto />
+                      <Footer.RemoveBlock />
+                  </Footer>
+              </Footer.ContextProvider>
+            )
+          }}
         >
           <Block
             type="text"

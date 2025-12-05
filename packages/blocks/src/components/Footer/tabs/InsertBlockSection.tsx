@@ -1,7 +1,10 @@
 import { Pressable, Text, View, StyleSheet, Dimensions, FlatList, Keyboard } from "react-native";
-import { useBlocksContext } from "../../BlocksContext";
-import { Block } from "../../../interfaces/Block.interface";
-import { useTextBlocksContext } from "../../TextBlocksProvider";
+import {
+    Block, 
+    useBlocksContext, 
+    useTextBlocksContext, 
+    createBlock
+} from "@react-native-blocks/core";
 
 const { width } = Dimensions.get("window");
 
@@ -9,11 +12,12 @@ export default function InsertBlockSection({ setActiveTab, setHidden } : any) {
     const { inputRefs, setShowSoftInputOnFocus, textBasedBlocks } = useTextBlocksContext();
     const { blocks, focusedBlockId, insertBlock, removeBlock, blockTypes } = useBlocksContext();
 
+
     const handleInsertBlock = (blockType: string) => {
         const parentBlockId = blocks[focusedBlockId].parent === "root" ? focusedBlockId : blocks[focusedBlockId].parent;
        
         setShowSoftInputOnFocus(true);
-        const newBlock = new Block({
+        const newBlock = createBlock({
             type: blockType,
             properties: {
                 title: ""

@@ -98,13 +98,19 @@ function RenderTree() {
  * @param props.defaultBlockType The block type to be used as output of some actions, for example splitting a block.
  * @param props.extractBlocks
  * @param props.children
+ * @param props.contentContainerStyle
+ * @param props.ToolbarComponent
  */
 export function Editor({
-    defaultBlocks,
     children,
+
+    // Todo: Deprecate defaultBlockType
     defaultBlockType,
+
     extractBlocks,
-    contentContainerStyle
+    defaultBlocks,
+    contentContainerStyle,
+    ToolbarComponent = () => <View/>
 }) {
 
     if (defaultBlockType === undefined) throw new Error("defaultBlockType is required");
@@ -124,14 +130,8 @@ export function Editor({
                             </ScrollProvider>
                         </BlocksMeasuresProvider>
 
-
-                        <Footer.ContextProvider>
-                            <Footer>
-                                <Footer.AddBlock />
-                                <Footer.TurnBlockInto />
-                                <Footer.RemoveBlock />
-                            </Footer>
-                        </Footer.ContextProvider>
+                        <ToolbarComponent />
+                        
                     </GestureHandlerRootView>
                 </TextBlocksProvider>
             </BlocksProvider>

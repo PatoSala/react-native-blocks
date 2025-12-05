@@ -1,6 +1,5 @@
 import { Pressable, Text, View, StyleSheet, Dimensions, FlatList } from "react-native";
-import { useTextBlocksContext } from "../../TextBlocksProvider";
-import { useBlocksContext } from "../../BlocksContext";
+import { useTextBlocksContext, useBlocksContext } from "@react-native-blocks/core";
 
 const { width } = Dimensions.get("window");
 

@@ -39,6 +39,7 @@ interface BlocksContext {
     turnBlockInto: (blockId: string, blockType: string) => Block;
     updateBlock: (updatedBlock: Block) => void;
     updateBlockV2: (blockId: string, blockData: Partial<Block>) => void;
+    blockTypes: string[];
 }
 
 const BlocksContext = createContext<BlocksContext | null>(null);
@@ -67,7 +68,9 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
         },
         ...defaultBlocks
     });
-    const { defaultBlockType } = useBlockRegistrationContext();
+
+    // To do: Deprecate defaultBlockType.
+    const { defaultBlockType, textBasedBlocks, blockTypes } = useBlockRegistrationContext();
 
     const rootContent = blocksRef.current["root"].content;
     const [blocksOrder, setBlocksOrder] = useState<string[]>([
@@ -312,7 +315,9 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
         removeBlock: removeBlock,
         moveBlock: moveBlock,
         getBlockSnapshot: (blockId: string) => blocksRef.current[blockId],
-        updateBlockV2
+        updateBlockV2,
+        textBasedBlocks,
+        blockTypes
     }
 
     return (
