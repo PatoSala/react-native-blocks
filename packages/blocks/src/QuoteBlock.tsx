@@ -1,4 +1,4 @@
-import { useTextInput } from "@react-native-blocks/core";
+import { useTextInput, DragProvider } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet } from "react-native";
 
 interface Props {
@@ -9,17 +9,19 @@ export function QuoteBlock({ blockId } : Props) {
     const { getTextInputProps } = useTextInput(blockId);
 
     return (
-        <View style={styles.container}>
-            <View style={styles.quote}>
-                <View style={styles.border}/>
-                 
-                <TextInput
-                    key={blockId}
-                    style={styles.text}
-                    {...getTextInputProps()}
-                />
+        <DragProvider blockId={blockId}>
+            <View style={styles.container}>
+                <View style={styles.quote}>
+                    <View style={styles.border}/>
+                    
+                    <TextInput
+                        key={blockId}
+                        style={styles.text}
+                        {...getTextInputProps()}
+                    />
+                </View>
             </View>
-        </View>
+        </DragProvider>
     )
 }
 

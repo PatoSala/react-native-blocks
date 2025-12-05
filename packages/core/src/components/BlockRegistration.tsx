@@ -4,7 +4,7 @@ import { Block, BlockOptionsProps, BlockProps } from "./Block";
 interface BlockRegistrationProviderProps {
     blockTypes: RefObject<Record<string, React.FunctionComponent>>;
     textBasedBlocks: Array<string>;
-    dfaultBlockType: string
+    dfaultBlockType: string,
 }
 
 const BlockRegistrationContext = createContext<BlockRegistrationProviderProps | {}>({});

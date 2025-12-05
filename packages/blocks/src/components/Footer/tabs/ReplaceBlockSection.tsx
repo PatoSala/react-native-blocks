@@ -1,14 +1,11 @@
 import { Pressable, Text, View, StyleSheet, Dimensions, FlatList } from "react-native";
-import { useTextBlocksContext } from "../../TextBlocksProvider";
-import { useBlocksContext } from "../../BlocksContext";
-import { useBlockRegistrationContext } from "../../BlockRegistration";
+import { useTextBlocksContext, useBlocksContext } from "@react-native-blocks/core";
 
 const { width } = Dimensions.get("window");
 
 export default function ReplaceBlockSection() {
-    const { inputRefs, setShowSoftInputOnFocus } = useTextBlocksContext();
-    const { blocks, focusedBlockId, setFocusedBlockId, turnBlockInto } = useBlocksContext();
-    const { textBasedBlocks, blockTypes } = useBlockRegistrationContext();
+    const { inputRefs, textBasedBlocks } = useTextBlocksContext();
+    const { blocks, focusedBlockId, blockTypes, turnBlockInto } = useBlocksContext();
 
     const handleTurnBlockInto = (blockType: string) => {
         const updatedBlock = turnBlockInto(focusedBlockId, blockType);

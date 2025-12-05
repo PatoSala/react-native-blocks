@@ -24,7 +24,7 @@ const { height: screenHeight } = Dimensions.get("screen");
 const TOP_THRESHOLD = 100;
 const BOTTOM_THRESHOLD = screenHeight - 100;
 
-export default function DragProvider({
+export function DragProvider({
     children,
     blockId,
 }) {
@@ -34,7 +34,6 @@ export default function DragProvider({
         moveBlock,
         blocks,
         setSelectedBlockId,
-        rootBlockId
     } = useBlocksContext();
     const {
         // Offset is actually ghost block poosition
@@ -209,7 +208,6 @@ export default function DragProvider({
             .onStart((e) => {
                 scheduleOnRN(setSelectedBlockId, blockId);
             })
-            /* .enabled(blockId !== rootBlockId); */
 
     const blockDrag = Gesture.Pan()
         .activateAfterLongPress(1000)
@@ -224,13 +222,14 @@ export default function DragProvider({
             scheduleOnRN(handleOnDragEnd);
         })
         .blocksExternalGesture(nativeGestures)
-        .enabled(blockId !== rootBlockId)
     
     const composed = Gesture.Simultaneous(nativeGestures, longPress, blockDrag);
 
     return (
         <GestureDetector gesture={composed}>
-            {children}
+            <View>
+                {children}
+            </View>
         </GestureDetector>
     );
 }

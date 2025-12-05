@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Image, View, StyleSheet, Dimensions, Text, Pressable, Modal, Button } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { useBlocksContext, BlockProps, updateBlockData } from "@react-native-blocks/core";
+import { useBlocksContext, BlockProps, updateBlockData, DragProvider } from "@react-native-blocks/core";
 import * as ImagePicker from 'expo-image-picker';
 import FormSheetModal from "./components/Modal/FormSheetModal";
 
@@ -60,7 +60,7 @@ export const ImageBlock = (props: BlockProps) => {
   const backgroundColor = source === null ? "#7d7a751d" : "transparent";
 
   return (
-    <>
+    <DragProvider blockId={blockId}>
       <Pressable
         style={[styles.container, { backgroundColor: backgroundColor }]}
         onPress={pickImage}
@@ -98,7 +98,7 @@ export const ImageBlock = (props: BlockProps) => {
             ]}
           />
       </FormSheetModal>
-    </>
+    </DragProvider>
   )
 }
 

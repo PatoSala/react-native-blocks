@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Keyboard } from "react-native";
 
+/** Might replace this with a library that handles better this job */
+
 export function useKeyboardStatus() {
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
     const [keyboardHeight, setKeyboardHeight] = useState(0);

@@ -1,6 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { Editor, Block } from '@react-native-blocks/core';
-import { useSafeAreaInsets, SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Editor,
+  Block,
+  createBlock
+} from '@react-native-blocks/core';
 import {
   HeaderBlock,
   PageBlock,
@@ -11,38 +15,113 @@ import {
   CalloutBlock,
   QuoteBlock,
   CheckboxBlock,
-  BulletBlock
+  BulletBlock,
+  Footer
 } from '@react-native-blocks/blocks';
 
 const blankNote = {
     "1": {
-        id: "1",
-        type: "page",
-        properties: {
-            title: ""
-        },
-        content: [],
-        parent: "root"
+      id: "1",
+      type: "page",
+      properties: {
+          title: ""
+      },
+      content: [],
+      parent: "root"
+    }
+}
+
+const initialBlocks = {
+    "1": {
+      id: "1",
+      type: "page",
+      properties: {
+          title: "@react-native-blocks/core"
+      },
+      format: {
+        page_icon: "👋"
+      },
+      content: ["2", "3"],
+      parent: "root"
+    },
+    "2": {
+      id: "2",
+      type: "text",
+      properties: {
+          title: "The core library of react-native-blocks. Provides all the necessary tools to build block-based text editors like Notion."
+      },
+      content: [],
+      parent: "1"
+    },
+    "3": {
+      id: "3",
+      type: "image",
+      properties: {
+          source: "https://raw.githubusercontent.com/PatoSala/react-native-blocks/8862145f6a3fb6ecc055445da92f265d02069283/assets/logo-small-white.png"
+      },
+      format: {
+        block_aspect_ratio: 1,
+        block_width: 1024
+      },
+      content: [],
+      parent: "1"
     }
 }
 
 export default function App() {
 
-  const extractBlocks = (blocksStore) => {
-    /* console.log("ROOT CONTENT", blocksStore["root"].content);
-    console.log("ONLY ROOT CHILD CONTENT", blocksStore[blocksStore["root"].content[0]].content); */
+  const extractBlocks = (blocks) => {
+    console.log("blocks", blocks);
   }
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1}} edges={["top"]}>
-        <Editor
-          defaultBlocks={blankNote}
-          rootBlockId="1"
+        <Editor          
+          defaultBlocks={initialBlocks}
+          extractBlocks={extractBlocks}
+          ToolbarComponent={() => {
+            return (
+              <Footer.ContextProvider>
+                  <Footer>
+                      <Footer.AddBlock />
+                      <Footer.TurnBlockInto />
+                      <Footer.RemoveBlock />
+                  </Footer>
+              </Footer.ContextProvider>
+            )
+          }}
+          // Deprecate
           defaultBlockType={"text"}
 
           // Experimental
-          extractBlocks={extractBlocks}
+          onBlankSpacePress={({ blocks, blocksOrder, inputRefs, insertBlock }) => {
+            const rootBlockId = blocks["root"].content[0];
+            const rootBlock = blocks[rootBlockId];
+
+            if (
+              blocks[blocksOrder[blocksOrder.length - 1]].type === "text"
+              && blocks[blocksOrder[blocksOrder.length - 1]].properties?.title.length === 0
+          ) {
+              inputRefs.current[rootBlock.content[rootBlock.content.length - 1]]?.current.focus();
+          } else {
+              const newBlock = createBlock({
+                  type: "text",
+                  properties: {
+                      title: ""
+                  },
+                  format: {},
+                  content: [],
+                  parent: rootBlock.id
+              });
+
+              insertBlock(newBlock);
+              // Focus new block
+              requestAnimationFrame(() => {
+                  inputRefs.current[newBlock.id]?.current.focus();
+              });
+          }
+          }}
         >
           <Block
             type="text"

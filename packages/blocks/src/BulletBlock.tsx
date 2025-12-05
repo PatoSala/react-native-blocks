@@ -5,7 +5,7 @@ import {
     findPrevTextBlockInContent,
     useTextBlocksContext,
     createBlock,
-
+    DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet, Text } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -185,17 +185,19 @@ export function BulletBlock({ blockId } : Props) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.bullet}>•</Text>
-            <TextInput
-                // ref={inputRef} ??? 
-                key={`input-${blockId}`}   // Really important to pass the key prop
-                style={styles.text}
-                {...getTextInputProps()}
-                onKeyPress={handleOnKeyPress}
-                onSubmitEditing={handleSubmitEditing}
-            />
-        </View>
+        <DragProvider blockId={blockId}>
+            <View style={styles.container}>
+                <Text style={styles.bullet}>•</Text>
+                <TextInput
+                    // ref={inputRef} ??? 
+                    key={`input-${blockId}`}   // Really important to pass the key prop
+                    style={styles.text}
+                    {...getTextInputProps()}
+                    onKeyPress={handleOnKeyPress}
+                    onSubmitEditing={handleSubmitEditing}
+                />
+            </View>
+        </DragProvider>
     )
 }
 

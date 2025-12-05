@@ -4,7 +4,8 @@ import {
     useTextBlocksContext,
     createBlock,
     updateBlockData,
-    findPrevTextBlockInContent
+    findPrevTextBlockInContent,
+    DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet } from "react-native";
 
@@ -168,17 +169,19 @@ export function HeaderBlock({ blockId } : Props) {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                // ref={inputRef}
-                key={blockId}
-                style={styles.header}
-                {...getTextInputProps()}
-                placeholder={placeholder}
-                onSubmitEditing={handleSubmitEditing}
-                onKeyPress={handleOnKeyPress}
-            />
-        </View>
+        <DragProvider blockId={blockId}>
+            <View style={styles.container}>
+                <TextInput
+                    // ref={inputRef}
+                    key={blockId}
+                    style={styles.header}
+                    {...getTextInputProps()}
+                    placeholder={placeholder}
+                    onSubmitEditing={handleSubmitEditing}
+                    onKeyPress={handleOnKeyPress}
+                />
+            </View>
+        </DragProvider>
     )
 }
 

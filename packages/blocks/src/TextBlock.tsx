@@ -4,9 +4,22 @@ import {
     findPrevTextBlockInContent,
     useTextBlocksContext,
     createBlock,
-
+    DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet } from "react-native";
+
+/**
+ * It could be a good idea to create a way to define a block's strucuture (like an interface) and
+ * use that structure to register the block.
+ * 
+ * @example
+ * const textBlock = {
+ *     {text block properties here}
+ * }
+ * 
+ * Then this structure could be used at the moment of registering the block.
+ */
+
 interface Props {
     blockId: string
 }
@@ -17,7 +30,6 @@ export function TextBlock({ blockId } : Props) {
     const {
         blocks,
         insertBlock,
-        updateBlock,
         updateBlockV2,
         removeBlock
     } = useBlocksContext();
@@ -148,16 +160,18 @@ export function TextBlock({ blockId } : Props) {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                // ref={inputRef} ??? 
-                key={`input-${blockId}`}   // Really important to pass the key prop
-                style={styles.text}
-                {...getTextInputProps()}
-                onKeyPress={handleOnKeyPress}
-                onSubmitEditing={handleSubmitEditing}
-            />
-        </View>
+        <DragProvider blockId={blockId}>
+            <View style={styles.container}>
+                <TextInput
+                    // ref={inputRef} ??? 
+                    key={`input-${blockId}`}   // Really important to pass the key prop
+                    style={styles.text}
+                    {...getTextInputProps()}
+                    onKeyPress={handleOnKeyPress}
+                    onSubmitEditing={handleSubmitEditing}
+                />
+            </View>
+        </DragProvider>
     )
 }
 

@@ -1,66 +1,39 @@
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-    Pressable,
-    View
-} from "react-native";
-import { Block  } from "../interfaces/Block.interface";
-import DragProvider from "./DragProvider";
+import { Pressable, View } from "react-native";
 import { LayoutProvider } from "./LayoutProvider";
-import Footer from "./Footer/Footer";
 import { useKeyboardStatus } from "../hooks/useKeyboardStatus";
-import { BlocksProvider, useBlocksContext, useBlock } from "./BlocksContext";
+import { BlocksProvider, useBlocksContext } from "./BlocksContext";
 import { BlockRegistration, useBlockRegistrationContext } from "./BlockRegistration";
 import { TextBlocksProvider, useTextBlocksContext } from "./TextBlocksProvider";
-import { ScrollProvider, useScrollContext } from "./ScrollProvider";
-import { BlocksMeasuresProvider, useBlocksMeasuresContext } from "./BlocksMeasuresProvider";
-import * as Crypto from 'expo-crypto';
+import { ScrollProvider } from "./ScrollProvider";
+import { BlocksMeasuresProvider } from "./BlocksMeasuresProvider";
 
-function RenderTree({
-    rootBlockId
-}) {
-    const { blockTypes, defaultBlockType } = useBlockRegistrationContext();
+/**
+ * Blank space component.
+ * Review the handleOnBlankSpacePress function. Add necessary documentation and clean up the code.
+ */
+const BlankSpace = ({ onBlankSpacePress }) => {
+    const { keyboardHeight } = useKeyboardStatus();
     const {
         blocks,
         blocksOrder,
         insertBlock,
+        updateBlockV2,
+        removeBlock
     } = useBlocksContext();
-    const { keyboardHeight } = useKeyboardStatus();
-
-    // Root block in this speecific case equals the first (and only) block of the "root" block.
-    const rootBlock : Block = blocks[blocksOrder[0]];
-
-    /** Editor configs */
     const { inputRefs } = useTextBlocksContext();
 
-    const handleNewLineBlock = () => {
-        if (
-            blocks[blocksOrder[blocksOrder.length - 1]].type === defaultBlockType
-            && blocks[blocksOrder[blocksOrder.length - 1]].properties?.title.length === 0
-        ) {
-            inputRefs.current[rootBlock.content[rootBlock.content.length - 1]]?.current.focus();
-        } else {
-            const newBlock = new Block({
-                type: defaultBlockType,
-                properties: {
-                    title: ""
-                },
-                format: {},
-                content: [],
-                parent: rootBlock.id
-            });
+    const handleBlankSpacePress = () => onBlankSpacePress({
+        blocks,
+        blocksOrder,
+        insertBlock,
+        inputRefs
+    });
 
-            insertBlock(newBlock);
-            // Focus new block
-            requestAnimationFrame(() => {
-                inputRefs.current[newBlock.id]?.current.focus();
-            });
-        }
-    }
- 
-    const ListFooterComponent = () => (
+    return (
         <Pressable
-            onPress={handleNewLineBlock}
+            onPress={handleBlankSpacePress}
             style={{
                 flexGrow: 1,
                 minHeight: keyboardHeight + 64,
@@ -68,73 +41,87 @@ function RenderTree({
             }}
         />
     )
+};
+
+interface RenderTreeProps {
+    onBlankSpacePress: () => void
+}
+function RenderTree(props: RenderTreeProps) {
+    const {
+        onBlankSpacePress
+    } = props;
+    const { blockTypes, defaultBlockType } = useBlockRegistrationContext();
+    const { blocks, blocksOrder } = useBlocksContext();
 
     return (
         <>
-            {/* Wee concat the "root" content (should be just one item) with the content of its only child. */}
+            {/* We concat the "root" content (should be just one item) with the content of its only child. */}
             {blocksOrder.map((blockId: string, index: number) => {
                 const Component = blockTypes[blocks[blockId].type].component;
                 return (
                     <View key={`component-${blockId}`} style={{ backgroundColor: "transparent" }}> 
                         <LayoutProvider blockId={blockId} >
-                            <DragProvider blockId={blockId}>
                                 <View>
                                     <Component blockId={blockId} />
                                 </View>
-                            </DragProvider>
                         </LayoutProvider>
                     </View>
                 )
             })}
 
-            <ListFooterComponent />
+            <BlankSpace onBlankSpacePress={onBlankSpacePress}/>
         </>
     )
 }
 
-/**
- * @param props.defaultBlocks
- * @param props.customBlocks
- * @param props.defaultBlockType The block type to be used as output of some actions, for example splitting a block.
- * @param props.extractBlocks
- * @param props.children
- */
-export function Editor({
-    defaultBlocks,
-    rootBlockId,
-    children,
-    defaultBlockType,
-    extractBlocks,
-    contentContainerStyle
-}) {
+interface EditorProps {
+    children: React.ReactNode
+    defaultBlockType: string
+    extractBlocks?: (blocks: any) => any
+    defaultBlocks?: any
+    contentContainerStyle?: any
+    /** Component to render above the keyboard */
+    ToolbarComponent?: any
+    /** Fires when a blank space is pressed */
+    onBlankSpacePress?: any
+}
+
+export function Editor(props : EditorProps) {
+    const {
+        children,
+
+        // Todo: Deprecate defaultBlockType
+        defaultBlockType,
+
+        extractBlocks,
+        defaultBlocks,
+        contentContainerStyle,
+        ToolbarComponent,
+
+        // Experimental
+        onBlankSpacePress
+    } = props;
 
     if (defaultBlockType === undefined) throw new Error("defaultBlockType is required");
-    if (rootBlockId === undefined) throw new Error("rootBlockId is required");
     if (children === undefined) throw new Error("children is required");
 
     return (
         <BlockRegistration customBlocks={children} defaultBlockType={defaultBlockType}>
             <BlocksProvider
                 defaultBlocks={defaultBlocks}
-                rootBlockId={rootBlockId}
                 extractBlocks={extractBlocks}
             >
                 <TextBlocksProvider>
                     <GestureHandlerRootView>
                         <BlocksMeasuresProvider>
                             <ScrollProvider contentContainerStyle={contentContainerStyle}>
-                                <RenderTree rootBlockId={rootBlockId} />
+                                <RenderTree
+                                    onBlankSpacePress={onBlankSpacePress}
+                                />
                             </ScrollProvider>
                         </BlocksMeasuresProvider>
-
-
-                        <Footer.ContextProvider>
-                            <Footer>
-                                <Footer.AddBlock />
-                                <Footer.TurnBlockInto />
-                                <Footer.RemoveBlock />
-                            </Footer>
-                        </Footer.ContextProvider>
+                        
+                        {ToolbarComponent && <ToolbarComponent />}
                     </GestureHandlerRootView>
                 </TextBlocksProvider>
             </BlocksProvider>
