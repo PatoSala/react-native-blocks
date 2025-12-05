@@ -1,12 +1,7 @@
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-    Pressable,
-    View
-} from "react-native";
-import { Block  } from "../interfaces/Block.interface";
+import { Pressable, View } from "react-native";
 import { LayoutProvider } from "./LayoutProvider";
-import Footer from "./Footer/Footer";
 import { useKeyboardStatus } from "../hooks/useKeyboardStatus";
 import { BlocksProvider, useBlocksContext } from "./BlocksContext";
 import { BlockRegistration, useBlockRegistrationContext } from "./BlockRegistration";
@@ -14,55 +9,31 @@ import { TextBlocksProvider, useTextBlocksContext } from "./TextBlocksProvider";
 import { ScrollProvider } from "./ScrollProvider";
 import { BlocksMeasuresProvider } from "./BlocksMeasuresProvider";
 
-function RenderTree() {
-    const { blockTypes, defaultBlockType } = useBlockRegistrationContext();
+/**
+ * Blank space component.
+ * Review the handleOnBlankSpacePress function. Add necessary documentation and clean up the code.
+ */
+const BlankSpace = ({ onBlankSpacePress }) => {
+    const { keyboardHeight } = useKeyboardStatus();
     const {
         blocks,
         blocksOrder,
         insertBlock,
+        updateBlockV2,
+        removeBlock
     } = useBlocksContext();
-    const { keyboardHeight } = useKeyboardStatus();
-
-    // Root block in this speecific case equals the first (and only) block of the "root" block.
-    const rootBlock : Block = blocks[blocksOrder[0]];
-
-    /** Editor configs */
     const { inputRefs } = useTextBlocksContext();
 
-    /**
-     * This could be provided as a prop for the Editor component.
-     * Could be named something like onBlankSpacePress where the user can pass a function to handle the event.
-     * In our case we want to insert a new line block.
-     */
-    const handleNewLineBlock = () => {
-        if (
-            blocks[blocksOrder[blocksOrder.length - 1]].type === defaultBlockType
-            && blocks[blocksOrder[blocksOrder.length - 1]].properties?.title.length === 0
-        ) {
-            inputRefs.current[rootBlock.content[rootBlock.content.length - 1]]?.current.focus();
-        } else {
-            const newBlock = new Block({
-                type: defaultBlockType,
-                properties: {
-                    title: ""
-                },
-                format: {},
-                content: [],
-                parent: rootBlock.id
-            });
+    const handleBlankSpacePress = () => onBlankSpacePress({
+        blocks,
+        blocksOrder,
+        insertBlock,
+        inputRefs
+    });
 
-            insertBlock(newBlock);
-            // Focus new block
-            requestAnimationFrame(() => {
-                inputRefs.current[newBlock.id]?.current.focus();
-            });
-        }
-    }
- 
-    // Blank space component
-    const ListFooterComponent = () => (
+    return (
         <Pressable
-            onPress={handleNewLineBlock}
+            onPress={handleBlankSpacePress}
             style={{
                 flexGrow: 1,
                 minHeight: keyboardHeight + 64,
@@ -70,10 +41,21 @@ function RenderTree() {
             }}
         />
     )
+};
+
+interface RenderTreeProps {
+    onBlankSpacePress: () => void
+}
+function RenderTree(props: RenderTreeProps) {
+    const {
+        onBlankSpacePress
+    } = props;
+    const { blockTypes, defaultBlockType } = useBlockRegistrationContext();
+    const { blocks, blocksOrder } = useBlocksContext();
 
     return (
         <>
-            {/* Wee concat the "root" content (should be just one item) with the content of its only child. */}
+            {/* We concat the "root" content (should be just one item) with the content of its only child. */}
             {blocksOrder.map((blockId: string, index: number) => {
                 const Component = blockTypes[blocks[blockId].type].component;
                 return (
@@ -87,7 +69,7 @@ function RenderTree() {
                 )
             })}
 
-            <ListFooterComponent />
+            <BlankSpace onBlankSpacePress={onBlankSpacePress}/>
         </>
     )
 }
@@ -100,6 +82,7 @@ function RenderTree() {
  * @param props.children
  * @param props.contentContainerStyle
  * @param props.ToolbarComponent
+ * @param props.onBlankSpacePress Fires when the user presses a blank space in the editor
  */
 export function Editor({
     children,
@@ -110,7 +93,13 @@ export function Editor({
     extractBlocks,
     defaultBlocks,
     contentContainerStyle,
-    ToolbarComponent = () => <View/>
+    ToolbarComponent = () => <View/>,
+
+    // Experimental
+    /**
+     * Fires when the user presses a blank space in the editor.
+     */
+    onBlankSpacePress = () => {}
 }) {
 
     if (defaultBlockType === undefined) throw new Error("defaultBlockType is required");
@@ -126,12 +115,13 @@ export function Editor({
                     <GestureHandlerRootView>
                         <BlocksMeasuresProvider>
                             <ScrollProvider contentContainerStyle={contentContainerStyle}>
-                                <RenderTree/>
+                                <RenderTree
+                                    onBlankSpacePress={onBlankSpacePress}
+                                />
                             </ScrollProvider>
                         </BlocksMeasuresProvider>
-
-                        <ToolbarComponent />
                         
+                        <ToolbarComponent />
                     </GestureHandlerRootView>
                 </TextBlocksProvider>
             </BlocksProvider>

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Editor, Block } from '@react-native-blocks/core';
+import { Editor, Block, createBlock } from '@react-native-blocks/core';
 import { useSafeAreaInsets, SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import {
   HeaderBlock,
@@ -37,11 +37,8 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1}} edges={["top"]}>
-        <Editor
+        <Editor          
           defaultBlocks={blankNote}
-          defaultBlockType={"text"}
-
-          // Experimental
           extractBlocks={extractBlocks}
           ToolbarComponent={() => {
             return (
@@ -53,6 +50,42 @@ export default function App() {
                   </Footer>
               </Footer.ContextProvider>
             )
+          }}
+          // Deprecate
+          defaultBlockType={"text"}
+
+          // Experimental
+          onBlankSpacePress={({ blocks, blocksOrder, inputRefs, insertBlock }) => {
+            console.log("Blocks", blocks ? true : false);
+            console.log("Blocks Order", blocksOrder ? true : false);
+            console.log("Input Refs", inputRefs ? true : false);
+            console.log("Insert Block", insertBlock ? true : false);
+            
+            const rootBlockId = blocks["root"].content[0];
+            const rootBlock = blocks[rootBlockId];
+
+            if (
+              blocks[blocksOrder[blocksOrder.length - 1]].type === "text"
+              && blocks[blocksOrder[blocksOrder.length - 1]].properties?.title.length === 0
+          ) {
+              inputRefs.current[rootBlock.content[rootBlock.content.length - 1]]?.current.focus();
+          } else {
+              const newBlock = createBlock({
+                  type: "text",
+                  properties: {
+                      title: ""
+                  },
+                  format: {},
+                  content: [],
+                  parent: rootBlock.id
+              });
+
+              insertBlock(newBlock);
+              // Focus new block
+              requestAnimationFrame(() => {
+                  inputRefs.current[newBlock.id]?.current.focus();
+              });
+          }
           }}
         >
           <Block
