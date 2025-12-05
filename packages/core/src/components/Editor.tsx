@@ -74,33 +74,33 @@ function RenderTree(props: RenderTreeProps) {
     )
 }
 
-/**
- * @param props.defaultBlocks
- * @param props.customBlocks
- * @param props.defaultBlockType The block type to be used as output of some actions, for example splitting a block.
- * @param props.extractBlocks
- * @param props.children
- * @param props.contentContainerStyle
- * @param props.ToolbarComponent
- * @param props.onBlankSpacePress Fires when the user presses a blank space in the editor
- */
-export function Editor({
-    children,
+interface EditorProps {
+    children: React.ReactNode
+    defaultBlockType: string
+    extractBlocks?: (blocks: any) => any
+    defaultBlocks?: any
+    contentContainerStyle?: any
+    /** Component to render above the keyboard */
+    ToolbarComponent?: any
+    /** Fires when a blank space is pressed */
+    onBlankSpacePress?: any
+}
 
-    // Todo: Deprecate defaultBlockType
-    defaultBlockType,
+export function Editor(props : EditorProps) {
+    const {
+        children,
 
-    extractBlocks,
-    defaultBlocks,
-    contentContainerStyle,
-    ToolbarComponent = () => <View/>,
+        // Todo: Deprecate defaultBlockType
+        defaultBlockType,
 
-    // Experimental
-    /**
-     * Fires when the user presses a blank space in the editor.
-     */
-    onBlankSpacePress = () => {}
-}) {
+        extractBlocks,
+        defaultBlocks,
+        contentContainerStyle,
+        ToolbarComponent,
+
+        // Experimental
+        onBlankSpacePress
+    } = props;
 
     if (defaultBlockType === undefined) throw new Error("defaultBlockType is required");
     if (children === undefined) throw new Error("children is required");
@@ -121,7 +121,7 @@ export function Editor({
                             </ScrollProvider>
                         </BlocksMeasuresProvider>
                         
-                        <ToolbarComponent />
+                        {ToolbarComponent && <ToolbarComponent />}
                     </GestureHandlerRootView>
                 </TextBlocksProvider>
             </BlocksProvider>
