@@ -4,7 +4,7 @@ import {
     findPrevTextBlockInContent,
     useTextBlocksContext,
     createBlock,
-
+    DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet } from "react-native";
 interface Props {
@@ -148,16 +148,18 @@ export function TextBlock({ blockId } : Props) {
     };
 
     return (
-        <View style={styles.container}>
-            <TextInput
-                // ref={inputRef} ??? 
-                key={`input-${blockId}`}   // Really important to pass the key prop
-                style={styles.text}
-                {...getTextInputProps()}
-                onKeyPress={handleOnKeyPress}
-                onSubmitEditing={handleSubmitEditing}
-            />
-        </View>
+        <DragProvider blockId={blockId}>
+            <View style={styles.container}>
+                <TextInput
+                    // ref={inputRef} ??? 
+                    key={`input-${blockId}`}   // Really important to pass the key prop
+                    style={styles.text}
+                    {...getTextInputProps()}
+                    onKeyPress={handleOnKeyPress}
+                    onSubmitEditing={handleSubmitEditing}
+                />
+            </View>
+        </DragProvider>
     )
 }
 

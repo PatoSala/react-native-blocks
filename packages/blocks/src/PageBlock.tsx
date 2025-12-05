@@ -5,7 +5,8 @@ import {
     useTextBlocksContext,
     useBlock,
     updateBlockData,
-    createBlock
+    createBlock,
+    DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, Text, StyleSheet, TouchableOpacity, Modal, Button, Image, Dimensions, Pressable } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -41,8 +42,8 @@ export function PageBlock({ blockId } : Props) {
     } = useTextBlocksContext();
     const { properties } = useBlock(blockId);
 
-    // This condition should be renamed to "isFirstBlock" or sth like that
-    const isRootBlock = blocksOrder[0] === blockId;
+    // This condition should be renamed to "isFirstBlock" or sth like that.
+    const isRootBlock = blocks["root"].content[0] === blockId;
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
     const [pageIcon, setPageIcon] = useState<string | null>(blocks[blockId]?.format?.page_icon || null);
     const [pageCover, setPageCover] = useState<string | null>(blocks[blockId]?.format?.page_cover || null);
@@ -260,6 +261,7 @@ export function PageBlock({ blockId } : Props) {
                             height: pageIcon ? 136 : 184,
                             display: pageCover === null ? "none" : "flex"
                         }}/>
+                        
                         <View style={styles.root}>
                             {pageCover === null
                                 ? (
@@ -324,7 +326,7 @@ export function PageBlock({ blockId } : Props) {
                     </>
                 )
                 : (
-                    <>
+                    <DragProvider blockId={blockId}>
                         <View style={styles.row}>
                             <TouchableOpacity
                                 onPress={() => setShowEmojiSelector(true)}
@@ -356,7 +358,7 @@ export function PageBlock({ blockId } : Props) {
                                 {properties.title.length === 0 ? placeholder : properties.title}
                             </Text>
                         </View>
-                    </>
+                    </DragProvider>
                 )}
 
                 <Modal

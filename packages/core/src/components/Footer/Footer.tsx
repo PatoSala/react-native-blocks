@@ -173,7 +173,7 @@ Footer.AddBlock = () => {
 Footer.TurnBlockInto = () => {
     const { activeTab, setActiveTab } = useFooterContext();
     const { inputRefs, setShowSoftInputOnFocus } = useTextBlocksContext();
-    const { focusedBlockId, rootBlockId, blocksOrder } = useBlocksContext();
+    const { focusedBlockId, blocksOrder } = useBlocksContext();
 
     const handleOnPress = () => {
         setShowSoftInputOnFocus(false);

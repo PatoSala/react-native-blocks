@@ -5,20 +5,16 @@ import {
     View
 } from "react-native";
 import { Block  } from "../interfaces/Block.interface";
-import DragProvider from "./DragProvider";
 import { LayoutProvider } from "./LayoutProvider";
 import Footer from "./Footer/Footer";
 import { useKeyboardStatus } from "../hooks/useKeyboardStatus";
-import { BlocksProvider, useBlocksContext, useBlock } from "./BlocksContext";
+import { BlocksProvider, useBlocksContext } from "./BlocksContext";
 import { BlockRegistration, useBlockRegistrationContext } from "./BlockRegistration";
 import { TextBlocksProvider, useTextBlocksContext } from "./TextBlocksProvider";
-import { ScrollProvider, useScrollContext } from "./ScrollProvider";
-import { BlocksMeasuresProvider, useBlocksMeasuresContext } from "./BlocksMeasuresProvider";
-import * as Crypto from 'expo-crypto';
+import { ScrollProvider } from "./ScrollProvider";
+import { BlocksMeasuresProvider } from "./BlocksMeasuresProvider";
 
-function RenderTree({
-    rootBlockId
-}) {
+function RenderTree() {
     const { blockTypes, defaultBlockType } = useBlockRegistrationContext();
     const {
         blocks,
@@ -33,6 +29,11 @@ function RenderTree({
     /** Editor configs */
     const { inputRefs } = useTextBlocksContext();
 
+    /**
+     * This could be provided as a prop for the Editor component.
+     * Could be named something like onBlankSpacePress where the user can pass a function to handle the event.
+     * In our case we want to insert a new line block.
+     */
     const handleNewLineBlock = () => {
         if (
             blocks[blocksOrder[blocksOrder.length - 1]].type === defaultBlockType
@@ -58,6 +59,7 @@ function RenderTree({
         }
     }
  
+    // Blank space component
     const ListFooterComponent = () => (
         <Pressable
             onPress={handleNewLineBlock}
@@ -77,11 +79,9 @@ function RenderTree({
                 return (
                     <View key={`component-${blockId}`} style={{ backgroundColor: "transparent" }}> 
                         <LayoutProvider blockId={blockId} >
-                            <DragProvider blockId={blockId}>
                                 <View>
                                     <Component blockId={blockId} />
                                 </View>
-                            </DragProvider>
                         </LayoutProvider>
                     </View>
                 )
@@ -101,7 +101,6 @@ function RenderTree({
  */
 export function Editor({
     defaultBlocks,
-    rootBlockId,
     children,
     defaultBlockType,
     extractBlocks,
@@ -109,21 +108,19 @@ export function Editor({
 }) {
 
     if (defaultBlockType === undefined) throw new Error("defaultBlockType is required");
-    if (rootBlockId === undefined) throw new Error("rootBlockId is required");
     if (children === undefined) throw new Error("children is required");
 
     return (
         <BlockRegistration customBlocks={children} defaultBlockType={defaultBlockType}>
             <BlocksProvider
                 defaultBlocks={defaultBlocks}
-                rootBlockId={rootBlockId}
                 extractBlocks={extractBlocks}
             >
                 <TextBlocksProvider>
                     <GestureHandlerRootView>
                         <BlocksMeasuresProvider>
                             <ScrollProvider contentContainerStyle={contentContainerStyle}>
-                                <RenderTree rootBlockId={rootBlockId} />
+                                <RenderTree/>
                             </ScrollProvider>
                         </BlocksMeasuresProvider>
 

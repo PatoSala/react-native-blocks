@@ -53,7 +53,6 @@ export default function App() {
     <SafeAreaProvider>
       <Editor
         defaultBlocks={blankNote}
-        rootBlockId="1"
         defaultBlockType={"text"}
         contentContainerStyle={{
           paddingTop: 70

@@ -7,7 +7,6 @@ import * as Crypto from 'expo-crypto';
 interface BlocksContext {
     blocks: RefObject<Record<string, Block>>;
     blocksOrder: string[];
-    rootBlockId: string;
     focusedBlockId: string;
     movingBlockId: string | null;
     selectedBlockId: string | null;
@@ -39,6 +38,7 @@ interface BlocksContext {
     removeBlock: (blockId: string) => Block;
     turnBlockInto: (blockId: string, blockType: string) => Block;
     updateBlock: (updatedBlock: Block) => void;
+    updateBlockV2: (blockId: string, blockData: Partial<Block>) => void;
 }
 
 const BlocksContext = createContext<BlocksContext | null>(null);
@@ -56,7 +56,7 @@ function useBlock(blockId: string) : Block {
     return blocks[blockId];
 }
 
-function BlocksProvider({ children, defaultBlocks, rootBlockId, extractBlocks }: any) {
+function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
     const blocksRef = useRef({
         // This block should never be removed nor updated.
         "root": {
@@ -75,7 +75,7 @@ function BlocksProvider({ children, defaultBlocks, rootBlockId, extractBlocks }:
         ...blocksRef.current[blocksRef.current["root"].content[0]].content
     ]);
 
-    const [focusedBlockId, setFocusedBlockId] = useState(rootBlockId); // Maybe this was to be able to insert by default on the rootBlock?
+    const [focusedBlockId, setFocusedBlockId] = useState(null); // Maybe this was to be able to insert by default on the rootBlock?
     const [movingBlockId, setMovingBlockId] = useState<string | null>(null);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null >(null);
     const [shouldUpdate, setShouldUpdate] = useState([]);
@@ -260,7 +260,10 @@ function BlocksProvider({ children, defaultBlocks, rootBlockId, extractBlocks }:
         });
 
         blocksRef.current[parentId] = updatedBlock;
-        setBlocksOrder([rootBlockId, ...blocksRef.current[rootBlockId].content]);
+        setBlocksOrder([
+            blocksRef.current["root"].content[0], // Keep root block only child at the top.
+            ...blocksRef.current[blocksRef.current["root"].content[0]].content // Update the rest of the blocks order.
+        ]);
     }
 
     /**
@@ -293,7 +296,6 @@ function BlocksProvider({ children, defaultBlocks, rootBlockId, extractBlocks }:
     const value = {
         blocks: blocksRef.current,
         blocksOrder,
-        rootBlockId,
         focusedBlockId,
         movingBlockId,
         shouldUpdate,

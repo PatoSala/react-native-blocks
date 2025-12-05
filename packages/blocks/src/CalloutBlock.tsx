@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTextInput, useBlocksContext } from "@react-native-blocks/core";
+import { useTextInput, useBlocksContext, DragProvider } from "@react-native-blocks/core";
 import {
     View,
     TextInput,
@@ -10,7 +10,6 @@ import {
     Modal,
     Button,
 } from "react-native";
-import { Pressable, GestureDetector, Gesture } from "react-native-gesture-handler";
 import EmojiSelector from "react-native-emoji-selector";
 import FormSheetModal from "./components/Modal/FormSheetModal";
 
@@ -34,7 +33,7 @@ export function CalloutBlock({ blockId } : Props) {
     };
 
     return (
-        <>
+        <DragProvider blockId={blockId}>
             <View
                 style={styles.container}
             >
@@ -96,7 +95,7 @@ export function CalloutBlock({ blockId } : Props) {
                     }}
                 />
             </Modal>
-        </>
+        </DragProvider>
     )
 }
 

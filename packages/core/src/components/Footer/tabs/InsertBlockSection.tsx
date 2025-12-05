@@ -7,7 +7,7 @@ const { width } = Dimensions.get("window");
 
 export default function InsertBlockSection({ setActiveTab, setHidden } : any) {
     const { inputRefs, setShowSoftInputOnFocus } = useTextBlocksContext();
-    const { blocks, focusedBlockId, insertBlock, removeBlock, rootBlockId } = useBlocksContext();
+    const { blocks, focusedBlockId, insertBlock, removeBlock } = useBlocksContext();
     const { blockTypes, textBasedBlocks } = useBlockRegistrationContext();
 
     const handleInsertBlock = (blockType: string) => {

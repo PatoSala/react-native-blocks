@@ -9,7 +9,7 @@ export function LayoutProvider({
     children,
     blockId
 }) {
-    const { blocksOrder, rootBlockId, blocks } = useBlocksContext();
+    const { blocks } = useBlocksContext();
     const {
         registerBlockMeasure,
         removeBlockMeasure,
@@ -18,7 +18,11 @@ export function LayoutProvider({
 
     /** Maybe this computation could be workletized (?) */
     const handleOnLayout = () => {
-        if (blockId !== rootBlockId && viewRef.current) {
+        /** 
+         * Same story as with DragProvider.
+         * This condition will be removed
+         */
+        if (blockId !== blocks["root"].content[0] && viewRef.current) {
             viewRef.current?.measure((x, y, width, height) => {
                 registerBlockMeasure(blockId, {
                     ref: viewRef,

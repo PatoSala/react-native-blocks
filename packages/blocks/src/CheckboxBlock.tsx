@@ -5,7 +5,7 @@ import {
     findPrevTextBlockInContent,
     useTextBlocksContext,
     createBlock,
-
+    DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -187,24 +187,26 @@ export function CheckboxBlock({ blockId } : Props) {
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity
-                style={styles.checkbox}
-                onPress={() => setChecked(!checked)}>
-                {checked
-                ? <MaterialCommunityIcons name="checkbox-marked" size={24} color="#2383e2" />
-                : <MaterialCommunityIcons name="checkbox-blank-outline" size={24} color="black" />}
-            </TouchableOpacity>
-            <TextInput
-                // ref={inputRef} ??? 
-                key={`input-${blockId}`}   // Really important to pass the key prop
-                style={styles.text}
-                {...getTextInputProps()}
-                onKeyPress={handleOnKeyPress}
-                onSubmitEditing={handleSubmitEditing}
-                placeholder="To-do"
-            />
-        </View>
+        <DragProvider blockId={blockId}>
+            <View style={styles.container}>
+                <TouchableOpacity
+                    style={styles.checkbox}
+                    onPress={() => setChecked(!checked)}>
+                    {checked
+                    ? <MaterialCommunityIcons name="checkbox-marked" size={24} color="#2383e2" />
+                    : <MaterialCommunityIcons name="checkbox-blank-outline" size={24} color="black" />}
+                </TouchableOpacity>
+                <TextInput
+                    // ref={inputRef} ??? 
+                    key={`input-${blockId}`}   // Really important to pass the key prop
+                    style={styles.text}
+                    {...getTextInputProps()}
+                    onKeyPress={handleOnKeyPress}
+                    onSubmitEditing={handleSubmitEditing}
+                    placeholder="To-do"
+                />
+            </View>
+        </DragProvider>
     )
 }
 

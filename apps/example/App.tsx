@@ -38,7 +38,6 @@ export default function App() {
       <SafeAreaView style={{ flex: 1}} edges={["top"]}>
         <Editor
           defaultBlocks={blankNote}
-          rootBlockId="1"
           defaultBlockType={"text"}
 
           // Experimental

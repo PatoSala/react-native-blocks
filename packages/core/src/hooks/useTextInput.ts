@@ -16,21 +16,16 @@ export function useTextInput(blockId: string) {
     const {
         blocks,
         blocksOrder,
-        rootBlockId,
         focusedBlockId,
         setFocusedBlockId,
         updateBlock,
-        insertBlock,
         mergeBlock,
         splitBlock,
         removeBlock,
-        shouldUpdate,
-        setShouldUpdate,
         getBlockSnapshot
     } = useBlocksContext();
     const {
         registerRef,
-        unregisterRef,
         showSoftInputOnFocus,
         inputRefs
     } = useTextBlocksContext();
@@ -100,6 +95,10 @@ export function useTextInput(blockId: string) {
         updateBlock(updatedBlock);
     }
 
+    /**
+     * @deprecated
+     * handleOnKeyPress is now handled within each block component for more flexibility.
+     */
     function handleOnKeyPress (event: { nativeEvent: { key: string; }; }) {
         const block = updateBlockData(blocks[blockId], {
             properties:
@@ -126,7 +125,7 @@ export function useTextInput(blockId: string) {
                 removeBlock(targetBlockId);
             });
         } else {
-            const { prevTitle, newTitle, mergeResult } = mergeBlock(block, targetBlockId);
+            const { mergeResult } = mergeBlock(block, targetBlockId);
 
             inputRefs.current[mergeResult.id]?.current.setText(mergeResult.properties.title);
             inputRefs.current[mergeResult.id]?.current.setSelection({
@@ -139,6 +138,10 @@ export function useTextInput(blockId: string) {
         return;
     }
 
+    /**
+     * @deprecated
+     * handleSubmitEditing is now handled within each block component for more flexibility.
+     */
     const handleSubmitEditing = () => {
         const block = updateBlockData(
             blocks[blockId],
@@ -166,7 +169,7 @@ export function useTextInput(blockId: string) {
          * keyboard flickering.
          */
 
-        const { prevBlock, nextBlock } = splitBlock(block, selection);
+        const { nextBlock } = splitBlock(block, selection);
 
         inputRefs.current[nextBlock.id]?.current.setText(nextBlock.properties.title);
         setTimeout(() => {
@@ -177,35 +180,6 @@ export function useTextInput(blockId: string) {
             inputRefs.current[nextBlock.id]?.current.focus();
         }, 0);
 
-        /* setTimeout(() => {
-            const { prevBlock, nextBlock } = splitBlock(block, selection);
-
-            if (prevBlock.id === rootBlockId) {
-                // Since in this scenario a new block is created, we focus after animation.
-                requestAnimationFrame(() => {
-                    inputRefs.current[prevBlock.id]?.current.setText(prevBlock.properties.title);
-
-                    inputRefs.current[nextBlock.id]?.current.setText(nextBlock.properties.title);
-                    inputRefs.current[nextBlock.id]?.current.setSelection({
-                        start: 0,
-                        end: 0
-                    });
-                    inputRefs.current[nextBlock.id]?.current.focus();
-
-                });
-
-            } else {
-                requestAnimationFrame(() => {
-                    inputRefs.current[nextBlock.id].current.setText(nextBlock.properties.title);
-                    inputRefs.current[nextBlock.id]?.current.setSelection({
-                        start: 0,
-                        end: 0
-                    });
-                    inputRefs.current[nextBlock.id]?.current.focus();
-                });
-            }
-        }, 0); */
-        
         return;
     };
 
