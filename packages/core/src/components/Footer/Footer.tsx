@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext, useRef, RefObject, SetStateAction } from "react";
 import { View, Text, StyleSheet, Pressable, Keyboard, FlatList } from "react-native";
-import { MaterialCommunityIcons, MaterialIcons, FontAwesome6, Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Feather, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { useKeyboardStatus } from "../../hooks/useKeyboardStatus";
 
 import InsertBlockSection from "./tabs/InsertBlockSection";
@@ -165,7 +165,7 @@ Footer.AddBlock = () => {
 
     return (
         <Footer.Button onPress={handleOnPress}>
-            <Ionicons name="add-outline" size={24} color="black" />
+            <FontAwesome6 name="add" size={20} color="black" />
         </Footer.Button>
     )
 }
@@ -188,7 +188,7 @@ Footer.TurnBlockInto = () => {
 
     return (
         <Footer.Button onPress={handleOnPress}>
-            <Ionicons name="repeat-outline" size={24} color="black" />
+            <Feather name="repeat" size={20} color="black" />
         </Footer.Button>
     )
 }
@@ -219,7 +219,7 @@ Footer.RemoveBlock = () => {
 
     return (
         <Footer.Button onPress={handleOnPress}>
-            <Ionicons name="trash-outline" size={24} color="black" />
+            <FontAwesome6 name="trash-can" size={20} color="black" />
         </Footer.Button>
     )
 }
@@ -238,8 +238,11 @@ Footer.DismissKeyboard = () => {
     };
 
     return (
-        <Footer.Button onPress={handleOnPress}>
-            <MaterialCommunityIcons name="keyboard-close-outline" size={24} color="black" />
+        <Footer.Button style={[styles.keyboardDown]} onPress={handleOnPress}>
+            <FontAwesome6 name="keyboard" size={20} color="black" />
+                <View style={styles.keyboardArrowContainer}>
+                    <FontAwesome6 name="chevron-down" size={10} color="black"/>
+                </View>
         </Footer.Button>
     )
 }
@@ -258,7 +261,7 @@ Footer.OpenKeyboard = () => {
 
     return (
         <Footer.Button onPress={handleOpenKeyboard}>
-            <Ionicons name="close-circle-outline" size={24} color="black" />
+            <FontAwesome6 name="circle-xmark" size={20} color="black" />
         </Footer.Button>
     )
 }
@@ -277,5 +280,17 @@ const styles = StyleSheet.create({
     },
     tabSectionContainer: {
         backgroundColor: "#f5f5f5",
+    },
+    keyboardDown: {
+        width: 44,
+        height: 44,
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        paddingBottom: 4
+    },
+    keyboardArrowContainer: {
+        position: "absolute",
+        bottom: 8
     }
 });
