@@ -2,7 +2,7 @@
 
 # React Native Blocks
 
-[Inspired by the data model behind Notion's flexibility](https://www.notion.com/blog/data-model-behind-notion), React Native Blocks let's you create modular block-based text editors like Notion.
+[Inspired by the data model behind Notion's flexibility](https://www.notion.com/blog/data-model-behind-notion), React Native Blocks let's you create modular block-based text editors like Notion. [Try it on Expo Snack](https://snack.expo.dev/@patosala/react-native-blocks?platform=ios).
 
 <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
   <img src="assets/screenshot.png" alt="drawing" width="400px"/>
