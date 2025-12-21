@@ -149,6 +149,7 @@ export function DragProvider({
     }
 
     const handleOnDragStart = () => {
+        console.log("BLOCK MEASURES", blockMeasuresRef.current);
         setIsDragging(true);
         setMovingBlockId(blockId);
         // mesure in window does not include safe areas
@@ -172,13 +173,14 @@ export function DragProvider({
         }
         
         // translationX/Y equals how much the finger has moved from its starting point (offset)
-        // We need to substract the insets
+        // We need to substract the insets to make sure the indicator is positioned correctly
         setOffset({
             x: e.translationX,
             y: e.translationY - insets.top 
         })
         /** Update indicator position */
         const { blockId, closestTo } = findBlockAtPosition(e.absoluteY);
+        console.log(blockId, closestTo);
 
         if (blockId) {
             /**

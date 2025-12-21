@@ -61,7 +61,6 @@ export function ScrollProvider({ children, contentContainerStyle }) {
                 automaticallyAdjustKeyboardInsets
             >
                 {children}
-
             </ScrollView>
         </ScrollContext.Provider>
     );

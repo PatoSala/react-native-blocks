@@ -11,6 +11,7 @@ export function LayoutProvider({
 }) {
     const { blocks } = useBlocksContext();
     const {
+        blockMeasuresRef,
         registerBlockMeasure,
         removeBlockMeasure,
     } = useBlocksMeasuresContext();
@@ -23,7 +24,9 @@ export function LayoutProvider({
          * This condition will be removed
          */
         if (blockId !== blocks["root"].content[0] && viewRef.current) {
-            viewRef.current?.measure((x, y, width, height) => {
+            viewRef.current?.measureInWindow((x, y, width, height) => {
+                console.log("MEASURING", blockId)
+                console.log(x, y, width, height);
                 registerBlockMeasure(blockId, {
                     ref: viewRef,
                     type: blocks[blockId].type,
@@ -34,6 +37,7 @@ export function LayoutProvider({
                 });
             });
         }
+        console.log("BLOCK MEASURES", blockMeasuresRef.current);
     }
 
     useEffect(() => {
