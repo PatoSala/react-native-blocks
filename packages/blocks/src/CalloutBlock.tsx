@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { useTextInput, useBlocksContext, DragProvider } from "@react-native-blocks/core";
+import { 
+    useTextInput,
+    useBlocksContext,
+    DragProvider,
+    useTextBlocksContext,
+    createBlock,
+    findPrevTextBlockInContent
+} from "@react-native-blocks/core";
 import {
     View,
     TextInput,
@@ -20,10 +27,178 @@ interface Props {
 const { width } = Dimensions.get("window");
 
 export function CalloutBlock({ blockId } : Props) {
-    const { getTextInputProps } = useTextInput(blockId);
-    const { selectedBlockId, setSelectedBlockId, removeBlock } = useBlocksContext();
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
     const [selectedEmoji, setSelectedEmoji] = useState("💡");
+
+    const { getTextInputProps, getValue, getSelection } = useTextInput(blockId);
+    const { inputRefs, textBasedBlocks } = useTextBlocksContext();
+    const {
+        blocks,
+        insertBlock,
+        selectedBlockId,
+        setSelectedBlockId,
+        updateBlockV2,
+        removeBlock
+    } = useBlocksContext();
+
+    const handleSubmitEditing = () => {
+        const value = getValue();
+        const selection = getSelection();
+
+         if (value.length === 0) {
+            inputRefs.current["ghostInput"]?.current.focus();
+
+            setTimeout(() => {
+                updateBlockV2(blockId, {
+                    type: "text",
+                    properties: {
+                        title: value
+                    }
+                });
+                requestAnimationFrame(() => {
+                    inputRefs.current[blockId]?.current.focus(); // Maybe the "ghostTextInput" hack should be done inside this function.
+                });
+            }, 0);
+            return;
+        }
+
+        if (selection.start === 0 && selection.end === 0) {
+            const newBlock = createBlock({
+                type: "text",
+                properties: {
+                    title: ""
+                },
+                parent: blocks[blockId].parent,
+                content: []
+            });
+
+            insertBlock(newBlock, {
+                nextBlockId: blockId
+            });
+            return;
+        }
+
+        if (selection.start === value.length && selection.end === value.length) {
+            const newBlock = createBlock({
+                type: "text",
+                properties: {
+                    title: ""
+                },
+                parent: blocks[blockId].parent,
+                content: []
+            });
+
+            insertBlock(newBlock, {
+                prevBlockId: blockId
+            });
+
+            requestAnimationFrame(() => {
+                inputRefs.current[newBlock.id]?.current.focus();
+            });
+            return;
+        }
+
+        const textBeforeSelection = value.substring(0, selection.start);
+        const textAfterSelection = value.substring(selection.end);
+
+        const newBlock = createBlock({
+            type: "text",
+            properties: {
+                title: textAfterSelection
+            },
+            parent: blocks[blockId].parent,
+            content: []
+        });
+
+       updateBlockV2(blockId, {
+            properties: {
+                title: textBeforeSelection
+            }
+         });
+
+       insertBlock(newBlock, {
+           prevBlockId: blockId
+       });
+
+       requestAnimationFrame(() => {
+           inputRefs.current[blockId]?.current.setText(textBeforeSelection);
+           inputRefs.current[newBlock.id]?.current.setSelection({
+               start: 0,
+               end: 0
+           });
+           inputRefs.current[newBlock.id]?.current.focus();
+       });
+    }
+
+   const handleOnKeyPress = (event: { nativeEvent: { key: string; }; }) => {
+        const value = getValue();
+        const selection = getSelection();
+
+        if (event.nativeEvent.key === "Backspace" && selection.start === 0 && selection.end === 0) {
+            // findPrevTextBlock
+
+            if (value.length === 0) {
+                inputRefs.current["ghostInput"]?.current.focus();
+
+                setTimeout(() => {
+                    updateBlockV2(blockId, {
+                        type: "text",
+                        properties: {
+                            title: value
+                        }
+                    });
+                    requestAnimationFrame(() => {
+                        inputRefs.current[blockId]?.current.focus(); // Maybe the "ghostTextInput" hack should be done inside this function.
+                    });
+                }, 0);
+                return;
+            }
+
+            const previousTextBlock = findPrevTextBlockInContent(blockId, blocks, textBasedBlocks);
+            
+            inputRefs.current["ghostInput"]?.current.focus();
+
+            if (previousTextBlock === undefined) {
+                const parentBlock = blocks[blocks[blockId].parent];
+                const isTextBased = textBasedBlocks.includes(parentBlock.type);
+                
+                if (isTextBased) {
+                    updateBlockV2(parentBlock.id, {
+                        properties: {
+                            title: parentBlock.properties.title + value
+                        }
+                    });
+                    removeBlock(blockId);
+
+                    requestAnimationFrame(() => {
+                        inputRefs.current[parentBlock.id]?.current.setText(parentBlock.properties.title + value);
+                        inputRefs.current[parentBlock.id]?.current.setSelection({
+                            start: parentBlock.properties.title.length,
+                            end: parentBlock.properties.title.length
+                        })
+                        inputRefs.current[parentBlock.id]?.current.focus();
+                    });
+                }
+                return;
+            }
+
+            updateBlockV2(previousTextBlock.id, {
+                properties: {
+                    title: previousTextBlock.properties.title + value
+                }
+            });
+            removeBlock(blockId);
+
+            requestAnimationFrame(() => {
+                inputRefs.current[previousTextBlock.id]?.current.setText(previousTextBlock.properties.title + value);
+                inputRefs.current[previousTextBlock.id]?.current.setSelection({
+                    start: previousTextBlock.properties.title.length,
+                    end: previousTextBlock.properties.title.length
+                })
+                inputRefs.current[previousTextBlock.id]?.current.focus();
+            });
+        }
+    };
 
     const handleRemoveBlock = () => {
         setSelectedBlockId(null);
@@ -34,9 +209,7 @@ export function CalloutBlock({ blockId } : Props) {
 
     return (
         <DragProvider blockId={blockId}>
-            <View
-                style={styles.container}
-            >
+            <View style={styles.container}>
                 <View style={styles.callout}>
                     <TouchableOpacity
                         onPress={() => setShowEmojiSelector(true)}
@@ -49,6 +222,8 @@ export function CalloutBlock({ blockId } : Props) {
                         key={blockId}
                         style={styles.text}
                         {...getTextInputProps()}
+                        onKeyPress={handleOnKeyPress}
+                        onSubmitEditing={handleSubmitEditing}
                     />
                 </View>
             </View>

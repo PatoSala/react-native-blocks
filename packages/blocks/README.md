@@ -2,7 +2,7 @@
 
 # @react-native-blocks/blocks
 
-A set of block components to use in conjunction [@react-native-blocks/core](https://www.npmjs.com/package/@react-native-blocks/core) library. Provides the necessary blocks to build a Notion-like text editor.
+A set of block components to use in conjunction [@react-native-blocks/core](https://www.npmjs.com/package/@react-native-blocks/core) library. Provides the necessary blocks to build a Notion-like text editor. [Try it on Expo Snack](https://snack.expo.dev/@patosala/react-native-blocks?platform=ios).
 
 <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
     <img src="../../assets/react-native-blocks-blocks.png" alt="drawing" width="400px"/>

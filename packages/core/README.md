@@ -2,7 +2,7 @@
 
 # @react-native-blocks/core
 
-Inspired by the data model behind Notion's flexibility, `@react-native-blocks/core` is the core library of [react-native-blocks](https://github.com/PatoSala/react-native-blocks/tree/main). Provides all the tools necessary to build block-based text editors like Notion.
+Inspired by the data model behind Notion's flexibility, `@react-native-blocks/core` is the core library of [react-native-blocks](https://github.com/PatoSala/react-native-blocks/tree/main). Provides all the tools necessary to build block-based text editors like Notion. [Try it on Expo Snack](https://snack.expo.dev/@patosala/react-native-blocks?platform=ios).
 
 <div style="width: 100%; display: flex; justify-content: center; align-items: center;">
   <img src="../../assets/react-native-blocks-core.png" width="400px"/>
