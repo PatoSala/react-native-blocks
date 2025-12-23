@@ -59,13 +59,11 @@ function RenderTree(props: RenderTreeProps) {
             {blocksOrder.map((blockId: string, index: number) => {
                 const Component = blockTypes[blocks[blockId].type].component;
                 return (
-                    <View key={`component-${blockId}`} style={{ backgroundColor: "transparent" }}> 
-                        <LayoutProvider blockId={blockId} >
-                                <View>
-                                    <Component blockId={blockId} />
-                                </View>
-                        </LayoutProvider>
-                    </View>
+                    <LayoutProvider blockId={blockId} key={`block-${blockId}`}>
+                            <View style={{ backgroundColor: "transparent" }}>
+                                <Component blockId={blockId} />
+                            </View>
+                    </LayoutProvider>
                 )
             })}
 

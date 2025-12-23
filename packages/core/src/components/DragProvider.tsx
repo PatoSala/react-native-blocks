@@ -118,12 +118,10 @@ export function DragProvider({
      * */
 
     const findBlockAtPosition = (y: number) : { blockId: string, closestTo: "start" | "end" } => {
-        const withScrollY = y + scrollY.value;
-
         for (const blockId in blockMeasuresRef.current) {
             const { start, end } = blockMeasuresRef.current[blockId];
-            if (withScrollY >= start && withScrollY <= end) {
-                const closestTo = withScrollY - start > end - withScrollY ? "end" : "start";
+            if (y >= start && y <= end) {
+                const closestTo = y - start > end - y ? "end" : "start";
 
                 return {
                     blockId,
@@ -141,15 +139,15 @@ export function DragProvider({
     const handleMoveBlock = () => {
         if (!movingBlockId) return;
 
+        console.log("INDICATOR", indicatorPosition.value.y);
         const blockToMove = blocks[movingBlockId];
-        const targetBlock = findBlockAtPosition(indicatorPosition.value.y); // Passing the indicator position fixes de out of bounds error since the indicator value will always be positioned at the start ot end of a block
+        const targetBlock = findBlockAtPosition(indicatorPosition.value.y); // Passing the indicator position fixes de out of bounds error since the indicator value will always be positioned at the start or end of a block.
         if (blockToMove.id !== targetBlock.blockId) {
             moveBlock(blockToMove.id, blockToMove.parent, targetBlock.blockId, targetBlock.closestTo);
         }
     }
 
     const handleOnDragStart = () => {
-        console.log("BLOCK MEASURES", blockMeasuresRef.current);
         setIsDragging(true);
         setMovingBlockId(blockId);
         // mesure in window does not include safe areas
@@ -177,9 +175,12 @@ export function DragProvider({
         setOffset({
             x: e.translationX,
             y: e.translationY - insets.top 
-        })
+        });
         /** Update indicator position */
-        const { blockId, closestTo } = findBlockAtPosition(e.absoluteY);
+        console.log("scrollY", scrollY.value);
+        console.log("absoluteY - insets.top", e.absoluteY - insets.top + scrollY.value);
+        console.log("blockMeasures", blockMeasuresRef.current);
+        const { blockId, closestTo } = findBlockAtPosition(e.absoluteY - insets.top + scrollY.value);
         console.log(blockId, closestTo);
 
         if (blockId) {
@@ -188,7 +189,7 @@ export function DragProvider({
              *  we need to substract it to make sure the indicator is positioned correctly.
              */
             setIndicatorPosition({
-                y: blockMeasuresRef.current[blockId][closestTo] - scrollY.value    // We need to substract the scrollY to make sure 
+                y: blockMeasuresRef.current[blockId][closestTo] - scrollY.value   // We need to substract the scrollY to make sure 
             });
         }
     }

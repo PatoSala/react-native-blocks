@@ -24,9 +24,7 @@ export function LayoutProvider({
          * This condition will be removed
          */
         if (blockId !== blocks["root"].content[0] && viewRef.current) {
-            viewRef.current?.measureInWindow((x, y, width, height) => {
-                console.log("MEASURING", blockId)
-                console.log(x, y, width, height);
+            viewRef.current?.measure((x, y, width, height, pageX, pageY) => {
                 registerBlockMeasure(blockId, {
                     ref: viewRef,
                     type: blocks[blockId].type,
@@ -37,15 +35,16 @@ export function LayoutProvider({
                 });
             });
         }
-        console.log("BLOCK MEASURES", blockMeasuresRef.current);
     }
 
     useEffect(() => {
+        handleOnLayout();
+
         return () => {
             // Remove the block measure when the block is unmounted.
             removeBlockMeasure(blockId);
         }
-    }, []);
+    });
 
     return (
         <View ref={viewRef} onLayout={handleOnLayout}>
