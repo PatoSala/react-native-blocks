@@ -139,9 +139,8 @@ export function DragProvider({
     const handleMoveBlock = () => {
         if (!movingBlockId) return;
 
-        console.log("INDICATOR", indicatorPosition.value.y);
         const blockToMove = blocks[movingBlockId];
-        const targetBlock = findBlockAtPosition(indicatorPosition.value.y); // Passing the indicator position fixes de out of bounds error since the indicator value will always be positioned at the start or end of a block.
+        const targetBlock = findBlockAtPosition(indicatorPosition.value.y + scrollY.value); // Passing the indicator position fixes de out of bounds error since the indicator value will always be positioned at the start or end of a block.
         if (blockToMove.id !== targetBlock.blockId) {
             moveBlock(blockToMove.id, blockToMove.parent, targetBlock.blockId, targetBlock.closestTo);
         }
@@ -177,11 +176,7 @@ export function DragProvider({
             y: e.translationY - insets.top 
         });
         /** Update indicator position */
-        console.log("scrollY", scrollY.value);
-        console.log("absoluteY - insets.top", e.absoluteY - insets.top + scrollY.value);
-        console.log("blockMeasures", blockMeasuresRef.current);
         const { blockId, closestTo } = findBlockAtPosition(e.absoluteY - insets.top + scrollY.value);
-        console.log(blockId, closestTo);
 
         if (blockId) {
             /**
