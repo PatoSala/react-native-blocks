@@ -434,7 +434,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         lineHeight: 42,
         marginBottom: 4,
-        flexWrap: "wrap"
+        flexWrap: "wrap",
+        outlineWidth: 0,
+        borderWidth: 0,
     },
     pageBtn: {
         flexDirection: "row",

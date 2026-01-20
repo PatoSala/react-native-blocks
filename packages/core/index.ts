@@ -7,3 +7,7 @@ export * from "./src/components/TextBlocksProvider";
 export * from "./src/components/DragProvider";
 export * from "./src/hooks/useKeyboardStatus";
 export { createBlock } from "./src/interfaces/Block.interface";
+
+// Experimental
+export * from "./src/hooks/useForceUpdate";
+export * from "./src/hooks/useWebTextInput";

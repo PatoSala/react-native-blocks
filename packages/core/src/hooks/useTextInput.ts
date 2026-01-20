@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { TextInput, TextInputProps } from "react-native";
+import { TextInput, TextInputProps, Platform } from "react-native";
 import { useBlocksContext, useBlock } from "../components/BlocksContext";
 import { useTextBlocksContext } from "../components/TextBlocksProvider";
 import { scheduleOnUI } from "react-native-worklets";
@@ -61,17 +61,6 @@ export function useTextInput(blockId: string) {
             setSelection: (selection: { start: number; end: number }) => {
                 inputRef.current?.setSelection(selection.start, selection.end);
                 selectionRef.current = selection;
-            },
-            focusWithSelection: (selection: { start: number; end: number }, text?: string) => {
-                /** Find a better way to sync value on block update */
-                if (text !== undefined) {
-                    inputRef.current?.setNativeProps({ text });
-                    /* valueRef.current = text; */
-                }
-
-                inputRef.current?.setSelection(selection.start, selection.end); // Sync native input with selection state
-                selectionRef.current = selection;
-                inputRef.current?.focus();
             },
             getPosition: () => {
                 inputRef.current?.measureInWindow((x, y, width, height) => {
@@ -230,8 +219,12 @@ export function useTextInput(blockId: string) {
              * [#52854](https://github.com/facebook/react-native/issues/52854)
              */
             if (title.length === 0) {
-                inputRef.current.setNativeProps({ text: " " });
-                inputRef.current.setNativeProps({ text: "" });
+                try {
+                    inputRef.current.setNativeProps({ text: " " });
+                    inputRef.current.setNativeProps({ text: "" });
+                } catch (error) {
+                    console.error(error);
+                }
             }
         }
         /** Needs review:

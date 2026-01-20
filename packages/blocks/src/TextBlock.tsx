@@ -1,12 +1,14 @@
 import {
     useTextInput,
+    useWebTextInput,
     useBlocksContext,
     findPrevTextBlockInContent,
     useTextBlocksContext,
     createBlock,
     DragProvider
 } from "@react-native-blocks/core";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Platform } from "react-native";
+import { WebControlls } from "./components/WebControlls/WebControlls";
 
 /**
  * It could be a good idea to create a way to define a block's strucuture (like an interface) and
@@ -25,7 +27,7 @@ interface Props {
 }
 
 export function TextBlock({ blockId } : Props) {
-    const { getTextInputProps, getValue, getSelection } = useTextInput(blockId);
+    const { getTextInputProps, getValue, getSelection } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId);
     const { inputRefs, textBasedBlocks } = useTextBlocksContext();
     const {
         blocks,
@@ -162,6 +164,7 @@ export function TextBlock({ blockId } : Props) {
     return (
         <DragProvider blockId={blockId}>
             <View style={styles.container}>
+                {Platform.OS === "web" && <WebControlls/>}
                 <TextInput
                     // ref={inputRef} ??? 
                     key={`input-${blockId}`}   // Really important to pass the key prop
@@ -177,7 +180,8 @@ export function TextBlock({ blockId } : Props) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
+        position: "relative"
     },
     text: {
         fontSize: 16,

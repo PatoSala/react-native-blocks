@@ -16,7 +16,7 @@
   ],
   "main": "index.ts",
   "peerDependencies": {
-    "@react-native-blocks/core": "0.1.17",
+    "@react-native-blocks/core": "0.1.18",
     "react": "19.1.0",
     "react-native": "~0.81.4"
   },
