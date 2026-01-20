@@ -100,6 +100,7 @@ export function useWebTextInput(blockId: string) {
             selectionColor: "black",
             /** Prevents keyboard from flickering when focusing a new block. */
             submitBehavior: "blurAndSubmit",
+            blurOnSubmit: true,
             selectTextOnFocus: false,
             smartInsertDelete: false,
             /** Prevents the text input being accidentally focused when scrolling/moving a block. */

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
     useTextInput,
+    useWebTextInput,
     useBlocksContext,
     useTextBlocksContext,
     useBlock,
@@ -8,7 +9,7 @@ import {
     createBlock,
     DragProvider
 } from "@react-native-blocks/core";
-import { View, TextInput, Text, StyleSheet, TouchableOpacity, Modal, Button, Image, Dimensions, Pressable } from "react-native";
+import { View, TextInput, Text, StyleSheet, TouchableOpacity, Modal, Button, Image, Dimensions, Pressable, Platform } from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import EmojiSelector from "react-native-emoji-selector";
 import * as ImagePicker from 'expo-image-picker';
@@ -29,7 +30,7 @@ export function PageBlock({ blockId } : Props) {
         getTextInputProps,
         getValue,
         getSelection
-    } = useTextInput(blockId);
+    } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId);
     const {
         blocks,
         insertBlock,
