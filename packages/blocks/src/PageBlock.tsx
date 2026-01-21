@@ -253,6 +253,10 @@ export function PageBlock({ blockId } : Props) {
                     </View>
                 )
                 : null}
+
+            { isRootBlock && !pageCover && Platform.OS === "web"
+                ? <View style={{ height: 90 }}/>
+                : null}
             
             <View style={styles.container}>
                 {isRootBlock
