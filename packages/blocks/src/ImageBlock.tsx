@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, View, StyleSheet, Dimensions, Text, Pressable, Modal, Button } from "react-native";
+import { Image, View, StyleSheet, Dimensions, Text, Pressable, Platform, Button } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import { useBlocksContext, BlockProps, updateBlockData, DragProvider } from "@react-native-blocks/core";
 import * as ImagePicker from 'expo-image-picker';
@@ -104,7 +104,7 @@ export const ImageBlock = (props: BlockProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: width - 32,
+    flex: 1,
     marginHorizontal: 8,
     boxSizing: "border-box",
     borderRadius: 8,

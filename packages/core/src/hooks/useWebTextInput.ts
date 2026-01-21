@@ -43,6 +43,8 @@ export function useWebTextInput(blockId: string) {
             ? true
             : false;
 
+    const [height, setHeight] = useState(0);
+    console.log(height);
     const api = {
         current: {
             getText: () => value,
@@ -111,6 +113,10 @@ export function useWebTextInput(blockId: string) {
             onChangeText: handleChangeText,
             onBlur: handleOnBlur,
             onFocus: handleOnFocus,
+
+            onContentSizeChange: (event) => {
+                setHeight(event.nativeEvent.contentSize.height);
+            }
         }
     }
 
