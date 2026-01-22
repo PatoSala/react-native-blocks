@@ -2,15 +2,11 @@ import React, { useState } from "react";
 import { TextInput, TextInputProps, Platform } from "react-native";
 import { useBlocksContext, useBlock } from "../components/BlocksContext";
 import { useTextBlocksContext } from "../components/TextBlocksProvider";
-import { scheduleOnUI } from "react-native-worklets";
 import {
     updateBlockData,
-    findPrevTextBlockInContent,
-    getPreviousBlockInContent
 } from "../core/updateBlock";
 import { useScrollContext } from "../components/ScrollProvider";
 import { useBlocksMeasuresContext } from "../components/BlocksMeasuresProvider";
-import { useBlockRegistrationContext } from "../components/BlockRegistration";
 
 /** 
  * Same as useTextInput but for web.  
@@ -43,8 +39,6 @@ export function useWebTextInput(blockId: string) {
             ? true
             : false;
 
-    const [height, setHeight] = useState(0);
-    console.log(height);
     const api = {
         current: {
             getText: () => value,
@@ -113,10 +107,6 @@ export function useWebTextInput(blockId: string) {
             onChangeText: handleChangeText,
             onBlur: handleOnBlur,
             onFocus: handleOnFocus,
-
-            onContentSizeChange: (event) => {
-                setHeight(event.nativeEvent.contentSize.height);
-            }
         }
     }
 
@@ -130,6 +120,6 @@ export function useWebTextInput(blockId: string) {
         getTextInputProps,
         isFocused,
         getValue: () => value,
-        getSelection: () => selection
+        getSelection: () => selection,
     };
 }

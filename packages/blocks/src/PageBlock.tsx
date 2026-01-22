@@ -29,7 +29,7 @@ export function PageBlock({ blockId } : Props) {
     const {
         getTextInputProps,
         getValue,
-        getSelection
+        getSelection,
     } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId);
     const {
         blocks,
@@ -49,6 +49,9 @@ export function PageBlock({ blockId } : Props) {
     const [pageIcon, setPageIcon] = useState<string | null>(blocks[blockId]?.format?.page_icon || null);
     const [pageCover, setPageCover] = useState<string | null>(blocks[blockId]?.format?.page_cover || null);
     const placeholder = "New page";
+
+    // Web TextInput height
+    const [textAreaHeight, setTextAreaHeight] = useState(0);
 
     const pickCover = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -216,7 +219,6 @@ export function PageBlock({ blockId } : Props) {
     }
 
     const handleOnKeyPress = (event: { nativeEvent: { key: string; }; }) => {
-        const value = getValue();
         const selection = getSelection();
 
         if (event.nativeEvent.key === "Backspace" && selection.start === 0 && selection.end === 0) {
@@ -321,11 +323,19 @@ export function PageBlock({ blockId } : Props) {
 
                             <TextInput
                                 key={`input-${blockId}`}   // Really important to pass the key prop
-                                style={styles.page}
+                                style={[
+                                    styles.page,
+                                    Platform.OS === "web" && { height: textAreaHeight }
+                                ]}
                                 {...getTextInputProps()}
                                 onSubmitEditing={handleSubmitEditing}
                                 onKeyPress={handleOnKeyPress}
                                 placeholder={placeholder}
+
+                                /** Web only */
+                                onContentSizeChange={(event) => {
+                                    setTextAreaHeight(event.nativeEvent.contentSize.height);
+                                }}
                             />
                         </View>
                     </>

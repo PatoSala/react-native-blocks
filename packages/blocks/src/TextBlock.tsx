@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
     useTextInput,
     useWebTextInput,
@@ -161,6 +162,9 @@ export function TextBlock({ blockId } : Props) {
         }
     };
 
+    // Used to make the text area grow with the content on web
+    const [textAreaHeight, settextAreaHeight] = useState(0);
+
     return (
         <DragProvider blockId={blockId}>
             <View style={styles.container}>
@@ -168,10 +172,17 @@ export function TextBlock({ blockId } : Props) {
                 <TextInput
                     // ref={inputRef} ??? 
                     key={`input-${blockId}`}   // Really important to pass the key prop
-                    style={styles.text}
+                    style={[
+                        styles.text,
+                        Platform.OS === "web" && { height: textAreaHeight }
+                    ]}
                     {...getTextInputProps()}
                     onKeyPress={handleOnKeyPress}
                     onSubmitEditing={handleSubmitEditing}
+                    /** Web only */
+                    onContentSizeChange={(event) => {
+                        settextAreaHeight(event.nativeEvent.contentSize.height);
+                    }}
                 />
             </View>
         </DragProvider>
