@@ -50,9 +50,6 @@ export function PageBlock({ blockId } : Props) {
     const [pageCover, setPageCover] = useState<string | null>(blocks[blockId]?.format?.page_cover || null);
     const placeholder = "New page";
 
-    // Web TextInput height
-    const [textAreaHeight, setTextAreaHeight] = useState(0);
-
     const pickCover = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
@@ -323,19 +320,28 @@ export function PageBlock({ blockId } : Props) {
 
                             <TextInput
                                 key={`input-${blockId}`}   // Really important to pass the key prop
-                                style={[
-                                    styles.page,
-                                    Platform.OS === "web" && { height: textAreaHeight }
-                                ]}
+                                style={[styles.page]}
                                 {...getTextInputProps()}
                                 onSubmitEditing={handleSubmitEditing}
                                 onKeyPress={handleOnKeyPress}
                                 placeholder={placeholder}
+                                {...Platform.OS === "web" && {
+                                    onLayout: () => {
+                                        inputRefs.current[blockId]?.current?.setHeight("0px");
+                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                    },
+                                    onChangeText: (text) => {
+                                        console.log("TEXT", text);
+                                        getTextInputProps().onChangeText(text)
 
-                                /** Web only */
-                                onContentSizeChange={(event) => {
-                                    setTextAreaHeight(event.nativeEvent.contentSize.height);
-                                }}
+                                        if (Platform.OS === "web") {
+                                            window.requestAnimationFrame(() => {
+                                                inputRefs.current[blockId]?.current?.setHeight("0px");
+                                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                            })
+                                        }
+                                    }
+                                }}                                
                             />
                         </View>
                     </>
@@ -450,8 +456,10 @@ const styles = StyleSheet.create({
         lineHeight: 42,
         marginBottom: 4,
         flexWrap: "wrap",
-        outlineWidth: 0,
-        borderWidth: 0,
+        outline: "none",
+        outlineStyle: 'none',
+        boxShadow: 'none',
+        border: 'none',
     },
     pageBtn: {
         flexDirection: "row",

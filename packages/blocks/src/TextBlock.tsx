@@ -171,8 +171,11 @@ export function TextBlock({ blockId } : Props) {
                     {...getTextInputProps()}
                     /** Web only */
                     {...Platform.OS === "web" && {
+                        onLayout: () => {
+                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                        },
                         onChangeText: (text) => {
-                            console.log("TEXT", text);
                             getTextInputProps().onChangeText(text)
 
                             if (Platform.OS === "web") {
@@ -181,6 +184,12 @@ export function TextBlock({ blockId } : Props) {
                                     inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
                                 })
                             }
+                        },
+                        onContentSizeChange: () => {
+                            window.requestAnimationFrame(() => {
+                                inputRefs.current[blockId]?.current?.setHeight("0px");
+                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                            })
                         }
                     }}
 
