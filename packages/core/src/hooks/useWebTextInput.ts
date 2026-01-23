@@ -58,6 +58,13 @@ export function useWebTextInput(blockId: string) {
                 inputRef.current?.measureInWindow((x, y, width, height) => {
                     console.log(x, y, width, height);
                 })
+            },
+            /** Experimental */
+            getRef: () => {
+                return inputRef;
+            },
+            setHeight: (height: string) => {
+                inputRef.current.style.height = height;
             }
         }
     };
@@ -104,7 +111,7 @@ export function useWebTextInput(blockId: string) {
 
             onSelectionChange: handleSelectionChange,
             showSoftInputOnFocus: showSoftInputOnFocus,
-            onChangeText: handleChangeText,
+            onChangeText: (text) => handleChangeText(text),
             onBlur: handleOnBlur,
             onFocus: handleOnFocus,
         }
@@ -121,5 +128,7 @@ export function useWebTextInput(blockId: string) {
         isFocused,
         getValue: () => value,
         getSelection: () => selection,
+
+        inpuRef: inputRef
     };
 }

@@ -29,6 +29,7 @@ interface Props {
 
 export function TextBlock({ blockId } : Props) {
     const { getTextInputProps, getValue, getSelection } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId);
+
     const { inputRefs, textBasedBlocks } = useTextBlocksContext();
     const {
         blocks,
@@ -162,28 +163,35 @@ export function TextBlock({ blockId } : Props) {
         }
     };
 
-    // Used to make the text area grow with the content on web
-    const [textAreaHeight, settextAreaHeight] = useState(0);
-
     return (
         <DragProvider blockId={blockId}>
-            <View style={styles.container}>
-                {Platform.OS === "web" && <WebControlls/>}
+            <View style={[styles.container]}>
                 <TextInput
+                    style={[styles.text]}
+                    {...getTextInputProps()}
+                    /** Web only */
+                    {...Platform.OS === "web" && {
+                        onChangeText: (text) => {
+                            console.log("TEXT", text);
+                            getTextInputProps().onChangeText(text)
+
+                            if (Platform.OS === "web") {
+                                window.requestAnimationFrame(() => {
+                                    inputRefs.current[blockId]?.current?.setHeight("0px");
+                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                })
+                            }
+                        }
+                    }}
+
                     // ref={inputRef} ??? 
                     key={`input-${blockId}`}   // Really important to pass the key prop
-                    style={[
-                        styles.text,
-                        Platform.OS === "web" && { height: textAreaHeight }
-                    ]}
-                    {...getTextInputProps()}
+                    
                     onKeyPress={handleOnKeyPress}
                     onSubmitEditing={handleSubmitEditing}
-                    /** Web only */
-                    onContentSizeChange={(event) => {
-                        settextAreaHeight(event.nativeEvent.contentSize.height);
-                    }}
                 />
+
+                {Platform.OS === "web" && <WebControlls/>}
             </View>
         </DragProvider>
     )
@@ -199,6 +207,10 @@ const styles = StyleSheet.create({
         fontWeight: "normal",
         paddingVertical: 6,
         lineHeight: 24,
-        flexWrap: "wrap"
+        flexWrap: "wrap",
+        outline: 'none',
+        outlineStyle: 'none',
+        boxShadow: 'none',
+        border: 'none',
     }
 });
