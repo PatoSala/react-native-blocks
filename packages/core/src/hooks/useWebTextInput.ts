@@ -29,7 +29,8 @@ export function useWebTextInput(blockId: string) {
     const block = getBlockSnapshot(blockId);
     const title = block.properties.title;
     const inputRef = React.useRef<TextInput>(null);
-    const selectionRef = React.useRef({ start: title.length, end: title.length });
+    /* const selectionRef = React.useRef({ start: title.length, end: title.length }); */
+    const [selection, setSelection] = React.useState({ start: title.length, end: title.length });
     const [value, setValue] = React.useState(title);
     /* console.log("Block", blockId, "value:", value); */
     const isFocused = focusedBlockId === blockId;
@@ -52,8 +53,9 @@ export function useWebTextInput(blockId: string) {
                 inputRef.current?.blur();
             },
             setSelection: (selection: { start: number; end: number }) => {
-                inputRef.current?.setSelectionRange(selection.start, selection.end);
-                selectionRef.current = selection;
+                /* inputRef.current?.setSelectionRange(selection.start, selection.end);
+                selectionRef.current = selection; */
+                setSelection(selection);
             },
             getPosition: () => {
                 inputRef.current?.measureInWindow((x, y, width, height) => {
@@ -71,7 +73,8 @@ export function useWebTextInput(blockId: string) {
     };
 
     function handleSelectionChange(event: { nativeEvent: { selection: { start: number; end: number; }; }; }) {
-        selectionRef.current = event.nativeEvent.selection;
+       /*  selectionRef.current = event.nativeEvent.selection; */
+       setSelection(event.nativeEvent.selection);
     }
 
     /** 
@@ -87,7 +90,6 @@ export function useWebTextInput(blockId: string) {
         updateBlock(updatedBlock);
     }
 
-
     const handleOnFocus = () => {
         setFocusedBlockId(blockId);
     }
@@ -100,7 +102,7 @@ export function useWebTextInput(blockId: string) {
         return {
             ref: inputRef,
             value: value,
-            selection: selectionRef,
+            selection: selection,
             /** Disable multiline text input scrolling. */
             scrollEnabled: false,
             multiline: true,
@@ -131,7 +133,7 @@ export function useWebTextInput(blockId: string) {
         getTextInputProps,
         isFocused,
         getValue: () => value,
-        getSelection: () => selectionRef.current,
+        getSelection: () => selection,
 
         inpuRef: inputRef
     };

@@ -116,6 +116,7 @@ export function TextBlock({ blockId } : Props) {
         const value = getValue();
         const selection = getSelection();
 
+        /** When cursor is at position 0 and backspace is pressed, merge with previous text block */
         if (event.nativeEvent.key === "Backspace" && selection.start === 0 && selection.end === 0) {
             // findPrevTextBlock
             const previousTextBlock = findPrevTextBlockInContent(blockId, blocks, textBasedBlocks);
@@ -133,7 +134,6 @@ export function TextBlock({ blockId } : Props) {
                             title: parentBlock.properties.title + value
                         }
                     });
-                    removeBlock(blockId);
 
                     requestAnimationFrame(() => {
                         inputRefs.current[parentBlock.id]?.current.setText(parentBlock.properties.title + value);
@@ -143,6 +143,8 @@ export function TextBlock({ blockId } : Props) {
                         })
                         inputRefs.current[parentBlock.id]?.current.focus();
                     });
+                    removeBlock(blockId);
+
                 }
                 return;
             }
@@ -163,11 +165,22 @@ export function TextBlock({ blockId } : Props) {
                 inputRefs.current[previousTextBlock.id]?.current.focus();
             });
         }
+
+        /** 
+         * [Experimental]
+         * Instead of updating block data onBlur we'll try to do it onKeyPress.
+         * We could add a debouncing effect to this onKeyPress event listener.
+         */
+        /* updateBlockV2(blockId, {
+            properties: {
+                title: value
+            }
+        }) */
     };
 
     return (
         <DragProvider blockId={blockId}>
-            <View style={({ hovered }) => [styles.container, hovered && styles.hover]}>
+            <View style={({ hovered }) => [styles.container]}>
                 <TextInput
                     style={[styles.text]}
                     {...getTextInputProps()}
@@ -217,6 +230,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "normal",
         paddingVertical: 6,
+        paddingHorizontal: 8,
         lineHeight: 24,
         flexWrap: "wrap",
         outline: 'none',
