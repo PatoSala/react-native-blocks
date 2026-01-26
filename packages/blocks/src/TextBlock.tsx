@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
     useTextInput,
     useWebTextInput,
@@ -38,13 +38,15 @@ export function TextBlock({ blockId } : Props) {
         removeBlock
     } = useBlocksContext();
 
+    const autoFocus = useRef(false);
+
     const handleSubmitEditing = () => {
         const value = getValue();
         const selection = getSelection();
-        console.log("Handle submit editing");
-        console.log("Selection", selection);
 
+        /** Insert a new empty block above */
         if (selection.start === 0 && selection.end === 0) {
+            console.log("Insert a new empty block above");
             const newBlock = createBlock({
                 type: "text",
                 properties: {
@@ -57,9 +59,11 @@ export function TextBlock({ blockId } : Props) {
             insertBlock(newBlock, {
                 nextBlockId: blockId
             });
+
             return;
         }
 
+        /** Insert a new empty block below */
         if (selection.start === value.length && selection.end === value.length) {
             const newBlock = createBlock({
                 type: "text",
@@ -80,6 +84,8 @@ export function TextBlock({ blockId } : Props) {
             return;
         }
 
+        /** Default behavior */
+        console.log("Default behavior");
         const textBeforeSelection = value.substring(0, selection.start);
         const textAfterSelection = value.substring(selection.end);
 
@@ -98,10 +104,10 @@ export function TextBlock({ blockId } : Props) {
             }
          });
 
-
         insertBlock(newBlock, {
             prevBlockId: blockId
         });
+
        requestAnimationFrame(() => {
             inputRefs.current[blockId]?.current.setText(textBeforeSelection);
             inputRefs.current[newBlock.id]?.current.setSelection({

@@ -53,8 +53,6 @@ export function useWebTextInput(blockId: string) {
                 inputRef.current?.blur();
             },
             setSelection: (selection: { start: number; end: number }) => {
-                /* inputRef.current?.setSelectionRange(selection.start, selection.end);
-                selectionRef.current = selection; */
                 setSelection(selection);
             },
             getPosition: () => {
