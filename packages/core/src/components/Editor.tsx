@@ -44,7 +44,7 @@ const BlankSpace = ({ onBlankSpacePress }) => {
 };
 
 interface RenderTreeProps {
-    onBlankSpacePress: () => void
+    onBlankSpacePress: () => void,
 }
 function RenderTree(props: RenderTreeProps) {
     const {
@@ -60,9 +60,9 @@ function RenderTree(props: RenderTreeProps) {
                 const Component = blockTypes[blocks[blockId].type].component;
                 return (
                     <LayoutProvider blockId={blockId} key={`block-${blockId}`}>
-                            <View style={{ backgroundColor: "transparent" }}>
-                                <Component blockId={blockId} />
-                            </View>
+                        <View style={{ backgroundColor: "transparent" }}>
+                            <Component blockId={blockId} />
+                        </View>
                     </LayoutProvider>
                 )
             })}
@@ -74,6 +74,7 @@ function RenderTree(props: RenderTreeProps) {
 
 interface EditorProps {
     children: React.ReactNode
+    /** @deprecated */
     defaultBlockType: string
     extractBlocks?: (blocks: any) => any
     defaultBlocks?: any
@@ -93,6 +94,7 @@ export function Editor(props : EditorProps) {
 
         extractBlocks,
         defaultBlocks,
+        /** Styles for the scroll view */
         contentContainerStyle,
         ToolbarComponent,
 

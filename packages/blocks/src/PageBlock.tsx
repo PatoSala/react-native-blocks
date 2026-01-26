@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
         outline: "none",
         outlineStyle: 'none',
         boxShadow: 'none',
-        border: 'none',
+        border: 'none'
     },
     pageBtn: {
         flexDirection: "row",

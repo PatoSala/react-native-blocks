@@ -41,6 +41,8 @@ export function TextBlock({ blockId } : Props) {
     const handleSubmitEditing = () => {
         const value = getValue();
         const selection = getSelection();
+        console.log("Handle submit editing");
+        console.log("Selection", selection);
 
         if (selection.start === 0 && selection.end === 0) {
             const newBlock = createBlock({
@@ -90,23 +92,23 @@ export function TextBlock({ blockId } : Props) {
             content: []
         });
 
-       updateBlockV2(blockId, {
+        updateBlockV2(blockId, {
             properties: {
                 title: textBeforeSelection
             }
          });
 
-       insertBlock(newBlock, {
-           prevBlockId: blockId
-       });
 
+        insertBlock(newBlock, {
+            prevBlockId: blockId
+        });
        requestAnimationFrame(() => {
-           inputRefs.current[blockId]?.current.setText(textBeforeSelection);
-           inputRefs.current[newBlock.id]?.current.setSelection({
-               start: 0,
-               end: 0
-           });
-           inputRefs.current[newBlock.id]?.current.focus();
+            inputRefs.current[blockId]?.current.setText(textBeforeSelection);
+            inputRefs.current[newBlock.id]?.current.setSelection({
+                start: 0,
+                end: 0
+            });
+            inputRefs.current[newBlock.id]?.current.focus();
        });
     }
 
@@ -165,7 +167,7 @@ export function TextBlock({ blockId } : Props) {
 
     return (
         <DragProvider blockId={blockId}>
-            <View style={[styles.container]}>
+            <View style={({ hovered }) => [styles.container, hovered && styles.hover]}>
                 <TextInput
                     style={[styles.text]}
                     {...getTextInputProps()}

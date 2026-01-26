@@ -7,7 +7,7 @@ export function WebControlls() {
                 <Ionicons name="add" size={24} color="#ada9a3" />
             </Pressable>
 
-            <Pressable style={({ hovered }) => [styles.button, { width: 20 }, hovered && styles.hover]}>
+            <Pressable style={({ hovered }) => [styles.button, { width: 20 }, hovered && styles.hover, { cursor: "grabbing" }]}>
                 <Octicons name="grabber" size={24} color="#ada9a3" />
             </Pressable>
         </View>

@@ -29,9 +29,9 @@ export function useWebTextInput(blockId: string) {
     const block = getBlockSnapshot(blockId);
     const title = block.properties.title;
     const inputRef = React.useRef<TextInput>(null);
-    const [selection, setSelection] = React.useState({ start: title.length, end: title.length });
+    const selectionRef = React.useRef({ start: title.length, end: title.length });
     const [value, setValue] = React.useState(title);
-
+    /* console.log("Block", blockId, "value:", value); */
     const isFocused = focusedBlockId === blockId;
     const isEditable = isScrolling === false && isDragging.value === false
         ? true
@@ -52,7 +52,8 @@ export function useWebTextInput(blockId: string) {
                 inputRef.current?.blur();
             },
             setSelection: (selection: { start: number; end: number }) => {
-                setSelection(selection);
+                inputRef.current?.setSelectionRange(selection.start, selection.end);
+                selectionRef.current = selection;
             },
             getPosition: () => {
                 inputRef.current?.measureInWindow((x, y, width, height) => {
@@ -70,10 +71,13 @@ export function useWebTextInput(blockId: string) {
     };
 
     function handleSelectionChange(event: { nativeEvent: { selection: { start: number; end: number; }; }; }) {
-        setSelection(event.nativeEvent.selection);
+        selectionRef.current = event.nativeEvent.selection;
     }
 
-    // Review this: handleOnBlur is messing up with handleSubmit.
+    /** 
+     *  [Note] In web onBlur is messing with handleSubmit.
+     *  And older comment stated that it was also messing on mobile but I don't see that anymore. 
+     */
     function handleOnBlur() {
        const updatedBlock = updateBlockData(blocks[blockId], {
             properties: {
@@ -96,7 +100,7 @@ export function useWebTextInput(blockId: string) {
         return {
             ref: inputRef,
             value: value,
-            selection: selection,
+            selection: selectionRef,
             /** Disable multiline text input scrolling. */
             scrollEnabled: false,
             multiline: true,
@@ -112,7 +116,7 @@ export function useWebTextInput(blockId: string) {
             onSelectionChange: handleSelectionChange,
             showSoftInputOnFocus: showSoftInputOnFocus,
             onChangeText: (text) => handleChangeText(text),
-            onBlur: handleOnBlur,
+            /* onBlur: handleOnBlur, */
             onFocus: handleOnFocus,
         }
     }
@@ -127,7 +131,7 @@ export function useWebTextInput(blockId: string) {
         getTextInputProps,
         isFocused,
         getValue: () => value,
-        getSelection: () => selection,
+        getSelection: () => selectionRef.current,
 
         inpuRef: inputRef
     };
