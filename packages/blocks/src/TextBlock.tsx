@@ -60,6 +60,10 @@ export function TextBlock({ blockId } : Props) {
                 nextBlockId: blockId
             });
 
+
+            /** Focusing through dom ref works. For some reason using inputRef.current[blockId].current.focus() doesn't work */
+            Platform.OS === "web" && inputRefs.current[blockId]?.getRef().current.focus();
+
             return;
         }
 
@@ -79,6 +83,11 @@ export function TextBlock({ blockId } : Props) {
             });
 
             requestAnimationFrame(() => {
+                inputRefs.current[blockId]?.current.setText("");
+                inputRefs.current[newBlock.id]?.current.setSelection({
+                    start: 0,
+                    end: 0
+                });
                 inputRefs.current[newBlock.id]?.current.focus();
             });
             return;
@@ -108,14 +117,14 @@ export function TextBlock({ blockId } : Props) {
             prevBlockId: blockId
         });
 
-       requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             inputRefs.current[blockId]?.current.setText(textBeforeSelection);
             inputRefs.current[newBlock.id]?.current.setSelection({
                 start: 0,
                 end: 0
             });
             inputRefs.current[newBlock.id]?.current.focus();
-       });
+        });
     }
 
    const handleOnKeyPress = (event: { nativeEvent: { key: string; }; }) => {
