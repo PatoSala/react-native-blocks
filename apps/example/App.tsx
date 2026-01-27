@@ -80,7 +80,7 @@ export default function App() {
         {Platform.OS === "web" && <View style={styles.nav}/>}
           <Editor        
             contentContainerStyle={styles.content}
-            defaultBlocks={initialBlocks}
+            defaultBlocks={blankNote}
             extractBlocks={extractBlocks}
             ToolbarComponent={() => {
               return (
@@ -96,7 +96,7 @@ export default function App() {
             // Deprecate
             defaultBlockType={"text"}
 
-            // Experimental
+            /** @experimental */
             onBlankSpacePress={({ blocks, blocksOrder, inputRefs, insertBlock }) => {
               const rootBlockId = blocks["root"].content[0];
               const rootBlock = blocks[rootBlockId];

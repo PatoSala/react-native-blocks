@@ -36,6 +36,7 @@ const BlankSpace = ({ onBlankSpacePress }) => {
             onPress={handleBlankSpacePress}
             style={{
                 flexGrow: 1,
+                zIndex: -1,
                 minHeight: keyboardHeight + 64,
                 backgroundColor: "transparent"
             }}

@@ -50,6 +50,11 @@ export function PageBlock({ blockId } : Props) {
     const [pageCover, setPageCover] = useState<string | null>(blocks[blockId]?.format?.page_cover || null);
     const placeholder = "New page";
 
+    const handleWebTextInputHeight = (inputRef, minHeight = 24) => {
+        inputRef?.current?.setHeight(`${minHeight}px`);
+        inputRef?.current?.setHeight(`${inputRef.current.scrollHeight}px`);
+    }
+
     const pickCover = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ['images'],
@@ -131,6 +136,8 @@ export function PageBlock({ blockId } : Props) {
     const handleSubmitEditing = () => {
         const value = getValue();
         const selection = getSelection();
+
+        Platform.OS === "web" && handleWebTextInputHeight(inputRefs.current[blockId], 42);
 
         if (selection.start === value.length && selection.end === value.length) {
             const newBlock = createBlock({
@@ -325,6 +332,7 @@ export function PageBlock({ blockId } : Props) {
                                 onSubmitEditing={handleSubmitEditing}
                                 onKeyPress={handleOnKeyPress}
                                 placeholder={placeholder}
+                                placeholderTextColor={"#37352f26"}
                                 {...Platform.OS === "web" && {
                                     onLayout: () => {
                                         inputRefs.current[blockId]?.current?.setHeight("0px");
@@ -340,6 +348,12 @@ export function PageBlock({ blockId } : Props) {
                                                 inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
                                             })
                                         }
+                                    },
+                                    onContentSizeChange: () => {
+                                        window.requestAnimationFrame(() => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        })
                                     }
                                 }}                                
                             />
