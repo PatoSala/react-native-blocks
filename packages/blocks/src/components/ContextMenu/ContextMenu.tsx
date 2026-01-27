@@ -68,7 +68,7 @@ ContextMenu.Provider = ({ children }) => {
     const handleShow = (event) => {
         console.log("event", event);
         setVisible(true);
-        setPosition({ x: event.nativeEvent.pageX, y: event.nativeEvent.pageY });
+        setPosition({ x: event.nativeEvent.pageX - 265 - 12, y: event.nativeEvent.pageY - 100 });
     }
 
     const  value = {

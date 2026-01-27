@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 0,
         left: -58,
-        zIndex: 99,
+        zIndex: 80,
         padding: 8
     },
     button: {
