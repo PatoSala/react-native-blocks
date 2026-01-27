@@ -60,10 +60,14 @@ export function useWebTextInput(blockId: string) {
                     console.log(x, y, width, height);
                 })
             },
-            /** Experimental */
+            /** @experimental */
             getRef: () => {
                 return inputRef;
             },
+            /** 
+             *  @experimental
+             * Nativly sets height of text input.
+             * */
             setHeight: (height: string) => {
                 inputRef.current.style.height = height;
             }

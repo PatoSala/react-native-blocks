@@ -38,11 +38,16 @@ export function TextBlock({ blockId } : Props) {
         removeBlock
     } = useBlocksContext();
 
-    const autoFocus = useRef(false);
+    const handleWebTextInputHeight = (inputRef, minHeight = 0) => {
+        inputRef?.current?.setHeight(`${minHeight}px`);
+        inputRef?.current?.setHeight(`${inputRef.current.scrollHeight}px`);
+    }
 
     const handleSubmitEditing = () => {
         const value = getValue();
         const selection = getSelection();
+
+        Platform.OS === "web" && handleWebTextInputHeight(inputRefs.current[blockId]);
 
         /** Insert a new empty block above */
         if (selection.start === 0 && selection.end === 0) {
@@ -94,7 +99,6 @@ export function TextBlock({ blockId } : Props) {
         }
 
         /** Default behavior */
-        console.log("Default behavior");
         const textBeforeSelection = value.substring(0, selection.start);
         const textAfterSelection = value.substring(selection.end);
 
