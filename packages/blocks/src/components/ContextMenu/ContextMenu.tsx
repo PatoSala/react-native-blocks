@@ -5,11 +5,11 @@ const ContextMenuContext = createContext(null);
 
 export const useContextMenu = () => useContext(ContextMenuContext);
 
-export function ContextMenu({ children }) {
+export function ContextMenu({ children, style }) {
     const { position } = useContextMenu();
 
     return (
-        <View style={[styles.container, { left: position.x, top: position.y }]}>
+        <View style={[styles.container, { left: position.x, top: position.y }, style]}>
             {children}
         </View>
     )
@@ -29,9 +29,9 @@ ContextMenu.Separator = () => {
     )
 }
 
-ContextMenu.Item = ({ children, onPress }) => {
+ContextMenu.Item = ({ children, onPress, ...rest }) => {
     return (
-        <Pressable style={({ hovered }) => [styles.item, hovered && styles.itemActive]} onPress={onPress}>
+        <Pressable style={({ hovered }) => [styles.item, hovered && styles.itemActive]} onPress={onPress} {...rest}>
             {children}
         </Pressable>
     )

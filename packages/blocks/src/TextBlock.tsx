@@ -48,6 +48,10 @@ export function TextBlock({ blockId } : Props) {
         const value = getValue();
         const selection = getSelection();
 
+        /** 
+         * @fix
+         * The following line is a hack to fix textarea's height on web since onContentSizeChange does not work properly.
+         */
         Platform.OS === "web" && handleWebTextInputHeight(inputRefs.current[blockId]);
 
         /** Insert a new empty block above */
@@ -89,11 +93,6 @@ export function TextBlock({ blockId } : Props) {
             });
 
             requestAnimationFrame(() => {
-                inputRefs.current[blockId]?.current.setText("");
-                inputRefs.current[newBlock.id]?.current.setSelection({
-                    start: 0,
-                    end: 0
-                });
                 inputRefs.current[newBlock.id]?.current.focus();
             });
             return;
@@ -202,45 +201,50 @@ export function TextBlock({ blockId } : Props) {
         <ContextMenu.Provider>
             <DragProvider blockId={blockId}>
                 <View style={styles.container}>
-                    <TextInput
-                        style={[styles.text]}
-                        {...getTextInputProps()}
-                        /** Web only */
-                        {...Platform.OS === "web" && {
-                            onLayout: () => {
-                                inputRefs.current[blockId]?.current?.setHeight("0px");
-                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                            },
-                            onChangeText: (text) => {
-                                getTextInputProps().onChangeText(text)
+                    <View style={{ position: "relative" }}>
+                        {Platform.OS === "web" && (
+                            <View style={{
+                                position: "absolute",
+                                left: -58,
+                                top: 6
+                            }}>
+                                <WebControlls blockId={blockId} />
+                            </View>
+                        )}
+                        <TextInput
+                            style={[styles.text]}
+                            {...getTextInputProps()}
+                            /** Web only */
+                            {...Platform.OS === "web" && {
+                                onLayout: () => {
+                                    inputRefs.current[blockId]?.current?.setHeight("0px");
+                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                },
+                                onChangeText: (text) => {
+                                    getTextInputProps().onChangeText(text)
 
-                                if (Platform.OS === "web") {
+                                    if (Platform.OS === "web") {
+                                        window.requestAnimationFrame(() => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        })
+                                    }
+                                },
+                                onContentSizeChange: () => {
                                     window.requestAnimationFrame(() => {
                                         inputRefs.current[blockId]?.current?.setHeight("0px");
                                         inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
                                     })
                                 }
-                            },
-                            onContentSizeChange: () => {
-                                window.requestAnimationFrame(() => {
-                                    inputRefs.current[blockId]?.current?.setHeight("0px");
-                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                })
-                            }
-                        }}
+                            }}
 
-                        // ref={inputRef} ??? 
-                        key={`input-${blockId}`}   // Really important to pass the key prop
-                        
-                        onKeyPress={handleOnKeyPress}
-                        onSubmitEditing={handleSubmitEditing}
-                    />
-
-                    {Platform.OS === "web" && (
-                        <>
-                            <WebControlls blockId={blockId} />
-                        </>
-                    )}
+                            // ref={inputRef} ??? 
+                            key={`input-${blockId}`}   // Really important to pass the key prop
+                            
+                            onKeyPress={handleOnKeyPress}
+                            onSubmitEditing={handleSubmitEditing}
+                        />
+                    </View>
                 </View>
             </DragProvider>
         </ContextMenu.Provider>
@@ -249,19 +253,19 @@ export function TextBlock({ blockId } : Props) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 8,
-        position: "relative"
+        paddingHorizontal: 8
     },
     text: {
         fontSize: 16,
         fontWeight: "normal",
         paddingVertical: 6,
-        paddingHorizontal: 8,
         lineHeight: 24,
         flexWrap: "wrap",
         outline: 'none',
         outlineStyle: 'none',
         boxShadow: 'none',
         border: 'none',
+        whiteSpace: "break-spaces",
+        wordBreak: "break-word"
     }
 });

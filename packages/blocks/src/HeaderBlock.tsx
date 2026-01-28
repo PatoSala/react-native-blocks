@@ -1,5 +1,6 @@
 import {
     useTextInput,
+    useWebTextInput,
     useBlocksContext,
     useTextBlocksContext,
     createBlock,
@@ -7,14 +8,16 @@ import {
     findPrevTextBlockInContent,
     DragProvider
 } from "@react-native-blocks/core";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Platform } from "react-native";
+import { WebControlls } from "./components/WebControlls/WebControlls";
+import { ContextMenu } from "./components/ContextMenu/ContextMenu";
 
 interface Props {
     blockId: string
 }
 
 export function HeaderBlock({ blockId } : Props) {
-    const { getTextInputProps, isFocused, getValue, getSelection } = useTextInput(blockId); // Maybe in the future we can pass a ref to use useImperativeHandle
+    const { getTextInputProps, isFocused, getValue, getSelection } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId); // Maybe in the future we can pass a ref to use useImperativeHandle
     const {
         blocks,
         turnBlockInto,
@@ -26,6 +29,11 @@ export function HeaderBlock({ blockId } : Props) {
     const { inputRefs, textBasedBlocks } = useTextBlocksContext();
     const placeholder = "Header 1";
 
+    const handleWebTextInputHeight = (inputRef, minHeight = 24) => {
+        inputRef?.current?.setHeight(`${minHeight}px`);
+        inputRef?.current?.setHeight(`${inputRef.current.scrollHeight}px`);
+    }
+
     const handleSubmitEditing = () => {
         const value = getValue();
         const selection = getSelection();
@@ -34,7 +42,7 @@ export function HeaderBlock({ blockId } : Props) {
             inputRefs.current["ghostInput"]?.current.focus();
             // This timeout prevents the keyboard flicker
             setTimeout(() => {
-                turnBlockInto(blockId, "text"); // Maybe this type should be thee defaultBlockType (?)
+                turnBlockInto(blockId, "text"); // Maybe this type should be the defaultBlockType (?)
 
                 requestAnimationFrame(() => {
                     inputRefs.current[blockId]?.current.focus(); // Maybe the "ghostTextInput" hack should be done inside this function.
@@ -42,6 +50,12 @@ export function HeaderBlock({ blockId } : Props) {
             }, 0);
             return;
         }
+
+         /** 
+         * @fix
+         * The following line is a hack to fix textarea's height on web since onContentSizeChange does not work properly.
+         */
+        Platform.OS === "web" && handleWebTextInputHeight(inputRefs.current[blockId]);
 
         if (selection.start === 0 && selection.end === 0) {
             const newBlock = createBlock({
@@ -56,6 +70,10 @@ export function HeaderBlock({ blockId } : Props) {
             insertBlock(newBlock, {
                 nextBlockId: blockId
             });
+
+            /** Focusing through dom ref works. For some reason using inputRef.current[blockId].current.focus() doesn't work */
+            Platform.OS === "web" && inputRefs.current[blockId]?.getRef().current.focus();
+
             return;
         }
 
@@ -136,8 +154,6 @@ export function HeaderBlock({ blockId } : Props) {
                     });
                     removeBlock(blockId);
 
-
-
                     requestAnimationFrame(() => {
                         inputRefs.current[parentBlock.id]?.current.setText(parentBlock.properties.title + value); // Find a way so that blocks update their content automatically
                         inputRefs.current[parentBlock.id]?.current.setSelection({
@@ -169,32 +185,76 @@ export function HeaderBlock({ blockId } : Props) {
     };
 
     return (
-        <DragProvider blockId={blockId}>
-            <View style={styles.container}>
-                <TextInput
-                    // ref={inputRef}
-                    key={blockId}
-                    style={styles.header}
-                    {...getTextInputProps()}
-                    placeholder={placeholder}
-                    onSubmitEditing={handleSubmitEditing}
-                    onKeyPress={handleOnKeyPress}
-                />
-            </View>
-        </DragProvider>
+        <ContextMenu.Provider>
+            <DragProvider blockId={blockId}>
+                <View style={styles.container}>
+                    <View style={{ position: "relative" }}>
+                        {Platform.OS === "web" && (
+                            <View style={{
+                                position: "absolute",
+                                left: -58,
+                                top: 5.8
+                            }}>
+                                <WebControlls blockId={blockId} />
+                            </View>
+                        )}
+
+                        <TextInput
+                            // ref={inputRef}
+                            key={blockId}
+                            style={styles.header}
+                            {...getTextInputProps()}
+                            /** Web only */
+                            {...Platform.OS === "web" && {
+                                onLayout: () => {
+                                    inputRefs.current[blockId]?.current?.setHeight("0px");
+                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                },
+                                onChangeText: (text) => {
+                                    getTextInputProps().onChangeText(text)
+
+                                    if (Platform.OS === "web") {
+                                        window.requestAnimationFrame(() => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        })
+                                    }
+                                },
+                                onContentSizeChange: () => {
+                                    window.requestAnimationFrame(() => {
+                                        inputRefs.current[blockId]?.current?.setHeight("0px");
+                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                    })
+                                }
+                            }}
+                            placeholder={placeholder}
+                            placeholderTextColor={"#37352f26"}
+                            onSubmitEditing={handleSubmitEditing}
+                            onKeyPress={handleOnKeyPress}
+                        />
+                    </View>
+                </View>
+            </DragProvider>
+        </ContextMenu.Provider>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
+        marginTop: 32,
+        marginBottom: 8
     },
     header: {
         fontWeight: "bold",
         fontSize: 28,
-        marginTop: 32,
-        marginBottom: 8,
         lineHeight: 34,
-        flexWrap: "wrap"
+        flexWrap: "wrap",
+        outline: 'none',
+        outlineStyle: 'none',
+        boxShadow: 'none',
+        border: 'none',
+        whiteSpace: "break-spaces",
+        wordBreak: "break-word"
     }
 });
