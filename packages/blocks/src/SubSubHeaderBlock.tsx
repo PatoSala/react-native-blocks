@@ -9,7 +9,8 @@ import {
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet, Platform } from "react-native";
 import { WebControlls } from "./components/WebControlls/WebControlls";
-import { ContextMenu } from "./components/ContextMenu/ContextMenu";
+import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
+import { BlockLayout } from "./ui/components/Block/Block";
 
 interface Props {
     blockId: string
@@ -182,56 +183,60 @@ export function SubSubHeaderBlock({ blockId } : Props) {
     };
 
     return (
-        <ContextMenu.Provider>
-            <DragProvider blockId={blockId}>
-                <View style={styles.container}>
-                    <View style={{ position: "relative" }}>
-                        {Platform.OS === "web" && (
-                            <View style={{
-                                position: "absolute",
-                                left: -58,
-                                top: 1.5
-                            }}>
-                                <WebControlls blockId={blockId} />
-                            </View>
-                        )}
-                        
-                        <TextInput
-                            key={blockId}
-                            style={styles.sub_sub_header}
-                            {...getTextInputProps()}
-                            {...Platform.OS === "web" && {
-                                onLayout: () => {
-                                    inputRefs.current[blockId]?.current?.setHeight("0px");
-                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                },
-                                onChangeText: (text) => {
-                                    getTextInputProps().onChangeText(text)
-
-                                    if (Platform.OS === "web") {
-                                        window.requestAnimationFrame(() => {
+        <BlockLayout>
+            {(hovered) => (
+                <ContextMenu.Provider>
+                    <DragProvider blockId={blockId}>
+                        <View style={styles.container}>
+                            <View style={{ position: "relative" }}>
+                                {Platform.OS === "web" && hovered && (
+                                    <View style={{
+                                        position: "absolute",
+                                        left: -58,
+                                        top: 1.5
+                                    }}>
+                                        <WebControlls blockId={blockId} />
+                                    </View>
+                                )}
+                                
+                                <TextInput
+                                    key={blockId}
+                                    style={styles.sub_sub_header}
+                                    {...getTextInputProps()}
+                                    {...Platform.OS === "web" && {
+                                        onLayout: () => {
                                             inputRefs.current[blockId]?.current?.setHeight("0px");
                                             inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                        })
-                                    }
-                                },
-                                onContentSizeChange: () => {
-                                    window.requestAnimationFrame(() => {
-                                        inputRefs.current[blockId]?.current?.setHeight("0px");
-                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                    })
-                                }
-                            }}
-                            onSubmitEditing={handleSubmitEditing}
-                            onKeyPress={handleOnKeyPress}
-                            placeholder={placeholder}
-                            placeholderTextColor={"#37352f26"}
-                        />
-                    </View>
-                </View>
-            </DragProvider>
+                                        },
+                                        onChangeText: (text) => {
+                                            getTextInputProps().onChangeText(text)
 
-        </ContextMenu.Provider>
+                                            if (Platform.OS === "web") {
+                                                window.requestAnimationFrame(() => {
+                                                    inputRefs.current[blockId]?.current?.setHeight("0px");
+                                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                                })
+                                            }
+                                        },
+                                        onContentSizeChange: () => {
+                                            window.requestAnimationFrame(() => {
+                                                inputRefs.current[blockId]?.current?.setHeight("0px");
+                                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                            })
+                                        }
+                                    }}
+                                    onSubmitEditing={handleSubmitEditing}
+                                    onKeyPress={handleOnKeyPress}
+                                    placeholder={placeholder}
+                                    placeholderTextColor={"#37352f26"}
+                                />
+                            </View>
+                        </View>
+                    </DragProvider>
+
+                </ContextMenu.Provider>
+            )}
+        </BlockLayout>
     )
 }
 

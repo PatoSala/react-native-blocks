@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Pressable, View, StyleSheet, Text } from "react-native";
 import { Octicons, Ionicons } from '@expo/vector-icons';
-import { ContextMenu, useContextMenu } from "../ContextMenu/ContextMenu";
-import { useBlocksContext } from "@react-native-blocks/core";
+import { ContextMenu, useContextMenu } from "../../ui/components/ContextMenu/ContextMenu";
+import { useBlocksContext, DragProvider } from "@react-native-blocks/core";
 
-export function WebControlls({ blockId }) {
+export function WebControlls({ blockId, ...rest }) {
     const { show } = useContextMenu();
     const { removeBlock, turnBlockInto } = useBlocksContext();
 
@@ -22,7 +22,9 @@ export function WebControlls({ blockId }) {
     return (
         <>
             <View style={styles.layout}>
-                <Pressable style={({ hovered }) => [styles.button, hovered && styles.hover]}>
+                <Pressable
+                    style={({ hovered }) => [styles.button, hovered && styles.hover]}
+                >
                     <Ionicons name="add" size={24} color="#ada9a3" />
                 </Pressable>
 
@@ -30,7 +32,9 @@ export function WebControlls({ blockId }) {
                     onPress={show}
                     style={({ hovered }) => [styles.button, { width: 20 }, hovered && styles.hover, { cursor: "grabbing" }]}
                 >
-                    <Octicons name="grabber" size={24} color="#ada9a3" />
+                    <DragProvider blockId={blockId}>
+                        <Octicons name="grabber" size={24} color="#ada9a3" />
+                    </DragProvider>
                 </Pressable>
             </View>
 
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
         /* position: "absolute",
         top: 4,
         left: -58, */
-        zIndex: 80,
+        /* zIndex: 80, */
         /* padding: 8 */
     },
     button: {
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
         height: 24,
         borderRadius: 4,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     hover: {
         backgroundColor: "#37352f0f"

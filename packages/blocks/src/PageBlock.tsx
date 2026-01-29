@@ -231,7 +231,14 @@ export function PageBlock({ blockId } : Props) {
     }
 
     return (
-        <>
+        <View
+            style={{
+                ...Platform.OS === "web" ? {
+                    paddingLeft: "22%",
+                    paddingRight: "22%"
+                    } : {}
+            }}
+        >
             { isRootBlock && pageCover
                 ? (
                     <View style={styles.cover}>
@@ -433,7 +440,7 @@ export function PageBlock({ blockId } : Props) {
                     />
                 </Modal>
             </View>
-        </>
+        </View>
     )
 }
 

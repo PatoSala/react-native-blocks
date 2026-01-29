@@ -87,6 +87,18 @@ ContextMenu.Provider = ({ children }) => {
     )
 }
 
+ContextMenu.Assambled = ({ options, position }) => {
+    return (
+        <ContextMenu.Provider>
+            <ContextMenu.Backdrop>
+                <ContextMenu>
+                    
+                </ContextMenu>
+            </ContextMenu.Backdrop>
+        </ContextMenu.Provider>
+    );
+}
+
 const styles = StyleSheet.create({
     container: {
         width: 265,

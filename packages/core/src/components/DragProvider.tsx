@@ -9,7 +9,7 @@ import {
     useSharedValue,
     useAnimatedReaction,
 } from "react-native-reanimated";
-import { Dimensions, View } from "react-native";
+import { Dimensions, View, Platform } from "react-native";
 import { scheduleOnRN } from "react-native-worklets";
 import { Gesture, GestureDetector, GestureStateChangeEvent, PanGestureHandlerEventPayload } from "react-native-gesture-handler";
 import { useBlocksContext } from "./BlocksContext";
@@ -27,6 +27,7 @@ const BOTTOM_THRESHOLD = screenHeight - 100;
 export function DragProvider({
     children,
     blockId,
+    disableGestures = false
 }) {
     const {
         movingBlockId,
@@ -208,7 +209,7 @@ export function DragProvider({
             })
 
     const blockDrag = Gesture.Pan()
-        .activateAfterLongPress(1000)
+        
         .minDistance(50)
         .onStart((e) => {
             scheduleOnRN(handleOnDragStart);
@@ -220,11 +221,12 @@ export function DragProvider({
             scheduleOnRN(handleOnDragEnd);
         })
         .blocksExternalGesture(nativeGestures)
+        .activateAfterLongPress(Platform.OS === "web" ? 10 : 1000)
     
     const composed = Gesture.Simultaneous(nativeGestures, longPress, blockDrag);
 
     return (
-        <GestureDetector gesture={composed}>
+        <GestureDetector gesture={Platform.OS === "web" ? composed : blockDrag}>
             <View>
                 {children}
             </View>
