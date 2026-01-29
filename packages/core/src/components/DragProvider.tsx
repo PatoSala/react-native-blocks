@@ -209,7 +209,7 @@ export function DragProvider({
             })
 
     const blockDrag = Gesture.Pan()
-        .activateAfterLongPress(Platform.OS === "web" ? 10 : 1000)
+        .activateAfterLongPress(Platform.OS === "web" ? 150 : 1000)
         .minDistance(50)
         .onStart((e) => {
             scheduleOnRN(handleOnDragStart);
