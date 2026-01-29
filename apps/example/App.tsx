@@ -221,19 +221,15 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  layout: {
-    flex: 1,
-    alignItems: "center",
-  },
   content: {
     /* maxWidth: 708, */
     width: "100%",
     display: "flex",
     flex: 1,
-    ...Platform.OS === "web" ? {
+    /* ...Platform.OS === "web" ? {
       paddingLeft: "22%",
       paddingRight: "22%"
-    } : {}
+    } : {} */
   },
   nav: {
     width: 240,
