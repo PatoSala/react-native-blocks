@@ -20,12 +20,14 @@ export function useBlockRegistrationContext() : BlockRegistrationProviderProps |
 export function BlockRegistration(props: any) {
     const {
         customBlocks,
+        /** @deprecate */
         defaultBlockType,
         children
     } = props;
 
     const blocksMapRef = useRef({});
     const textBasedBlocksRef = useRef([]);
+    /** @deprecate */
     const defaultBlockTypeRef = useRef(defaultBlockType);
 
     const register = React.useCallback(({ type, component, options } : { type: string; component: Function; options?: BlockOptionsProps }) => {

@@ -6,7 +6,7 @@ import { useBlocksContext, DragProvider } from "@react-native-blocks/core";
 
 export function WebControlls({ blockId, ...rest }) {
     const { show } = useContextMenu();
-    const { removeBlock, turnBlockInto } = useBlocksContext();
+    const { removeBlock, turnBlockInto, blockTypes } = useBlocksContext();
 
     const [turnIntoModal, setTurnIntoModal] = useState(false);
 
@@ -56,21 +56,11 @@ export function WebControlls({ blockId, ...rest }) {
 
                         {turnIntoModal && (
                             <ContextMenu style={{ position: "absolute" }}>
-                                <ContextMenu.Item onPress={() => handleTurnInto("text")}>
-                                    <Text style={styles.itemText}>Text</Text>
-                                </ContextMenu.Item>
-
-                                <ContextMenu.Item onPress={() => handleTurnInto("header")}>
-                                    <Text style={styles.itemText}>Heading 1</Text>
-                                </ContextMenu.Item>
-
-                                <ContextMenu.Item onPress={() => handleTurnInto("sub_header")}>
-                                    <Text style={styles.itemText}>Heading 2</Text>
-                                </ContextMenu.Item>
-
-                                <ContextMenu.Item onPress={() => handleTurnInto("sub_sub_header")}>
-                                    <Text style={styles.itemText}>Heading 3</Text>
-                                </ContextMenu.Item>
+                                {Object.keys(blockTypes).map((blockType) => (
+                                    <ContextMenu.Item onPress={() => handleTurnInto(blockType)}>
+                                        <Text style={styles.itemText}>{blockTypes[blockType].options.name}</Text>
+                                    </ContextMenu.Item>
+                                ))}
                             </ContextMenu>
                         )}
                     </ContextMenu>
