@@ -38,6 +38,7 @@ const BlankSpace = ({ onBlankSpacePress }) => {
                 flexGrow: 1,
                 zIndex: -1,
                 minHeight: keyboardHeight + 64,
+                height: "100%",
                 backgroundColor: "transparent"
             }}
         />

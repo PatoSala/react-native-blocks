@@ -9,7 +9,6 @@ export function BlockLayout({ children }) {
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
             style={[
-                styles.layout,
                 Platform.OS === "web" && {
                     paddingHorizontal: "22%",
                 }
@@ -22,6 +21,5 @@ export function BlockLayout({ children }) {
 
 const styles = StyleSheet.create({
     layout: {
-        flexDirection: "row"
     }
 })

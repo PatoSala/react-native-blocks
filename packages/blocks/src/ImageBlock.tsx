@@ -5,7 +5,7 @@ import { useBlocksContext, BlockProps, updateBlockData, DragProvider } from "@re
 import * as ImagePicker from 'expo-image-picker';
 import FormSheetModal from "./components/Modal/FormSheetModal";
 
-const { width } = Dimensions.get("window");
+import { BlockLayout } from "./ui/components/Block/Block";
 
 /**
  * Image block specific properties:
@@ -60,55 +60,59 @@ export const ImageBlock = (props: BlockProps) => {
   const backgroundColor = source === null ? "#7d7a751d" : "transparent";
 
   return (
-    <DragProvider blockId={blockId}>
-      <Pressable
-        style={[styles.container, { backgroundColor: backgroundColor }]}
-        onPress={pickImage}
-      >
-          {source === null
-            ? (
-                <View style={styles.row}>
-                    <Ionicons name="image-outline" size={24} color="#7d7a75" />
-                    <Text style={styles.text}>Add an image</Text>
-                </View>
-            )
-            : (
-                <Image
-                    style={[styles.image, { aspectRatio }]}
-                    source={{ uri: source }}
-                />
-            )
-          }
-        
-      </Pressable>
-
-      <FormSheetModal
-        title="Actions"
-        visible={selectedBlockId === blockId}
-        onClose={() => setSelectedBlockId(null)}
-      >
-          <FormSheetModal.Section
-            title="Image"
-            options={[
-              {
-                title: "Remove",
-                style: { color: "red" },
-                onPress: handleRemoveBlock
+    <BlockLayout>
+      {(hovered) => (
+        <DragProvider blockId={blockId}>
+          <Pressable
+            style={[styles.container, { backgroundColor: backgroundColor }]}
+            onPress={pickImage}
+          >
+              {source === null
+                ? (
+                    <View style={styles.row}>
+                        <Ionicons name="image-outline" size={24} color="#7d7a75" />
+                        <Text style={styles.text}>Add an image</Text>
+                    </View>
+                )
+                : (
+                    <Image
+                        style={[styles.image, { aspectRatio }]}
+                        source={{ uri: source }}
+                    />
+                )
               }
-            ]}
-          />
-      </FormSheetModal>
-    </DragProvider>
+            
+          </Pressable>
+
+          <FormSheetModal
+            title="Actions"
+            visible={selectedBlockId === blockId}
+            onClose={() => setSelectedBlockId(null)}
+          >
+              <FormSheetModal.Section
+                title="Image"
+                options={[
+                  {
+                    title: "Remove",
+                    style: { color: "red" },
+                    onPress: handleRemoveBlock
+                  }
+                ]}
+              />
+          </FormSheetModal>
+        </DragProvider>
+      )}
+    </BlockLayout>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    /* flex: 1, */
     marginHorizontal: 8,
     boxSizing: "border-box",
     borderRadius: 8,
-    marginVertical: 4
+    marginVertical: 4,
   },
   row: {
     flexDirection: "row",

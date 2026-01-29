@@ -209,7 +209,7 @@ export function DragProvider({
             })
 
     const blockDrag = Gesture.Pan()
-        
+        .activateAfterLongPress(Platform.OS === "web" ? 10 : 1000)
         .minDistance(50)
         .onStart((e) => {
             scheduleOnRN(handleOnDragStart);
@@ -221,15 +221,24 @@ export function DragProvider({
             scheduleOnRN(handleOnDragEnd);
         })
         .blocksExternalGesture(nativeGestures)
-        .activateAfterLongPress(Platform.OS === "web" ? 10 : 1000)
     
     const composed = Gesture.Simultaneous(nativeGestures, longPress, blockDrag);
 
     return (
-        <GestureDetector gesture={Platform.OS === "web" ? composed : blockDrag}>
-            <View>
-                {children}
-            </View>
-        </GestureDetector>
+        <>
+            {disableGestures
+            ? (
+                <View>
+                    {children}
+                </View>
+            )
+            : (
+                <GestureDetector gesture={Platform.OS !== "web" ? composed : blockDrag}>
+                    <View>
+                        {children}
+                    </View>
+                </GestureDetector>
+            )}
+        </>
     );
 }

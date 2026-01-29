@@ -32,7 +32,6 @@ interface Props {
 
 export function TextBlock({ blockId } : Props) {
     const { getTextInputProps, getValue, getSelection } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId);
-
     const { inputRefs, textBasedBlocks } = useTextBlocksContext();
     const {
         blocks,
@@ -202,58 +201,56 @@ export function TextBlock({ blockId } : Props) {
     return (
         <BlockLayout>
             {(hovered) => (
-                <>
-                    <ContextMenu.Provider>
-                        <DragProvider blockId={blockId}>
-                            <View style={styles.container}>
-                                <View style={{ position: "relative" }}>
-                                    {Platform.OS === "web" && hovered && (
-                                        <View style={{
-                                            position: "absolute",
-                                            left: -58,
-                                            top: 6
-                                        }}>
-                                            <WebControlls blockId={blockId} />
-                                        </View>
-                                    )}
-                                    <TextInput
-                                        style={[styles.text]}
-                                        {...getTextInputProps()}
-                                        /** Web only */
-                                        {...Platform.OS === "web" && {
-                                            onLayout: () => {
-                                                inputRefs.current[blockId]?.current?.setHeight("0px");
-                                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                            },
-                                            onChangeText: (text) => {
-                                                getTextInputProps().onChangeText(text)
+                <ContextMenu.Provider>
+                    <DragProvider blockId={blockId} disableGestures={Platform.OS === "web" ? true : false}>
+                        <View style={styles.container}>
+                            <View style={{ position: "relative" }}>
+                                {Platform.OS === "web" && hovered && (
+                                    <View style={{
+                                        position: "absolute",
+                                        left: -58,
+                                        top: 6
+                                    }}>
+                                        <WebControlls blockId={blockId} />
+                                    </View>
+                                )}
+                                <TextInput
+                                    style={[styles.text]}
+                                    {...getTextInputProps()}
+                                    /** Web only */
+                                    {...Platform.OS === "web" && {
+                                        onLayout: () => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        },
+                                        onChangeText: (text) => {
+                                            getTextInputProps().onChangeText(text)
 
-                                                if (Platform.OS === "web") {
-                                                    window.requestAnimationFrame(() => {
-                                                        inputRefs.current[blockId]?.current?.setHeight("0px");
-                                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                                    })
-                                                }
-                                            },
-                                            onContentSizeChange: () => {
+                                            if (Platform.OS === "web") {
                                                 window.requestAnimationFrame(() => {
                                                     inputRefs.current[blockId]?.current?.setHeight("0px");
                                                     inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
                                                 })
                                             }
-                                        }}
+                                        },
+                                        onContentSizeChange: () => {
+                                            window.requestAnimationFrame(() => {
+                                                inputRefs.current[blockId]?.current?.setHeight("0px");
+                                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                            })
+                                        },
+                                    }}
 
-                                        // ref={inputRef} ??? 
-                                        key={`input-${blockId}`}   // Really important to pass the key prop
-                                        
-                                        onKeyPress={handleOnKeyPress}
-                                        onSubmitEditing={handleSubmitEditing}
-                                    />
-                                </View>
+                                    // ref={inputRef} ??? 
+                                    key={`input-${blockId}`}   // Really important to pass the key prop
+                                    
+                                    onKeyPress={handleOnKeyPress}
+                                    onSubmitEditing={handleSubmitEditing}
+                                />
                             </View>
-                        </DragProvider>
-                    </ContextMenu.Provider>
-                </>
+                        </View>
+                    </DragProvider>
+                </ContextMenu.Provider>
             )}
         </BlockLayout>
     )
@@ -261,7 +258,7 @@ export function TextBlock({ blockId } : Props) {
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 8
+        paddingHorizontal: 8,
     },
     text: {
         fontSize: 16,
@@ -274,6 +271,6 @@ const styles = StyleSheet.create({
         boxShadow: 'none',
         border: 'none',
         whiteSpace: "break-spaces",
-        wordBreak: "break-word"
+        wordBreak: "break-word",
     }
 });
