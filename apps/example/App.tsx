@@ -77,7 +77,7 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1, flexDirection: "row" }} edges={["top"]}>
-        {Platform.OS === "web" && <View style={styles.nav}/>}
+        {/* {Platform.OS === "web" && <View style={styles.nav}/>} */}
           <Editor        
             contentContainerStyle={styles.content}
             defaultBlocks={blankNote}

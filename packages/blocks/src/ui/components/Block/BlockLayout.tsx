@@ -11,7 +11,24 @@ export function BlockLayout({
     contextMenuContent
 }) {
     const contextMenuRef = useRef(null);
+    const contextMenuButtonRef = useRef(null);
     const [hovered, setHovered] = useState(false);
+    const [isContextMenuVisible, setContextMenuVisible] = useState(false);
+
+    const handleOpenContextMenu = (e) => {
+        contextMenuButtonRef.current.measure((x, y, width, height, pageX, pageY) => {
+            contextMenuRef.current.show({
+                x: pageX - 256 - 16,
+                y: pageY
+            });
+        })
+        setContextMenuVisible(true);
+    }
+
+    const handleCloseContextMenu = () => {
+        contextMenuRef.current.hide();
+        setContextMenuVisible(false);
+    }
 
     return (
         <View style={style}>
@@ -39,8 +56,16 @@ export function BlockLayout({
                             </Pressable>
 
                             <Pressable
-                                onPress={(e) => contextMenuRef.current.show({ x: e.nativeEvent.pageX - 256 - 240 - 23, y: e.nativeEvent.pageY })}
-                                style={({ hovered }) => [styles.button, { width: 20 }, hovered && styles.hover, { cursor: "grabbing" }]}
+                                ref={contextMenuButtonRef}
+                                onPress={handleOpenContextMenu}
+                                style={({ hovered }) => [
+                                    styles.button,
+                                    {
+                                        width: 20,
+                                        cursor: "grabbing"
+                                    },
+                                    hovered || isContextMenuVisible ? styles.hover : null,
+                                ]}
                             >
                                 <DragProvider blockId={blockId}>
                                     <Octicons name="grabber" size={24} color="#ada9a3" />
@@ -52,9 +77,23 @@ export function BlockLayout({
                         {children(hovered)}
                     </View>
 
-                    <ContextMenu ref={contextMenuRef}>
-                        {contextMenuContent}
-                    </ContextMenu>
+                    <Pressable
+                        onPress={handleCloseContextMenu}
+                        style={{
+                            position: "fixed",
+                            top: 0,
+                            left: 0,
+                            display: isContextMenuVisible ? "flex" : "none",
+                            flex: 1,
+                            zIndex: 98,
+                            width: "100%",
+                            height: "100%",
+                        }}
+                    >
+                        <ContextMenu ref={contextMenuRef}>
+                            {contextMenuContent}
+                        </ContextMenu>
+                    </Pressable>
                 </View>
             )
             : (

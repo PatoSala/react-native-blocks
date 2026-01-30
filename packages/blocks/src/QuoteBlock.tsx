@@ -165,8 +165,8 @@ export function QuoteBlock({ blockId } : Props) {
                     <ContextMenu.SubTitle>
                         {blockTypes[blocks[blockId].type].options.name}
                     </ContextMenu.SubTitle>
-                    <TurnInto blockId={blockId} />
-                    <DeleteBlock blockId={blockId} />
+                    <TurnInto blockId={blockId}/>
+                    <DeleteBlock blockId={blockId}/>
                 </>
             )}
         >

@@ -12,7 +12,7 @@ import { View, TextInput, StyleSheet, Platform } from "react-native";
 
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 import { BlockLayout } from "./ui/components/Block/BlockLayout";
-import { TurnInto } from "./components/BlockActions";
+import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
 interface Props {
     blockId: string
@@ -200,6 +200,7 @@ export function HeaderBlock({ blockId } : Props) {
                         {blockTypes[blocks[blockId].type].options.name}
                     </ContextMenu.SubTitle>
                     <TurnInto blockId={blockId}/>
+                    <DeleteBlock blockId={blockId}/>
                 </>
             )}
         >

@@ -36,6 +36,7 @@ export function TextBlock({ blockId } : Props) {
     const { inputRefs, textBasedBlocks } = useTextBlocksContext();
     const {
         blocks,
+        blockTypes,
         insertBlock,
         updateBlockV2,
         removeBlock
@@ -204,11 +205,11 @@ export function TextBlock({ blockId } : Props) {
             blockId={blockId}
             contextMenuContent={(
                 <>
-                    <ContextMenu.SubTitle>Text</ContextMenu.SubTitle>
+                    <ContextMenu.SubTitle>
+                        {blockTypes[blocks[blockId].type].options.name}
+                    </ContextMenu.SubTitle>
                     <TurnInto blockId={blockId}/>
                     <DeleteBlock blockId={blockId}/>
-                    <ContextMenu.Separator/>
-                    <View style={{ padding: 2 }}/>
                 </>
             )}
         >

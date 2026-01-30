@@ -1,13 +1,9 @@
 import { useContext, createContext, useState, useImperativeHandle, useRef } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 
-const ContextMenuContext = createContext(null);
-
-export const useContextMenu = () => useContext(ContextMenuContext);
-
 export function ContextMenu({ children, style, ref }) {
-    const contextMenuRef = useRef(null);
-
+    const viewRef = useRef(null);
+    console.log(viewRef);
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -19,33 +15,27 @@ export function ContextMenu({ children, style, ref }) {
         hide: () => {
             setVisible(false);
             setPosition({ x: 0, y: 0 });
-        },
-        measure: () => {
-            contextMenuRef.current.measure((x, y, width, height, pageX, pageY) => {
-                return { x, y, width, height, pageX, pageY }
-            });
         }
     }));
 
     return (
-        <Pressable
-            ref={contextMenuRef}
-            style={{
-                position: visible ? "fixed" : "none",
-                top: 0,
-                left: 0,
-                display: visible ? "flex" : "none",
-                flex: 1,
-                zIndex: 98,
-                width: "100%",
-                height: "100%",
-            }}
-            onPress={() => setVisible(false)}
-        >
-            <View style={[styles.container, { left: position.x, top: position.y }, style]}>
+        <>
+            <View
+                ref={viewRef}
+                style={[
+                    styles.container,
+                    {
+                        left: position.x,
+                        top: position.y,
+                        display: visible ? "flex" : "none",
+                        position: visible ? "fixed" : "none"
+                    },
+                    style
+                ]}
+            >
                 {children}
             </View>
-        </Pressable>
+        </>
     )
 }
 
@@ -68,56 +58,6 @@ ContextMenu.Item = ({ children, onPress, ...rest }) => {
         <Pressable style={({ hovered }) => [styles.item, hovered && styles.itemActive]} onPress={onPress} {...rest}>
             {children}
         </Pressable>
-    )
-}
-
-ContextMenu.Backdrop = ({ children }) => {
-    const { hide, visible } = useContextMenu();
-
-    return (
-        <Pressable
-            style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                display: visible ? "flex" : "none",
-                flex: 1,
-                zIndex: 98,
-                width: "100%",
-                height: "100%",
-            }}
-            onPress={() => hide(false)}
-        >
-            {children}
-        </Pressable>
-    )
-}
-
-ContextMenu.Provider = ({ children }) => {
-    const [visible, setVisible] = useState(false);
-    const [context, setContext] = useState(null);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    console.log("position", position);
-
-    const handleShow = (event) => {
-        console.log("event", event);
-        setVisible(true);
-        setPosition({ x: event.nativeEvent.pageX - 265 - 12, y: event.nativeEvent.pageY - 100 });
-    }
-
-    const  value = {
-        visible,
-        show: handleShow,
-        hide: () => setVisible(false),
-        context,
-        setContext,
-        position
-    }
-
-    return (
-        <ContextMenuContext.Provider value={value}>
-            {children}
-        </ContextMenuContext.Provider>
     )
 }
 
