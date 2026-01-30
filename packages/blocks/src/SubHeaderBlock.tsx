@@ -187,14 +187,13 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
     };
 
     return (
-        <BlockLayout>
+        <BlockLayout blockId={blockId}>
             {(hovered) => (
                 <>
                     <ContextMenu.Provider>
-                        <DragProvider blockId={blockId}>
                             <View style={styles.container}>
                                 <View style={{ position: "relative" }}>
-                                    {Platform.OS === "web" && hovered && (
+                                    {/* {Platform.OS === "web" && hovered && (
                                         <View style={{
                                             position: "absolute",
                                             left: -58,
@@ -202,7 +201,7 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
                                         }}>
                                             <WebControlls blockId={blockId} />
                                         </View>
-                                    )}
+                                    )} */}
 
                                     <TextInput
                                         key={blockId}
@@ -237,7 +236,6 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
                                     />
                                 </View>
                             </View>
-                        </DragProvider>
                     </ContextMenu.Provider>
                 </>
             )}

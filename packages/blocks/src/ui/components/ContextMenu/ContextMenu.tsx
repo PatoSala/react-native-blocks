@@ -1,17 +1,51 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useImperativeHandle, useRef } from "react";
 import { View, StyleSheet, Text, Pressable } from "react-native";
 
 const ContextMenuContext = createContext(null);
 
 export const useContextMenu = () => useContext(ContextMenuContext);
 
-export function ContextMenu({ children, style }) {
-    const { position } = useContextMenu();
+export function ContextMenu({ children, style, ref }) {
+    const contextMenuRef = useRef(null);
+
+    const [visible, setVisible] = useState(false);
+    const [position, setPosition] = useState({ x: 0, y: 0 });
+
+    useImperativeHandle(ref, () => ({
+        show: (position: { x: number, y: number }) => {
+            setVisible(true);
+            setPosition({ x: position.x, y: position.y });
+        },
+        hide: () => {
+            setVisible(false);
+            setPosition({ x: 0, y: 0 });
+        },
+        measure: () => {
+            contextMenuRef.current.measure((x, y, width, height, pageX, pageY) => {
+                return { x, y, width, height, pageX, pageY }
+            });
+        }
+    }));
 
     return (
-        <View style={[styles.container, { left: position.x, top: position.y }, style]}>
-            {children}
-        </View>
+        <Pressable
+            ref={contextMenuRef}
+            style={{
+                position: visible ? "fixed" : "none",
+                top: 0,
+                left: 0,
+                display: visible ? "flex" : "none",
+                flex: 1,
+                zIndex: 98,
+                width: "100%",
+                height: "100%",
+            }}
+            onPress={() => setVisible(false)}
+        >
+            <View style={[styles.container, { left: position.x, top: position.y }, style]}>
+                {children}
+            </View>
+        </Pressable>
     )
 }
 
@@ -85,18 +119,6 @@ ContextMenu.Provider = ({ children }) => {
             {children}
         </ContextMenuContext.Provider>
     )
-}
-
-ContextMenu.Assambled = ({ options, position }) => {
-    return (
-        <ContextMenu.Provider>
-            <ContextMenu.Backdrop>
-                <ContextMenu>
-                    
-                </ContextMenu>
-            </ContextMenu.Backdrop>
-        </ContextMenu.Provider>
-    );
 }
 
 const styles = StyleSheet.create({

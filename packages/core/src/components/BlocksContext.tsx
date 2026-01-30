@@ -303,7 +303,6 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
         textBasedBlocks,
         blockTypes
     }
-    console.log(blockTypes);
 
     return (
         <BlocksContext.Provider value={value}>

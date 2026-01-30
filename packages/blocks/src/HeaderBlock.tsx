@@ -187,13 +187,12 @@ export function HeaderBlock({ blockId } : Props) {
     };
 
     return (
-        <BlockLayout>
+        <BlockLayout blockId={blockId}>
             {(hovered) => (
                 <ContextMenu.Provider>
-                    <DragProvider blockId={blockId}>
                         <View style={styles.container}>
                             <View style={{ position: "relative" }}>
-                                {Platform.OS === "web" && hovered && (
+                                {/* {Platform.OS === "web" && hovered && (
                                     <View style={{
                                         position: "absolute",
                                         left: -58,
@@ -201,7 +200,7 @@ export function HeaderBlock({ blockId } : Props) {
                                     }}>
                                         <WebControlls blockId={blockId} />
                                     </View>
-                                )}
+                                )} */}
 
                                 <TextInput
                                     // ref={inputRef}
@@ -238,7 +237,6 @@ export function HeaderBlock({ blockId } : Props) {
                                 />
                             </View>
                         </View>
-                    </DragProvider>
                 </ContextMenu.Provider>
             )}
         </BlockLayout>

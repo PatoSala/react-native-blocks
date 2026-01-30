@@ -8,11 +8,12 @@ import {
     createBlock,
     DragProvider
 } from "@react-native-blocks/core";
-import { View, TextInput, StyleSheet, Platform, Pressable } from "react-native";
+import { View, TextInput, StyleSheet, Platform, Text } from "react-native";
 import { WebControlls } from "./components/WebControlls/WebControlls";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 
 import { BlockLayout } from "./ui/components/Block/Block";
+import { TurnIntoAction } from "./components/BlockActions";
 
 /**
  * It could be a good idea to create a way to define a block's strucuture (like an interface) and
@@ -199,58 +200,67 @@ export function TextBlock({ blockId } : Props) {
     };
 
     return (
-        <BlockLayout>
+        <BlockLayout
+            blockId={blockId}
+            contextMenuContent={(
+                <>
+                    <ContextMenu.SubTitle>Text</ContextMenu.SubTitle>
+                    <TurnIntoAction blockId={blockId}/>
+                    <ContextMenu.Item onPress={null}>
+                        <Text style={styles.itemText}>Delete</Text>
+                    </ContextMenu.Item>
+                    <ContextMenu.Separator/>
+                    <View style={{ padding: 2 }}/>
+                </>
+            )}
+        >
             {(hovered) => (
-                <ContextMenu.Provider>
-                    <DragProvider blockId={blockId} disableGestures={Platform.OS === "web" ? true : false}>
-                        <View style={styles.container}>
-                            <View style={{ position: "relative" }}>
-                                {Platform.OS === "web" && hovered && (
-                                    <View style={{
-                                        position: "absolute",
-                                        left: -58,
-                                        top: 6
-                                    }}>
-                                        <WebControlls blockId={blockId} />
-                                    </View>
-                                )}
-                                <TextInput
-                                    style={[styles.text]}
-                                    {...getTextInputProps()}
-                                    /** Web only */
-                                    {...Platform.OS === "web" && {
-                                        onLayout: () => {
-                                            inputRefs.current[blockId]?.current?.setHeight("0px");
-                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                        },
-                                        onChangeText: (text) => {
-                                            getTextInputProps().onChangeText(text)
+                    <View style={styles.container}>
+                        <View style={{ position: "relative" }}>
+                            {/* {Platform.OS === "web" && hovered && (
+                                <View style={{
+                                    position: "absolute",
+                                    left: -58,
+                                    top: 6
+                                }}>
+                                    <WebControlls blockId={blockId} />
+                                </View>
+                            )} */}
+                            <TextInput
+                                style={[styles.text]}
+                                {...getTextInputProps()}
+                                /** Web only */
+                                {...Platform.OS === "web" && {
+                                    onLayout: () => {
+                                        inputRefs.current[blockId]?.current?.setHeight("0px");
+                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                    },
+                                    onChangeText: (text) => {
+                                        getTextInputProps().onChangeText(text)
 
-                                            if (Platform.OS === "web") {
-                                                window.requestAnimationFrame(() => {
-                                                    inputRefs.current[blockId]?.current?.setHeight("0px");
-                                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                                })
-                                            }
-                                        },
-                                        onContentSizeChange: () => {
+                                        if (Platform.OS === "web") {
                                             window.requestAnimationFrame(() => {
                                                 inputRefs.current[blockId]?.current?.setHeight("0px");
                                                 inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
                                             })
-                                        },
-                                    }}
+                                        }
+                                    },
+                                    onContentSizeChange: () => {
+                                        window.requestAnimationFrame(() => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        })
+                                    },
+                                }}
 
-                                    // ref={inputRef} ??? 
-                                    key={`input-${blockId}`}   // Really important to pass the key prop
-                                    
-                                    onKeyPress={handleOnKeyPress}
-                                    onSubmitEditing={handleSubmitEditing}
-                                />
-                            </View>
+                                // ref={inputRef} ??? 
+                                key={`input-${blockId}`}   // Really important to pass the key prop
+                                
+                                onKeyPress={handleOnKeyPress}
+                                onSubmitEditing={handleSubmitEditing}
+                            />
                         </View>
-                    </DragProvider>
-                </ContextMenu.Provider>
+                    </View>
             )}
         </BlockLayout>
     )
