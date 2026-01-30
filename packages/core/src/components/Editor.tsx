@@ -115,13 +115,14 @@ export function Editor(props : EditorProps) {
             >
                 <TextBlocksProvider>
                     <GestureHandlerRootView>
-                        <ScrollProvider contentContainerStyle={contentContainerStyle}>
-                            <BlocksMeasuresProvider>
-                                    <RenderTree
-                                        onBlankSpacePress={onBlankSpacePress}
-                                    />
-                            </BlocksMeasuresProvider>
-                        </ScrollProvider>
+                        <BlocksMeasuresProvider>
+                            <ScrollProvider contentContainerStyle={contentContainerStyle}>
+                                <RenderTree
+                                    onBlankSpacePress={onBlankSpacePress}
+                                />
+                            </ScrollProvider>
+                        </BlocksMeasuresProvider>
+                        
                         {ToolbarComponent && <ToolbarComponent />}
                     </GestureHandlerRootView>
                 </TextBlocksProvider>
