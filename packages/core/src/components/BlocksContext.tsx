@@ -44,6 +44,9 @@ interface BlocksContext {
 
 const BlocksContext = createContext<BlocksContext | null>(null);
 
+/**
+ * [To do]: Rename to "useBlocks".
+ */
 function useBlocksContext() {
     const blocksContext = useContext(BlocksContext);
     if (blocksContext === null) {

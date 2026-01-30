@@ -5,7 +5,9 @@ import { useBlocksContext, BlockProps, updateBlockData, DragProvider } from "@re
 import * as ImagePicker from 'expo-image-picker';
 import FormSheetModal from "./components/Modal/FormSheetModal";
 
-import { BlockLayout } from "./ui/components/Block/Block";
+import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
+import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
 /**
  * Image block specific properties:
@@ -20,7 +22,15 @@ export const ImageBlock = (props: BlockProps) => {
   const {
     blockId,
   } = props;
-  const { blocks, updateBlock, selectedBlockId, setSelectedBlockId, removeBlock } = useBlocksContext();
+  const {
+    blocks,
+    blockTypes,
+    updateBlock,
+    removeBlock,
+    /** Review selectedBlock */
+    selectedBlockId,
+    setSelectedBlockId
+  } = useBlocksContext();
 
   const [source, setSource] = useState(blocks[blockId]?.properties.source || null);
   const [aspectRatio, setAspectRatio] = useState(blocks[blockId]?.format?.block_aspect_ratio || null);
@@ -60,11 +70,28 @@ export const ImageBlock = (props: BlockProps) => {
   const backgroundColor = source === null ? "#7d7a751d" : "transparent";
 
   return (
-    <BlockLayout>
+    <BlockLayout
+      blockId={blockId}
+      style={{
+        boxSizing: "border-box",
+        marginVertical: 4,
+        borderRadius: 8,
+        marginHorizontal: 8
+      }}
+      contextMenuContent={(
+          <>
+              <ContextMenu.SubTitle>
+                  {blockTypes[blocks[blockId].type].options.name}
+              </ContextMenu.SubTitle>
+              <TurnInto blockId={blockId}/>
+              <DeleteBlock blockId={blockId}/>
+          </>
+      )}
+    >
       {(hovered) => (
-        <DragProvider blockId={blockId}>
+        <>
           <Pressable
-            style={[styles.container, { backgroundColor: backgroundColor }]}
+            style={[styles.emptyImage, { backgroundColor: backgroundColor }]}
             onPress={pickImage}
           >
               {source === null
@@ -100,19 +127,16 @@ export const ImageBlock = (props: BlockProps) => {
                 ]}
               />
           </FormSheetModal>
-        </DragProvider>
+        </>
       )}
     </BlockLayout>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    /* flex: 1, */
-    marginHorizontal: 8,
+  emptyImage: {
     boxSizing: "border-box",
     borderRadius: 8,
-    marginVertical: 4,
   },
   row: {
     flexDirection: "row",

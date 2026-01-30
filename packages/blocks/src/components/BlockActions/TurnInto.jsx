@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ContextMenu } from "../../ui/components/ContextMenu/ContextMenu";
 
 /** web */
-export function TurnIntoAction({ blockId }) {
+export function TurnInto({ blockId }) {
     const contextMenuRef = useRef(null);
     const { turnBlockInto, blockTypes } = useBlocksContext();
 

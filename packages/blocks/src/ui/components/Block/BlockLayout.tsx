@@ -4,12 +4,17 @@ import { Ionicons, Octicons } from '@expo/vector-icons';
 import { DragProvider } from "@react-native-blocks/core";
 import { ContextMenu } from "../ContextMenu/ContextMenu";
 
-export function BlockLayout({ children, blockId, containerStyles, contextMenuContent }) {
+export function BlockLayout({
+    children,
+    blockId,
+    style,
+    contextMenuContent
+}) {
     const contextMenuRef = useRef(null);
     const [hovered, setHovered] = useState(false);
 
     return (
-        <>
+        <View style={style}>
             {Platform.OS == "web"
             ? (
                 <View
@@ -18,11 +23,13 @@ export function BlockLayout({ children, blockId, containerStyles, contextMenuCon
                     style={[{
                         paddingHorizontal: "22%",
                         flexDirection: "row",
-                        alignItems: "center",
-                    }, containerStyles]}
+                        alignItems: "center"
+                    }]}
                 >
+                    {/* Web controls */}
                     <View style={{
                         position: "relative",
+                        flex: 1
                     }}>
                         <View style={[styles.blockActions, { display: hovered ? "flex" : "none" }]}>
                             <Pressable
@@ -55,7 +62,7 @@ export function BlockLayout({ children, blockId, containerStyles, contextMenuCon
                     {children(hovered)}
                 </DragProvider>
             )}
-        </>
+        </View>
     );
 }
 

@@ -1,19 +1,33 @@
-import { useTextInput, DragProvider, useTextBlocksContext, useBlocksContext, createBlock, findPrevTextBlockInContent } from "@react-native-blocks/core";
-import { View, TextInput, StyleSheet } from "react-native";
+import {
+    useTextInput,
+    useWebTextInput,
+    useTextBlocksContext,
+    useBlocksContext,
+    createBlock
+} from "@react-native-blocks/core";
+import { View, TextInput, StyleSheet, Platform } from "react-native";
+
+import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
+import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
 interface Props {
     blockId: string
 }
 
+const handleWebTextInputHeight = (inputRef, minHeight = 24) => {
+    inputRef?.current?.setHeight(`${minHeight}px`);
+    inputRef?.current?.setHeight(`${inputRef.current.scrollHeight}px`);
+}
+
 export function QuoteBlock({ blockId } : Props) {
-    const { getTextInputProps, getValue, getSelection } = useTextInput(blockId);
-    const { inputRefs, textBasedBlocks } = useTextBlocksContext();
+    const { getTextInputProps, getValue, getSelection } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId);
+    const { inputRefs } = useTextBlocksContext();
     const {
         blocks,
+        blockTypes,
         insertBlock,
-        updateBlock,
         updateBlockV2,
-        removeBlock
     } = useBlocksContext();
 
     const handleSubmitEditing = () => {
@@ -37,6 +51,12 @@ export function QuoteBlock({ blockId } : Props) {
             return;
         }
 
+        /** 
+         * @fix
+         * The following line is a hack to fix textarea's height on web since onContentSizeChange does not work properly.
+         */
+        Platform.OS === "web" && handleWebTextInputHeight(inputRefs.current[blockId]);
+
         if (selection.start === 0 && selection.end === 0) {
             const newBlock = createBlock({
                 type: "text",
@@ -50,6 +70,10 @@ export function QuoteBlock({ blockId } : Props) {
             insertBlock(newBlock, {
                 nextBlockId: blockId
             });
+
+            /** Focusing through dom ref works. For some reason using inputRef.current[blockId].current.focus() doesn't work */
+            Platform.OS === "web" && inputRefs.current[blockId]?.getRef().current.focus();
+
             return;
         }
 
@@ -131,36 +155,73 @@ export function QuoteBlock({ blockId } : Props) {
     };
 
     return (
-        <DragProvider blockId={blockId}>
-            <View style={styles.container}>
-                <View style={styles.quote}>
-                    <View style={styles.border}/>
-                    
-                    <TextInput
-                        key={blockId}
-                        style={styles.text}
-                        {...getTextInputProps()}
-                        onKeyPress={handleOnKeyPress}
-                        onSubmitEditing={handleSubmitEditing}
-                    />
+        <BlockLayout
+            blockId={blockId}
+            style={{
+                marginVertical: 16
+            }}
+            contextMenuContent={(
+                <>
+                    <ContextMenu.SubTitle>
+                        {blockTypes[blocks[blockId].type].options.name}
+                    </ContextMenu.SubTitle>
+                    <TurnInto blockId={blockId} />
+                    <DeleteBlock blockId={blockId} />
+                </>
+            )}
+        >
+            {(hovered) => (
+                <View style={styles.container}>
+                    <View style={styles.quote}>
+                        <TextInput
+                            key={blockId}
+                            style={styles.text}
+                            {...getTextInputProps()}
+                            {...Platform.OS === "web" && {
+                                onLayout: () => {
+                                    inputRefs.current[blockId]?.current?.setHeight("0px");
+                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                },
+                                onChangeText: (text) => {
+                                    getTextInputProps().onChangeText(text)
+
+                                    if (Platform.OS === "web") {
+                                        window.requestAnimationFrame(() => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        })
+                                    }
+                                },
+                                onContentSizeChange: () => {
+                                    window.requestAnimationFrame(() => {
+                                        inputRefs.current[blockId]?.current?.setHeight("0px");
+                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                    })
+                                }
+                            }}
+                            onKeyPress={handleOnKeyPress}
+                            onSubmitEditing={handleSubmitEditing}
+                        />
+                    </View>
                 </View>
-            </View>
-        </DragProvider>
+            )}
+        </BlockLayout>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 8,
-        marginVertical: 16,
+        paddingHorizontal: 8
     },
     quote: {
         flexDirection: "row",
-        overflow: "hidden",
+        /* overflow: "hidden", */
         boxSizing: "border-box",
-        paddingRight: 16,
+        paddingLeft: 16,
         alignItems: "center",
-        gap: 12
+        gap: 12,
+        borderLeftColor: "#000000",
+        borderLeftWidth: 2.5,
     },
     text: {
         fontSize: 16,
@@ -169,7 +230,13 @@ const styles = StyleSheet.create({
         marginRight: 16,
         paddingTop: 8,
         paddingBottom: 8,
-        flexGrow: 1
+        flexGrow: 1,
+        outline: 'none',
+        outlineStyle: 'none',
+        boxShadow: 'none',
+        border: 'none',
+        whiteSpace: "break-spaces",
+        wordBreak: "break-word"
     },
     border: {
         width: 2.5,

@@ -11,7 +11,8 @@ import { View, TextInput, StyleSheet, Platform } from "react-native";
 import { WebControlls } from "./components/WebControlls/WebControlls";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 
-import { BlockLayout } from "./ui/components/Block/Block";
+import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { TurnInto } from "./components/BlockActions";
 
 interface Props {
     blockId: string
@@ -21,6 +22,7 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
     const { getTextInputProps, isFocused, getValue, getSelection } = Platform.OS === "web" ? useWebTextInput(blockId) : useTextInput(blockId); // Maybe in the future we can pass a ref to use useImperativeHandle
     const {
         blocks,
+        blockTypes,
         turnBlockInto,
         insertBlock,
         updateBlock,
@@ -187,56 +189,56 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
     };
 
     return (
-        <BlockLayout blockId={blockId}>
+        <BlockLayout
+            blockId={blockId}
+            style={{
+                marginTop: 24,
+                marginBottom: 4
+            }}
+            contextMenuContent={(
+                <>
+                    <ContextMenu.SubTitle>
+                        {blockTypes[blocks[blockId].type].options.name}
+                    </ContextMenu.SubTitle>
+                    <TurnInto blockId={blockId}/>
+                </>
+            )}
+        >
             {(hovered) => (
                 <>
-                    <ContextMenu.Provider>
-                            <View style={styles.container}>
-                                <View style={{ position: "relative" }}>
-                                    {/* {Platform.OS === "web" && hovered && (
-                                        <View style={{
-                                            position: "absolute",
-                                            left: -58,
-                                            top: 3.8
-                                        }}>
-                                            <WebControlls blockId={blockId} />
-                                        </View>
-                                    )} */}
+                    <View style={styles.container}>
+                        <TextInput
+                            key={blockId}
+                            style={styles.sub_header}
+                            {...getTextInputProps()}
+                            {...Platform.OS === "web" && {
+                                onLayout: () => {
+                                    inputRefs.current[blockId]?.current?.setHeight("0px");
+                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                },
+                                onChangeText: (text) => {
+                                    getTextInputProps().onChangeText(text)
 
-                                    <TextInput
-                                        key={blockId}
-                                        style={styles.sub_header}
-                                        {...getTextInputProps()}
-                                        {...Platform.OS === "web" && {
-                                            onLayout: () => {
-                                                inputRefs.current[blockId]?.current?.setHeight("0px");
-                                                inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                            },
-                                            onChangeText: (text) => {
-                                                getTextInputProps().onChangeText(text)
-
-                                                if (Platform.OS === "web") {
-                                                    window.requestAnimationFrame(() => {
-                                                        inputRefs.current[blockId]?.current?.setHeight("0px");
-                                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                                    })
-                                                }
-                                            },
-                                            onContentSizeChange: () => {
-                                                window.requestAnimationFrame(() => {
-                                                    inputRefs.current[blockId]?.current?.setHeight("0px");
-                                                    inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
-                                                })
-                                            }
-                                        }}
-                                        onSubmitEditing={handleSubmitEditing}
-                                        onKeyPress={handleOnKeyPress}
-                                        placeholder={placeholder}
-                                        placeholderTextColor={"#37352f26"}
-                                    />
-                                </View>
-                            </View>
-                    </ContextMenu.Provider>
+                                    if (Platform.OS === "web") {
+                                        window.requestAnimationFrame(() => {
+                                            inputRefs.current[blockId]?.current?.setHeight("0px");
+                                            inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                        })
+                                    }
+                                },
+                                onContentSizeChange: () => {
+                                    window.requestAnimationFrame(() => {
+                                        inputRefs.current[blockId]?.current?.setHeight("0px");
+                                        inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
+                                    })
+                                }
+                            }}
+                            onSubmitEditing={handleSubmitEditing}
+                            onKeyPress={handleOnKeyPress}
+                            placeholder={placeholder}
+                            placeholderTextColor={"#37352f26"}
+                        />
+                    </View>
                 </>
             )}
         </BlockLayout>
@@ -246,8 +248,6 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 8,
-        marginTop: 24,
-        marginBottom: 4
     },
     sub_header: {
         fontWeight: "bold",

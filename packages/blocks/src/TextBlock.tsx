@@ -12,8 +12,8 @@ import { View, TextInput, StyleSheet, Platform, Text } from "react-native";
 import { WebControlls } from "./components/WebControlls/WebControlls";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 
-import { BlockLayout } from "./ui/components/Block/Block";
-import { TurnIntoAction } from "./components/BlockActions";
+import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
 /**
  * It could be a good idea to create a way to define a block's strucuture (like an interface) and
@@ -205,10 +205,8 @@ export function TextBlock({ blockId } : Props) {
             contextMenuContent={(
                 <>
                     <ContextMenu.SubTitle>Text</ContextMenu.SubTitle>
-                    <TurnIntoAction blockId={blockId}/>
-                    <ContextMenu.Item onPress={null}>
-                        <Text style={styles.itemText}>Delete</Text>
-                    </ContextMenu.Item>
+                    <TurnInto blockId={blockId}/>
+                    <DeleteBlock blockId={blockId}/>
                     <ContextMenu.Separator/>
                     <View style={{ padding: 2 }}/>
                 </>
@@ -217,15 +215,6 @@ export function TextBlock({ blockId } : Props) {
             {(hovered) => (
                     <View style={styles.container}>
                         <View style={{ position: "relative" }}>
-                            {/* {Platform.OS === "web" && hovered && (
-                                <View style={{
-                                    position: "absolute",
-                                    left: -58,
-                                    top: 6
-                                }}>
-                                    <WebControlls blockId={blockId} />
-                                </View>
-                            )} */}
                             <TextInput
                                 style={[styles.text]}
                                 {...getTextInputProps()}
