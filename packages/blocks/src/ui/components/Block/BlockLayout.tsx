@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
-import { View, StyleSheet, Platform, Pressable, Text } from "react-native";
+import { View, StyleSheet, Platform, Pressable, Dimensions } from "react-native";
 import { Ionicons, Octicons } from '@expo/vector-icons';
-import { DragProvider } from "@react-native-blocks/core";
+import { DragProvider, useScrollContext } from "@react-native-blocks/core";
 import { ContextMenu } from "../ContextMenu/ContextMenu";
+
+const { height } = Dimensions.get("window");
 
 export function BlockLayout({
     children,
@@ -14,14 +16,16 @@ export function BlockLayout({
     const contextMenuButtonRef = useRef(null);
     const [hovered, setHovered] = useState(false);
     const [isContextMenuVisible, setContextMenuVisible] = useState(false);
+    const { scrollY } = useScrollContext();
 
     const handleOpenContextMenu = (e) => {
         contextMenuButtonRef.current.measure((x, y, width, height, pageX, pageY) => {
             contextMenuRef.current.show({
-                x: pageX - 256 - 16,
-                y: pageY
+                x: pageX - 256 - 24,
+                y: y
             });
-        })
+        });
+
         setContextMenuVisible(true);
     }
 
@@ -81,19 +85,19 @@ export function BlockLayout({
                         onPress={handleCloseContextMenu}
                         style={{
                             position: "fixed",
-                            top: 0,
+                            top: scrollY.value,
                             left: 0,
+                            width: "100vw",
+                            height: "100vh",
                             display: isContextMenuVisible ? "flex" : "none",
                             flex: 1,
                             zIndex: 98,
-                            width: "100%",
-                            height: "100%",
+                            /* backgroundColor: "red" */
                         }}
-                    >
+                    />
                         <ContextMenu ref={contextMenuRef}>
                             {contextMenuContent}
                         </ContextMenu>
-                    </Pressable>
                 </View>
             )
             : (

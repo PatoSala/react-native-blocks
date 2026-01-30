@@ -201,6 +201,8 @@ export function QuoteBlock({ blockId } : Props) {
                             }}
                             onKeyPress={handleOnKeyPress}
                             onSubmitEditing={handleSubmitEditing}
+                            placeholder="Empty quote"
+                            placeholderTextColor={"#37352f26"}
                         />
                     </View>
                 </View>

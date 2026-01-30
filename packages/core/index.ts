@@ -11,3 +11,4 @@ export { createBlock } from "./src/interfaces/Block.interface";
 // Experimental
 export * from "./src/hooks/useForceUpdate";
 export * from "./src/hooks/useWebTextInput";
+export { useScrollContext } from "./src/components/ScrollProvider";

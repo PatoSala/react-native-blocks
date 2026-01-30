@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, Pressable } from "react-native";
 
 export function ContextMenu({ children, style, ref }) {
     const viewRef = useRef(null);
-    console.log(viewRef);
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState({ x: 0, y: 0 });
 
@@ -28,7 +27,7 @@ export function ContextMenu({ children, style, ref }) {
                         left: position.x,
                         top: position.y,
                         display: visible ? "flex" : "none",
-                        position: visible ? "fixed" : "none"
+                        position: visible ? "absolute" : "none"
                     },
                     style
                 ]}

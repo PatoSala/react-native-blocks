@@ -13,8 +13,8 @@ export function TurnInto({ blockId }) {
     const handleOpenContextMenu = (e) => {
         viewRef?.current?.measure((x, y, width, height, pageX, pageY) => {
             contextMenuRef?.current?.show({
-                x: pageX + width,
-                y: pageY
+                x: x + width,
+                y: y - height
             });
         });
     }
