@@ -1,5 +1,5 @@
 import { createContext, useContext, useRef, RefObject, useState, useEffect } from "react";
-import { StyleSheet, Dimensions, View } from "react-native";
+import { StyleSheet, Dimensions, View, Image } from "react-native";
 import Animated, { useSharedValue, useAnimatedStyle, SharedValue } from "react-native-reanimated";
 import { useScrollContext } from "./ScrollProvider";
 import { useBlocksContext } from "./BlocksContext";
@@ -91,8 +91,14 @@ export function BlocksMeasuresProvider({ children }) {
      * but right now its mounting the whole component with all its logic, which is not necessary.
      * I'll leave it like this because its working, but it can be refactored in the future.
      */
+    const [viewShot, setViewShot] = useState({
+        uri: "",
+        width: 0,
+        height: 0
+    });
     const GhostBlock = () => {
-        const Component = blockTypes[blocks[movingBlockId].type].component;
+        console.log("VIEW SHOT DATA", viewShot);
+       /*  const Component = blockTypes[blocks[movingBlockId].type].component; */
 
         return (
             <Animated.View style={[{
@@ -101,7 +107,8 @@ export function BlocksMeasuresProvider({ children }) {
                 zIndex: 1000,
                 width: "100%",
             }, animatedStyles]}>
-                <Component blockId={movingBlockId} />
+                {/* <Component blockId={movingBlockId} /> */}
+                <Image source={{ uri: `file://${viewShot.uri}` }} style={{ width: viewShot.width, height: viewShot.height }} /> 
             </Animated.View>
         )
     }
@@ -118,6 +125,7 @@ export function BlocksMeasuresProvider({ children }) {
         setStartPosition: ({ x, y }) => startPosition.value = { x, y },
         offset,
         setOffset: ({ x, y }) => offset.value = { x, y },
+        setViewShot,
 
         // Move indicator
         indicatorPosition,

@@ -17,6 +17,7 @@ import { useBlocksMeasuresContext } from "./BlocksMeasuresProvider";
 import { useScrollContext } from "./ScrollProvider";
 import { useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import ViewShot from "react-native-view-shot";
 
 const { height: screenHeight } = Dimensions.get("screen");
 
@@ -41,6 +42,7 @@ export function DragProvider({
         setOffset,
         isDragging,
         setIsDragging,
+        setViewShot,
         setStartPosition,
         indicatorPosition,
         setIndicatorPosition,
@@ -50,7 +52,9 @@ export function DragProvider({
     const insets = useSafeAreaInsets();
 
     const scrollDirection = useSharedValue<null | "UP" | "DOWN">(null);
-    
+
+    /** View shot */
+    const viewShotRef = useRef(null);
 
     /** Auto scroll interval */
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -148,6 +152,18 @@ export function DragProvider({
     }
 
     const handleOnDragStart = () => {
+        console.log("blockMeasuresRef.current", blockMeasuresRef.current);
+        // take component screenshot
+       if (viewShotRef.current) {
+            viewShotRef?.current?.capture().then((uri) => {
+               setViewShot({
+                   uri: uri,
+                   width: blockMeasuresRef.current[blockId].width,
+                   height: blockMeasuresRef.current[blockId].height
+               });
+            });
+       }
+
         setIsDragging(true);
         setMovingBlockId(blockId);
         // mesure in window does not include safe areas
@@ -156,7 +172,7 @@ export function DragProvider({
                 x,
                 y: y
             })
-        })
+        });
     }
 
 
@@ -234,9 +250,12 @@ export function DragProvider({
             )
             : (
                 <GestureDetector gesture={Platform.OS !== "web" ? composed : blockDrag}>
-                    <View>
+                    <ViewShot ref={viewShotRef} options={{
+                        format: "png",
+                        quality: 0.8,
+                    }}>
                         {children}
-                    </View>
+                    </ViewShot>
                 </GestureDetector>
             )}
         </>
