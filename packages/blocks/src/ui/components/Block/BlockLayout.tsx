@@ -85,6 +85,11 @@ export function BlockLayout({
                         onPress={handleCloseContextMenu}
                         style={{
                             position: "fixed",
+                            /**
+                             * The following ternary its necessary to prevent web from crashing when dragging a block.
+                             * scrollY.value is out of scope for GhostComponent, and isContextMenuVisible can only be true if the block is not being dragged.
+                             * So by adding this condition, we avoid the crash.
+                             */
                             top: isContextMenuVisible ? scrollY.value : 0,
                             left: 0,
                             width: "100vw",
