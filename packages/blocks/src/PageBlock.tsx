@@ -233,12 +233,18 @@ export function PageBlock({ blockId } : Props) {
     return (
         <>
             {pageCover && isRootBlock && (
-                <View style={[
-                    styles.cover,
-                    Platform.OS !== "web" && {
-                        height: 200
-                    }
-                ]}>
+                <Pressable
+                    onPress={handleRemoveCover}
+                    style={[
+                        styles.cover,
+                        {
+                            position: "absolute",
+                        },
+                        Platform.OS !== "web" && {
+                            height: 200
+                        }
+                    ]}
+                >
                     <Image
                         style={{
                             width: "100%",
@@ -247,51 +253,28 @@ export function PageBlock({ blockId } : Props) {
                         }}
                         source={{ uri: pageCover }}
                     />
-                </View>
+                </Pressable>
             )}
             <View
                 style={{
-                    ...Platform.OS === "web" ? {
+                    ...Platform.OS === "web" && {
                         width: "100%",
                         flexDirection: "row",
                         alignItems: "flex-end",
                         justifyContent: "center",
                         marginBottom: 8
-                        } : {}
+                        }
                 }}
             >
-                {/* { isRootBlock && pageCover
-                    ? (
-                        <View style={styles.cover}>
-                            <View style={{
-                                right: 16,
-                                display: pageCover === null ? "none" : "flex",
-                                flexDirection: "row",
-                                gap: 8
-                            }}>
-                                <Pressable style={[styles.coverBtn, { display: pageIcon === null ? "flex" : "none" }]} onPress={() => setShowEmojiSelector(true)}>
-                                    <Text style={styles.pageBtnText}>Add icon</Text>
-                                </Pressable>
-                                
-                                <Pressable style={styles.coverBtn} onPress={handleRemoveCover}>
-                                    <Text style={styles.pageBtnText}>Remove cover</Text>
-                                </Pressable>
-                            </View>
-
-                            <Image
-                                source={{ uri: pageCover }}
-                                style={{ width: "100%", height: 200 }}
-                            />
-                        </View>
-                    )
-                    : null} */}
-
                 {/* Content */}
                 <View style={[
                     styles.container,
                     Platform.OS === "web" && {
                         width: "100%",
                         maxWidth: 700,
+                    },
+                    !pageIcon && pageCover && {
+                        marginTop: Platform.OS === "web" ? 255 : 200
                     }
                 ]}>
                     {isRootBlock
@@ -310,8 +293,7 @@ export function PageBlock({ blockId } : Props) {
                                         marginTop: 96,
                                         /* Have in mind mobile for the margin top */
                                         ...pageCover && {
-                                            marginTop: 0,
-                                                aspectRatio: 2 / 1
+                                            marginTop: Platform.OS === "web" ? 215 : 165,
                                         }
                                     }}
                                 >
@@ -320,11 +302,6 @@ export function PageBlock({ blockId } : Props) {
                                         style={{
                                             width: "100%",
                                             height: "100%",
-                                            ...pageCover && {
-                                                position: "relative",
-                                                top: "-50%",
-                                                zIndex: 1,
-                                            }
                                         }}
                                     >
                                         {containsEmoji(pageIcon) === false
