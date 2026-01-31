@@ -22,7 +22,7 @@ import {
 import EmojiSelector from "react-native-emoji-selector";
 import FormSheetModal from "./components/Modal/FormSheetModal";
 
-import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { BlockLayout } from "./ui/components/layouts/BlockLayout";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 import { TurnInto, DeleteBlock } from "./components/BlockActions";
 

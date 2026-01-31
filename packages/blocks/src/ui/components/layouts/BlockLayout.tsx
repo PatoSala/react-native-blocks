@@ -42,16 +42,19 @@ export function BlockLayout({
                     onMouseEnter={() => setHovered(true)}
                     onMouseLeave={() => setHovered(false)}
                     style={[{
-                        paddingHorizontal: "22%",
+                        width: "100%",
                         flexDirection: "row",
-                        alignItems: "center"
+                        alignItems: "center",
+                        justifyContent: "center",
                     }]}
                 >
-                    {/* Web controls */}
+                    {/* Content container */}
                     <View style={{
                         position: "relative",
-                        flex: 1
+                        flex: 1,
+                        maxWidth: 700
                     }}>
+                        {/* Web controls */}
                         <View style={[styles.blockActions, { display: hovered ? "flex" : "none" }]}>
                             <Pressable
                                 style={({ hovered }) => [styles.button, hovered && styles.hover]}

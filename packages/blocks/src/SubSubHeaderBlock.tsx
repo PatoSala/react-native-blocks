@@ -9,7 +9,7 @@ import {
 } from "@react-native-blocks/core";
 
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
-import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { BlockLayout } from "./ui/components/layouts/BlockLayout";
 import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
 interface Props {

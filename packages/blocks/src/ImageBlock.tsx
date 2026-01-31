@@ -5,7 +5,7 @@ import { useBlocksContext, BlockProps, updateBlockData, DragProvider } from "@re
 import * as ImagePicker from 'expo-image-picker';
 import FormSheetModal from "./components/Modal/FormSheetModal";
 
-import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { BlockLayout } from "./ui/components/layouts/BlockLayout";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
@@ -76,7 +76,6 @@ export const ImageBlock = (props: BlockProps) => {
         boxSizing: "border-box",
         marginVertical: 4,
         borderRadius: 8,
-        marginHorizontal: 8
       }}
       contextMenuContent={(
           <>
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
   emptyImage: {
     boxSizing: "border-box",
     borderRadius: 8,
+    marginHorizontal: 8
   },
   row: {
     flexDirection: "row",

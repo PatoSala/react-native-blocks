@@ -11,7 +11,7 @@ import {
 import { View, TextInput, StyleSheet, Platform, Text } from "react-native";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 
-import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { BlockLayout } from "./ui/components/layouts/BlockLayout";
 import { TurnInto, DeleteBlock } from "./components/BlockActions";
 
 /**

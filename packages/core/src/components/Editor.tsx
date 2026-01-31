@@ -1,6 +1,6 @@
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Pressable, View } from "react-native";
+import { Pressable, View, Platform } from "react-native";
 import { LayoutProvider } from "./LayoutProvider";
 import { useKeyboardStatus } from "../hooks/useKeyboardStatus";
 import { BlocksProvider, useBlocksContext } from "./BlocksContext";
@@ -127,7 +127,7 @@ export function Editor(props : EditorProps) {
                             </DragPreviewProvider>
                         </BlocksMeasuresProvider>
                         
-                        {ToolbarComponent && <ToolbarComponent />}
+                        {ToolbarComponent && Platform.OS !== "web" && <ToolbarComponent />}
                     </GestureHandlerRootView>
                 </TextBlocksProvider>
             </BlocksProvider>

@@ -7,7 +7,7 @@ import {
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet, Platform } from "react-native";
 
-import { BlockLayout } from "./ui/components/Block/BlockLayout";
+import { BlockLayout } from "./ui/components/layouts/BlockLayout";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 import { TurnInto, DeleteBlock } from "./components/BlockActions";
 

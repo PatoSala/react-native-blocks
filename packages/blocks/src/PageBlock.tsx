@@ -231,115 +231,150 @@ export function PageBlock({ blockId } : Props) {
     }
 
     return (
-        <View
-            style={{
-                ...Platform.OS === "web" ? {
-                    paddingLeft: "22%",
-                    paddingRight: "22%"
-                    } : {}
-            }}
-        >
-            { isRootBlock && pageCover
-                ? (
-                    <View style={styles.cover}>
-                        <View style={{
-                            position: "absolute",
-                            top: 8,
-                            right: 16,
-                            display: pageCover === null ? "none" : "flex",
-                            flexDirection: "row",
-                            gap: 8
-                        }}>
-                            <Pressable style={[styles.coverBtn, { display: pageIcon === null ? "flex" : "none" }]} onPress={() => setShowEmojiSelector(true)}>
-                                <Text style={styles.pageBtnText}>Add icon</Text>
-                            </Pressable>
-                            
-                            <Pressable style={styles.coverBtn} onPress={handleRemoveCover}>
-                                <Text style={styles.pageBtnText}>Remove cover</Text>
-                            </Pressable>
+        <>
+            {pageCover && isRootBlock && (
+                <View style={styles.cover}>
+                    <Image
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            resizeMode: "cover"
+                        }}
+                        source={{ uri: pageCover }}
+                    />
+                </View>
+            )}
+            <View
+                style={{
+                    ...Platform.OS === "web" ? {
+                        width: "100%",
+                        flexDirection: "row",
+                        alignItems: "flex-end",
+                        justifyContent: "center",
+                        marginBottom: 8
+                        } : {}
+                }}
+            >
+                {/* { isRootBlock && pageCover
+                    ? (
+                        <View style={styles.cover}>
+                            <View style={{
+                                right: 16,
+                                display: pageCover === null ? "none" : "flex",
+                                flexDirection: "row",
+                                gap: 8
+                            }}>
+                                <Pressable style={[styles.coverBtn, { display: pageIcon === null ? "flex" : "none" }]} onPress={() => setShowEmojiSelector(true)}>
+                                    <Text style={styles.pageBtnText}>Add icon</Text>
+                                </Pressable>
+                                
+                                <Pressable style={styles.coverBtn} onPress={handleRemoveCover}>
+                                    <Text style={styles.pageBtnText}>Remove cover</Text>
+                                </Pressable>
+                            </View>
+
+                            <Image
+                                source={{ uri: pageCover }}
+                                style={{ width: "100%", height: 200 }}
+                            />
                         </View>
+                    )
+                    : null} */}
 
-                        <Image
-                            source={{ uri: pageCover }}
-                            style={{ width: "100%", height: 200 }}
-                        />
-                    </View>
-                )
-                : null}
-
-            { isRootBlock && !pageCover && Platform.OS === "web"
-                ? <View style={{ height: 90 }}/>
-                : null}
-            
-            <View style={styles.container}>
-                {isRootBlock
-                ? (
-                    <>
-                        <View style={{
-                            height: pageIcon ? 136 : 184,
-                            display: pageCover === null ? "none" : "flex"
-                        }}/>
-                        
-                        <View style={styles.root}>
-                            {pageCover === null
-                                ? (
-                                    <View
-                                        style={[styles.row, {
-                                            marginBottom: 8,
-                                        }]}
-                                    >
-                                        {pageIcon === null && (
-                                            <TouchableOpacity style={styles.pageBtn} onPress={() => setShowEmojiSelector(true)}>
-                                                <Text style={styles.pageBtnText}>Add icon</Text>
-                                            </TouchableOpacity>
-                                        )}
-
-                                        {pageCover === null && (
-                                            <TouchableOpacity style={styles.pageBtn} onPress={pickCover}>
-                                                <Text style={styles.pageBtnText}>Add cover</Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    </View>
-                                )
-                                : null}
-
-                            {pageIcon !== null ? (
-                                <TouchableOpacity
-                                    onPress={() => setShowEmojiSelector(true)}
+                {/* Content */}
+                <View style={[
+                    styles.container,
+                    Platform.OS === "web" && {
+                        width: "100%",
+                        maxWidth: 700,
+                    }
+                ]}>
+                    {isRootBlock
+                    ? (
+                        <>
+                            {/* Page icon */}
+                            {pageIcon && (
+                                <View
                                     style={{
                                         borderRadius: 8,
                                         overflow: "hidden",
-                                        width: 64,
-                                        height: 64,
+                                        width: Platform.OS === "web" ? 78 : 64,
+                                        aspectRatio: 1,
                                         justifyContent: "center",
-                                        alignItems: "center"
+                                        alignItems: "center",
+                                        marginTop: 96,
+                                        /* Have in mind mobile for the margin top */
+                                        ...pageCover && {
+                                            marginTop: 0,
+                                                aspectRatio: 2 / 1
+                                        }
                                     }}
                                 >
-                                    {containsEmoji(pageIcon) === false
+                                    <Pressable
+                                        onPress={() => setShowEmojiSelector(true)}
+                                        style={{
+                                            ...pageCover && {
+                                                position: "relative",
+                                                top: "-50%",
+                                                zIndex: 1
+                                            }
+                                        }}
+                                    >
+                                        {containsEmoji(pageIcon) === false
                                         ? (
                                             <Image
                                                 source={{ uri: pageIcon }}
-                                                style={{ width: 64, height: 64 }}
+                                                style={{ width: "100%", height: "100%" }}
                                             />
                                         )
                                         : (
                                             <Text style={{
-                                                fontSize: 54
+                                                fontSize: Platform.OS === "web" ? 78 : 54
                                             }}>
                                                 {pageIcon}
                                             </Text>
                                         )}
-                                </TouchableOpacity>
-                            ) : null}
+                                    </Pressable>
+                                </View>
+                            )}
+
+                            {/* Page controls [icon, cover] */}
+                            <Pressable
+                                style={({ hovered }) => [
+                                    {
+                                        minHeight: 28,
+                                        boxSizing: "content-box",
+                                        paddingBottom: 4,
+                                        paddingTop:
+                                            !pageIcon && !pageCover
+                                                ? 80
+                                                :  pageIcon && pageCover
+                                                    ? 8 
+                                                    : pageCover && !pageIcon
+                                                        ? 16 : 8,
+                                        flexDirection: "row",
+                                        gap: 8,
+                                        opacity: hovered ? 1 : 0
+                                    }
+                                ]}
+                            >
+                                {pageIcon === null && (
+                                    <Pressable style={styles.pageBtn} onPress={() => setShowEmojiSelector(true)}>
+                                        <Text style={styles.pageBtnText}>Add icon</Text>
+                                    </Pressable>
+                                )}
+
+                                {pageCover === null && (
+                                    <Pressable style={styles.pageBtn} onPress={pickCover}>
+                                        <Text style={styles.pageBtnText}>Add cover</Text>
+                                    </Pressable>
+                                )}
+                            </Pressable>
 
                             <TextInput
                                 key={`input-${blockId}`}   // Really important to pass the key prop
                                 style={[styles.page]}
                                 {...getTextInputProps()}
-                                onSubmitEditing={handleSubmitEditing}
-                                onKeyPress={handleOnKeyPress}
-                                placeholder={placeholder}
-                                placeholderTextColor={"#37352f26"}
                                 {...Platform.OS === "web" && {
                                     onLayout: () => {
                                         inputRefs.current[blockId]?.current?.setHeight("0px");
@@ -362,85 +397,90 @@ export function PageBlock({ blockId } : Props) {
                                             inputRefs.current[blockId]?.current?.setHeight(`${inputRefs.current[blockId].current?.getRef().current.scrollHeight}px`);
                                         })
                                     }
-                                }}                                
+                                }}
+                                onSubmitEditing={handleSubmitEditing}
+                                onKeyPress={handleOnKeyPress}
+                                placeholder={placeholder}
+                                placeholderTextColor={"#37352f26"}                                
+                            />
+                        </>
+                    )
+                    : (
+                        /* Block layout should go here */
+                        <DragProvider blockId={blockId}>
+                            <View style={styles.row}>
+                                <TouchableOpacity
+                                    onPress={() => setShowEmojiSelector(true)}
+                                    style={styles.iconContainer}
+                                >
+
+                                    {pageIcon === null
+                                    ? (
+                                        <Ionicons name="document-text-outline" size={24} color="black" />
+                                    ) : (
+                                        <>
+                                            {containsEmoji(pageIcon) === false
+                                            ? (
+                                                <Image
+                                                    source={{ uri: pageIcon }}
+                                                    style={{ width: "100%", height: "100%" }}
+                                                />
+                                            )
+                                            : (
+                                                <Text style={styles.icon}>
+                                                    {pageIcon}
+                                                </Text>
+                                            )}
+                                        </>
+                                    )}
+                                </TouchableOpacity>
+                                
+                                <Text style={styles.text}>
+                                    {properties.title.length === 0 ? placeholder : properties.title}
+                                </Text>
+                            </View>
+                        </DragProvider>
+                    )}
+
+                    <Modal
+                        visible={showEmojiSelector}
+                        onRequestClose={() => setShowEmojiSelector(false)}
+                        presentationStyle="pageSheet"
+                        animationType="slide"
+                    >
+                        <View style={styles.header}>
+                            <Button
+                                title="Remove"
+                                onPress={handleRemoveIcon}
+                            />
+                            <Text style={styles.headerTitle}>Page Icon</Text>
+                            <Button
+                                title="Close"
+                                onPress={() => setShowEmojiSelector(false)}
                             />
                         </View>
-                    </>
-                )
-                : (
-                    <DragProvider blockId={blockId}>
-                        <View style={styles.row}>
-                            <TouchableOpacity
-                                onPress={() => setShowEmojiSelector(true)}
-                                style={styles.iconContainer}
-                            >
 
-                                {pageIcon === null
-                                ? (
-                                    <Ionicons name="document-text-outline" size={24} color="black" />
-                                ) : (
-                                    <>
-                                        {containsEmoji(pageIcon) === false
-                                        ? (
-                                            <Image
-                                                source={{ uri: pageIcon }}
-                                                style={{ width: "100%", height: "100%" }}
-                                            />
-                                        )
-                                        : (
-                                            <Text style={styles.icon}>
-                                                {pageIcon}
-                                            </Text>
-                                        )}
-                                    </>
-                                )}
-                            </TouchableOpacity>
-                            
-                            <Text style={styles.text}>
-                                {properties.title.length === 0 ? placeholder : properties.title}
-                            </Text>
+                        <View style={{ alignItems: "flex-start", marginHorizontal: 8 }}>
+                            <Button
+                                title="Upload image"
+                                onPress={() => {
+                                    setShowEmojiSelector(false);
+                                    setTimeout(() => {
+                                        pickIcon();
+                                    }, 1000);
+                                }}
+                            />
                         </View>
-                    </DragProvider>
-                )}
 
-                <Modal
-                    visible={showEmojiSelector}
-                    onRequestClose={() => setShowEmojiSelector(false)}
-                    presentationStyle="pageSheet"
-                    animationType="slide"
-                >
-                    <View style={styles.header}>
-                        <Button
-                            title="Remove"
-                            onPress={handleRemoveIcon}
+                        <EmojiSelector
+                            columns={8}
+                            showTabs={false}
+                            onEmojiSelected={handleEmojiSelect}
                         />
-                        <Text style={styles.headerTitle}>Page Icon</Text>
-                        <Button
-                            title="Close"
-                            onPress={() => setShowEmojiSelector(false)}
-                        />
-                    </View>
-
-                    <View style={{ alignItems: "flex-start", marginHorizontal: 8 }}>
-                        <Button
-                            title="Upload image"
-                            onPress={() => {
-                                setShowEmojiSelector(false);
-                                setTimeout(() => {
-                                    pickIcon();
-                                }, 1000);
-                            }}
-                        />
-                    </View>
-
-                    <EmojiSelector
-                        columns={8}
-                        showTabs={false}
-                        onEmojiSelected={handleEmojiSelect}
-                    />
-                </Modal>
+                    </Modal>
+                </View>
             </View>
-        </View>
+        </>
     )
 }
 
@@ -459,11 +499,9 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     cover: {
-        width: width + 32,
-        top: 0,
-        left: -32,
-        height: 100,
-        position: "absolute"
+        width: "100%",
+        height: 255,
+        backgroundColor: "lightgray"
     },
     coverBtn: {
         backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -475,6 +513,7 @@ const styles = StyleSheet.create({
         fontSize: 36,
         fontWeight: "bold",
         lineHeight: 42,
+        marginTop: 3,
         marginBottom: 4,
         flexWrap: "wrap",
         outline: "none",
