@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         boxShadow: "0px 14px 28px -6px #0000001a,0px 2px 4px -1px #0000000f,0 0 0 1px #54483114",
         padding: 4,
         gap: 1,
-        zIndex: 99
+        zIndex: 999
     },
     subtitle: {
         fontSize: 12,

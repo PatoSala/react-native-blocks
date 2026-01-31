@@ -35,7 +35,7 @@ export function TurnInto({ blockId }) {
                 </ContextMenu.Item>
             </View>
 
-            <View>
+            <View onMouseLeave={handleOpenContextMenu}>
                 <ContextMenu ref={contextMenuRef}>
                     {Object.keys(blockTypes).map(blockType => (
                         <ContextMenu.Item key={blockType} onPress={() => turnBlockInto(blockId, blockType)}>

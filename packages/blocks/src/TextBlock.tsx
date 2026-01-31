@@ -9,7 +9,6 @@ import {
     DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet, Platform, Text } from "react-native";
-import { WebControlls } from "./components/WebControlls/WebControlls";
 import { ContextMenu } from "./ui/components/ContextMenu/ContextMenu";
 
 import { BlockLayout } from "./ui/components/Block/BlockLayout";
