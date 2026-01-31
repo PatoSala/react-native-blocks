@@ -18,34 +18,46 @@ import { useScrollContext } from "./ScrollProvider";
 import { useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useDragPreviewContext } from "./DragPreviewProvider";
+
 const { height: screenHeight } = Dimensions.get("screen");
 
 // SCROLLING THRESHOLDS
 const TOP_THRESHOLD = 100;
 const BOTTOM_THRESHOLD = screenHeight - 100;
 
+/**
+ * Provides dragging capabilities to a block
+ */
 export function DragProvider({
     children,
     blockId,
     disableGestures = false
 }) {
     const {
-        movingBlockId,
-        setMovingBlockId,
         moveBlock,
         blocks,
         setSelectedBlockId,
     } = useBlocksContext();
+
+    const {
+        blockMeasuresRef
+    } = useBlocksMeasuresContext();
+
     const {
         // Offset is actually ghost block poosition
         setOffset,
         isDragging,
         setIsDragging,
         setStartPosition,
+        movingBlockId,
+        setMovingBlockId,
+
+
         indicatorPosition,
-        setIndicatorPosition,
-        blockMeasuresRef
-    } = useBlocksMeasuresContext();
+        setIndicatorPosition
+    } = useDragPreviewContext();
+
     const { scrollY, handleScrollTo } = useScrollContext();
     const insets = useSafeAreaInsets();
 
@@ -142,6 +154,7 @@ export function DragProvider({
 
         const blockToMove = blocks[movingBlockId];
         const targetBlock = findBlockAtPosition(indicatorPosition.value.y + scrollY.value); // Passing the indicator position fixes de out of bounds error since the indicator value will always be positioned at the start or end of a block.
+        
         if (blockToMove.id !== targetBlock.blockId) {
             moveBlock(blockToMove.id, blockToMove.parent, targetBlock.blockId, targetBlock.closestTo);
         }

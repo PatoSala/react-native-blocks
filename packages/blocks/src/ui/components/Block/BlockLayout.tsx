@@ -85,7 +85,7 @@ export function BlockLayout({
                         onPress={handleCloseContextMenu}
                         style={{
                             position: "fixed",
-                            top: scrollY.value,
+                            top: isContextMenuVisible ? scrollY.value : 0,
                             left: 0,
                             width: "100vw",
                             height: "100vh",

@@ -6,7 +6,7 @@ import {
     updateBlockData,
 } from "../core/updateBlock";
 import { useScrollContext } from "../components/ScrollProvider";
-import { useBlocksMeasuresContext } from "../components/BlocksMeasuresProvider";
+import { useDragPreviewContext } from "../components/DragPreviewProvider";
 
 /** 
  * Same as useTextInput but for web.  
@@ -24,7 +24,7 @@ export function useWebTextInput(blockId: string) {
         showSoftInputOnFocus,
     } = useTextBlocksContext();
     const { isScrolling } = useScrollContext();
-    const { isDragging } = useBlocksMeasuresContext();
+    const { isDragging } = useDragPreviewContext();
 
     const block = getBlockSnapshot(blockId);
     const title = block.properties.title;

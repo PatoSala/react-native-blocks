@@ -11,6 +11,7 @@ import {
 import { useScrollContext } from "../components/ScrollProvider";
 import { useBlocksMeasuresContext } from "../components/BlocksMeasuresProvider";
 import { useBlockRegistrationContext } from "../components/BlockRegistration";
+import { useDragPreviewContext } from "../components/DragPreviewProvider";
 
 export function useTextInput(blockId: string) {
     const {
@@ -30,7 +31,7 @@ export function useTextInput(blockId: string) {
         inputRefs
     } = useTextBlocksContext();
     const { isScrolling } = useScrollContext();
-    const { isDragging } = useBlocksMeasuresContext();
+    const { isDragging } = useDragPreviewContext();
     const { textBasedBlocks, defaultBlockType } = useBlockRegistrationContext();
 
     const block = getBlockSnapshot(blockId);
@@ -238,16 +239,6 @@ export function useTextInput(blockId: string) {
             console.log("UnregisterUNREGISTERed block", blockId);
         }; */
     }, []);
-
-   /*  React.useEffect(() => {
-       if (shouldUpdate.includes(blockId)) {
-           console.log("SHOULD UPDATE", blockId);
-           api.current.setText(blocks[blockId].properties.title);
-           
-           setShouldUpdate(prevState => prevState.filter(id => id !== blockId));
-       }
-    }, [shouldUpdate]); */
-
 
     return {
         getTextInputProps,

@@ -9,6 +9,8 @@ import { TextBlocksProvider, useTextBlocksContext } from "./TextBlocksProvider";
 import { ScrollProvider } from "./ScrollProvider";
 import { BlocksMeasuresProvider } from "./BlocksMeasuresProvider";
 
+import { DragPreviewProvider } from "./DragPreviewProvider";
+
 /**
  * Blank space component.
  * Review the handleOnBlankSpacePress function. Add necessary documentation and clean up the code.
@@ -116,11 +118,13 @@ export function Editor(props : EditorProps) {
                 <TextBlocksProvider>
                     <GestureHandlerRootView>
                         <BlocksMeasuresProvider>
-                            <ScrollProvider contentContainerStyle={contentContainerStyle}>
-                                <RenderTree
-                                    onBlankSpacePress={onBlankSpacePress}
-                                />
-                            </ScrollProvider>
+                            <DragPreviewProvider>
+                                <ScrollProvider contentContainerStyle={contentContainerStyle}>
+                                    <RenderTree
+                                        onBlankSpacePress={onBlankSpacePress}
+                                    />
+                                </ScrollProvider>
+                            </DragPreviewProvider>
                         </BlocksMeasuresProvider>
                         
                         {ToolbarComponent && <ToolbarComponent />}

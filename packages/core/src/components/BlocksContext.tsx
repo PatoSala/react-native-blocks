@@ -2,16 +2,13 @@ import { createContext, RefObject, useContext, useRef, useState, useEffect } fro
 import { Block } from "../interfaces/Block.interface";
 import { updateBlockData, insertBlockIdIntoContent } from "../core";
 import { useBlockRegistrationContext } from "./BlockRegistration";
-import * as Crypto from 'expo-crypto';
 
 interface BlocksContext {
     blocks: RefObject<Record<string, Block>>;
     blocksOrder: string[];
     focusedBlockId: string;
-    movingBlockId: string | null;
     selectedBlockId: string | null;
     setSelectedBlockId: (blockId: string | null) => void;
-    setMovingBlockId: (blockId: string | null) => void;
     setFocusedBlockId: (blockId: string) => void;
     insertBlock: (
         newBlock: Block,
@@ -82,9 +79,7 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
     ]);
 
     const [focusedBlockId, setFocusedBlockId] = useState(null); // Maybe this was to be able to insert by default on the rootBlock?
-    const [movingBlockId, setMovingBlockId] = useState<string | null>(null);
     const [selectedBlockId, setSelectedBlockId] = useState<string | null >(null);
-    const [shouldUpdate, setShouldUpdate] = useState([]);
 
     useEffect(() => {
         extractBlocks(blocksRef.current);
@@ -175,8 +170,6 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
             })])
         }
 
-        /* setShouldUpdate([updatedBlock.id, newBlock.id]); */
-        
         return {
             prevBlock: newBlock,
             nextBlock: updatedBlock
@@ -287,13 +280,11 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
         blocks: blocksRef.current,
         blocksOrder,
         focusedBlockId,
-        movingBlockId,
-        shouldUpdate,
-        setShouldUpdate,
+        
         selectedBlockId,
         setSelectedBlockId,
-        setMovingBlockId,
         setFocusedBlockId,
+
         insertBlock,
         updateBlock,
         turnBlockInto,
@@ -303,6 +294,7 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks }: any) {
         moveBlock: moveBlock,
         getBlockSnapshot: (blockId: string) => blocksRef.current[blockId],
         updateBlockV2,
+
         textBasedBlocks,
         blockTypes
     }
