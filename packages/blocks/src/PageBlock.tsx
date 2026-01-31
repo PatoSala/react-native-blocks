@@ -14,7 +14,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import EmojiSelector from "react-native-emoji-selector";
 import * as ImagePicker from 'expo-image-picker';
 
-const { width } = Dimensions.get("window");
+import { Hoverable } from "./ui/components/Hoverable/Hoverable";
 
 function containsEmoji(str: string) {
   const emojiRegex = /\p{Emoji_Presentation}|\p{Extended_Pictographic}/u;
@@ -233,7 +233,12 @@ export function PageBlock({ blockId } : Props) {
     return (
         <>
             {pageCover && isRootBlock && (
-                <View style={styles.cover}>
+                <View style={[
+                    styles.cover,
+                    Platform.OS !== "web" && {
+                        height: 200
+                    }
+                ]}>
                     <Image
                         style={{
                             width: "100%",
@@ -313,10 +318,12 @@ export function PageBlock({ blockId } : Props) {
                                     <Pressable
                                         onPress={() => setShowEmojiSelector(true)}
                                         style={{
+                                            width: "100%",
+                                            height: "100%",
                                             ...pageCover && {
                                                 position: "relative",
                                                 top: "-50%",
-                                                zIndex: 1
+                                                zIndex: 1,
                                             }
                                         }}
                                     >
@@ -339,8 +346,8 @@ export function PageBlock({ blockId } : Props) {
                             )}
 
                             {/* Page controls [icon, cover] */}
-                            <Pressable
-                                style={({ hovered }) => [
+                            <Hoverable
+                                style={[
                                     {
                                         minHeight: 28,
                                         boxSizing: "content-box",
@@ -353,23 +360,47 @@ export function PageBlock({ blockId } : Props) {
                                                     : pageCover && !pageIcon
                                                         ? 16 : 8,
                                         flexDirection: "row",
-                                        gap: 8,
-                                        opacity: hovered ? 1 : 0
+                                        gap: 8
                                     }
                                 ]}
                             >
-                                {pageIcon === null && (
-                                    <Pressable style={styles.pageBtn} onPress={() => setShowEmojiSelector(true)}>
-                                        <Text style={styles.pageBtnText}>Add icon</Text>
-                                    </Pressable>
-                                )}
+                                {({ hovered }) => (
+                                    <>
+                                        {console.log("hovered", hovered)}
+                                        {pageIcon === null && (
+                                            <Pressable
+                                                style={({ hovered: buttonHovered }) => [
+                                                    styles.pageBtn,
+                                                    Platform.OS === "web" && {
+                                                        opacity: hovered ? 1 : 0,
+                                                        backgroundColor: buttonHovered ? "#2a1c0012" : "transparent",
+                                                        paddingHorizontal: 8
+                                                    }
+                                                ]}
+                                                onPress={() => setShowEmojiSelector(true)}
+                                            >
+                                                <Text style={styles.pageBtnText}>Add icon</Text>
+                                            </Pressable>
+                                        )}
 
-                                {pageCover === null && (
-                                    <Pressable style={styles.pageBtn} onPress={pickCover}>
-                                        <Text style={styles.pageBtnText}>Add cover</Text>
-                                    </Pressable>
+                                        {pageCover === null && (
+                                            <Pressable
+                                                style={({ hovered: buttonHovered }) => [
+                                                    styles.pageBtn,
+                                                    Platform.OS === "web" && {
+                                                        opacity: hovered ? 1 : 0,
+                                                        backgroundColor: buttonHovered ? "#2a1c0012" : "transparent",
+                                                        paddingHorizontal: 8
+                                                    }
+                                                ]}
+                                                onPress={pickCover}
+                                            >
+                                                <Text style={styles.pageBtnText}>Add cover</Text>
+                                            </Pressable>
+                                        )}
+                                    </>
                                 )}
-                            </Pressable>
+                            </Hoverable>
 
                             <TextInput
                                 key={`input-${blockId}`}   // Really important to pass the key prop
@@ -523,13 +554,18 @@ const styles = StyleSheet.create({
     },
     pageBtn: {
         flexDirection: "row",
-        marginRight: 8
+        marginRight: 8,
+        gap: 6,
+        alignItems: "center",
+        borderRadius: 6,
+        cursor: "pointer",
+        transition: "opacity 100ms",
     },
     pageBtnText: {
-        fontSize: 16,
-        fontWeight: "500",
+        fontSize: 14,
+        fontWeight: "400",
         lineHeight: 22,
-        color: "lightgray",
+        color: "#a19e99",
     },
     text: {
         fontSize: 16,
