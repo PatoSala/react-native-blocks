@@ -91,37 +91,6 @@ export default function App() {
               </Footer.ContextProvider>
             )
           }}
-          // Deprecate
-          defaultBlockType={"text"}
-
-          // Experimental
-          onBlankSpacePress={({ blocks, blocksOrder, inputRefs, insertBlock }) => {
-            const rootBlockId = blocks["root"].content[0];
-            const rootBlock = blocks[rootBlockId];
-
-            if (
-              blocks[blocksOrder[blocksOrder.length - 1]].type === "text"
-              && blocks[blocksOrder[blocksOrder.length - 1]].properties?.title.length === 0
-          ) {
-              inputRefs.current[rootBlock.content[rootBlock.content.length - 1]]?.current.focus();
-          } else {
-              const newBlock = createBlock({
-                  type: "text",
-                  properties: {
-                      title: ""
-                  },
-                  format: {},
-                  content: [],
-                  parent: rootBlock.id
-              });
-
-              insertBlock(newBlock);
-              // Focus new block
-              requestAnimationFrame(() => {
-                  inputRefs.current[newBlock.id]?.current.focus();
-              });
-          }
-          }}
         >
           <Block
             type="text"

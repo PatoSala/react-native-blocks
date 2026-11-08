@@ -34,7 +34,7 @@ export function HeaderBlock({ blockId } : Props) {
             inputRefs.current["ghostInput"]?.current.focus();
             // This timeout prevents the keyboard flicker
             setTimeout(() => {
-                turnBlockInto(blockId, "text"); // Maybe this type should be thee defaultBlockType (?)
+                turnBlockInto(blockId, "text");
 
                 requestAnimationFrame(() => {
                     inputRefs.current[blockId]?.current.focus(); // Maybe the "ghostTextInput" hack should be done inside this function.

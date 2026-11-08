@@ -8,7 +8,6 @@ import {
     DragProvider
 } from "@react-native-blocks/core";
 import { View, TextInput, StyleSheet, Text } from "react-native";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 interface Props {
     blockId: string

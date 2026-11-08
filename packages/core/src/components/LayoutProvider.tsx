@@ -6,49 +6,51 @@ import { useAnimatedReaction } from "react-native-reanimated";
 
 /** Measures and registers the height and position of a block */
 export function LayoutProvider({
-    children,
-    blockId
+  children,
+  blockId
 }) {
-    const { blocks } = useBlocksContext();
-    const {
-        blockMeasuresRef,
-        registerBlockMeasure,
-        removeBlockMeasure,
-    } = useBlocksMeasuresContext();
-    const viewRef = useRef<View>(null);
+  const { blocks, rootBlockId } = useBlocksContext();
+  const {
+    blockMeasuresRef,
+    registerBlockMeasure,
+    removeBlockMeasure,
+  } = useBlocksMeasuresContext();
+  const viewRef = useRef<View>(null);
 
-    /** Maybe this computation could be workletized (?) */
-    const handleOnLayout = () => {
-        /** 
-         * Same story as with DragProvider.
-         * This condition will be removed
-         */
-        if (blockId !== blocks["root"].content[0] && viewRef.current) {
-            viewRef.current?.measure((x, y, width, height, pageX, pageY) => {
-                registerBlockMeasure(blockId, {
-                    ref: viewRef,
-                    type: blocks[blockId].type,
-                    width: width,
-                    height: height,
-                    start: y,
-                    end: y + height
-                });
-            });
-        }
+  /** Maybe this computation could be workletized (?) */
+  const handleOnLayout = () => {
+    console.log("Measuring block", blockId);
+    /** 
+     * Same story as with DragProvider.
+     * This condition will be removed
+     */
+    if (viewRef.current) {
+      viewRef.current?.measure((x, y, width, height, pageX, pageY) => {
+        registerBlockMeasure(blockId, {
+          ref: viewRef,
+          type: blocks[blockId].type,
+          width: width,
+          height: height,
+          start: y,
+          end: y + height
+        });
+      });
     }
+  }
 
-    useEffect(() => {
-        handleOnLayout();
+  useEffect(() => {
+    handleOnLayout();
 
-        return () => {
-            // Remove the block measure when the block is unmounted.
-            removeBlockMeasure(blockId);
-        }
-    });
+    return () => {
+      // Remove the block measure when the block is unmounted.
+      console.log("Removing block measure", blockId);
+      removeBlockMeasure(blockId);
+    }
+  });
 
-    return (
-        <View ref={viewRef} onLayout={handleOnLayout}>
-            {children}
-        </View>
-    );
+  return (
+    <View ref={viewRef} onLayout={handleOnLayout}>
+      {children}
+    </View>
+  );
 }

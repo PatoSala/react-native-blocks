@@ -20,13 +20,11 @@ export function useBlockRegistrationContext() : BlockRegistrationProviderProps |
 export function BlockRegistration(props: any) {
     const {
         customBlocks,
-        defaultBlockType,
         children
     } = props;
 
     const blocksMapRef = useRef({});
     const textBasedBlocksRef = useRef([]);
-    const defaultBlockTypeRef = useRef(defaultBlockType);
 
     const register = React.useCallback(({ type, component, options } : { type: string; component: Function; options?: BlockOptionsProps }) => {
         blocksMapRef.current[type] = {
@@ -57,8 +55,7 @@ export function BlockRegistration(props: any) {
 
     const value = React.useMemo(() => ({
         blockTypes: blocksMapRef.current,
-        textBasedBlocks: textBasedBlocksRef.current,
-        defaultBlockType: defaultBlockTypeRef.current
+        textBasedBlocks: textBasedBlocksRef.current
     }), []);
 
     return (

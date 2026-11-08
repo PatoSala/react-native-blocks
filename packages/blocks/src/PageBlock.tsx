@@ -31,6 +31,7 @@ export function PageBlock({ blockId } : Props) {
         getSelection
     } = useTextInput(blockId);
     const {
+        rootBlockId,
         blocks,
         insertBlock,
         updateBlock,
@@ -43,7 +44,11 @@ export function PageBlock({ blockId } : Props) {
     const { properties } = useBlock(blockId);
 
     // This condition should be renamed to "isFirstBlock" or sth like that.
-    const isRootBlock = blocks["root"].content[0] === blockId;
+    /**
+     * [2026-08-11] This condition wont serve any purpose in the future because Page blocks will only render nested in-line pages, not full pages.
+     * Full page rendering should be handled by users, ideally using PageScreen component that renders an Editor inside it.
+     */
+    const isRootBlock = rootBlockId === blockId;
     const [showEmojiSelector, setShowEmojiSelector] = useState(false);
     const [pageIcon, setPageIcon] = useState<string | null>(blocks[blockId]?.format?.page_icon || null);
     const [pageCover, setPageCover] = useState<string | null>(blocks[blockId]?.format?.page_cover || null);
