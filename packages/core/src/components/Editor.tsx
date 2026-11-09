@@ -57,7 +57,7 @@ function RenderTree() {
 
   return (
     <>
-      {/* We concat the "root" content (should be just one item) with the content of its only child. */}
+      {/* Render blocksOrder which is the content of the root block. */}
       {blocksOrder.map((blockId: string, index: number) => {
         const Component = blockTypes[blocks[blockId].type].component;
         return (

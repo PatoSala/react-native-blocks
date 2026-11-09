@@ -6,7 +6,7 @@ import {
   createBlock,
   DragProvider
 } from "@react-native-blocks/core";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput, StyleSheet, Platform } from "react-native";
 
 /**
  * It could be a good idea to create a way to define a block's strucuture (like an interface) and
@@ -33,8 +33,6 @@ export function TextBlock({ blockId }: Props) {
     updateBlockV2,
     removeBlock
   } = useBlocksContext();
-
-  const block = blocks[blockId];
 
   const handleSubmitEditing = () => {
     const value = getValue();
@@ -126,7 +124,6 @@ export function TextBlock({ blockId }: Props) {
       const previousTextBlock = findPrevTextBlockInContent(blockId, blocks, textBasedBlocks);
 
       inputRefs.current["ghostInput"]?.current.focus();
-
 
       if (previousTextBlock === undefined) {
         const parentBlock = blocks[blocks[blockId].parent];

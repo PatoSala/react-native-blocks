@@ -10,11 +10,11 @@ const { width } = Dimensions.get("window");
 
 export default function InsertBlockSection({ setActiveTab, setHidden } : any) {
     const { inputRefs, setShowSoftInputOnFocus, textBasedBlocks } = useTextBlocksContext();
-    const { blocks, focusedBlockId, insertBlock, removeBlock, blockTypes } = useBlocksContext();
+    const { rootBlockId, blocks, focusedBlockId, insertBlock, removeBlock, blockTypes } = useBlocksContext();
 
 
     const handleInsertBlock = (blockType: string) => {
-        const parentBlockId = blocks[focusedBlockId].parent === "root" ? focusedBlockId : blocks[focusedBlockId].parent;
+        const parentBlockId = blocks[focusedBlockId].parent === rootBlockId ? focusedBlockId : blocks[focusedBlockId].parent;
        
         setShowSoftInputOnFocus(true);
         const newBlock = createBlock({
@@ -26,7 +26,7 @@ export default function InsertBlockSection({ setActiveTab, setHidden } : any) {
             parent: parentBlockId
         });
 
-        if (blocks[focusedBlockId].parent === "root") {
+        if (blocks[focusedBlockId].parent === rootBlockId) {
             insertBlock(newBlock, {
                 nextBlockId: blocks[focusedBlockId].content[0]
             });
@@ -36,7 +36,7 @@ export default function InsertBlockSection({ setActiveTab, setHidden } : any) {
             });
         }
 
-        if (blocks[focusedBlockId].properties.title.length === 0 && blocks[focusedBlockId].parent !== "root") {
+        if (blocks[focusedBlockId].properties.title.length === 0 && blocks[focusedBlockId].parent !== rootBlockId) {
             removeBlock(focusedBlockId);
         }
 

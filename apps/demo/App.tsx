@@ -24,7 +24,22 @@ export default function App() {
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
-          <TextInput placeholder="Type something" value={rootBlock.properties.title}/>
+          {/* 
+            To do: find a way to be able to update blocks inside the Editor from outside it.
+            This is needed for:
+            - Insert a new block at the end when pressing on blank space.
+            - Be able to merge and split the Heading of the page with the first block in the Editor.
+           */}
+          <TextInput
+            placeholder="Type something"
+            value={rootBlock.properties.title}
+            style={{
+              fontSize: 32,
+              fontWeight: "bold",
+              paddingHorizontal: 16,
+              paddingVertical: 8
+            }}
+          />
           <Editor
             rootBlock={rootBlock}
             extractBlocks={(blocks) => console.log("Extracted blocks:", blocks)}
@@ -38,9 +53,6 @@ export default function App() {
                 content: [],
                 parent: "1"
               }
-            }}
-            contentContainerStyle={{
-              backgroundColor: "green",
             }}
           >
             <Block
@@ -72,6 +84,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
   },
 });
