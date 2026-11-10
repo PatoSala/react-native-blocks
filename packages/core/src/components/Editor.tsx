@@ -10,6 +10,8 @@ import { ScrollProvider } from "./ScrollProvider";
 import { BlocksMeasuresProvider } from "./BlocksMeasuresProvider";
 import { Block } from "../interfaces/Block.interface";
 
+import { useValue } from "@legendapp/state/react";
+
 /**
  * Blank space component.
  * Review the handleOnBlankSpacePress function. Add necessary documentation and clean up the code.
@@ -19,7 +21,7 @@ import { Block } from "../interfaces/Block.interface";
  * Blank space is no longer used.
  * Keeping it here for the moment in case we need to use it again.
  */
-const BlankSpace = ({ onBlankSpacePress }) => {
+/* const BlankSpace = ({ onBlankSpacePress }) => {
   const { keyboardHeight } = useKeyboardStatus();
   const {
     blocks,
@@ -47,18 +49,19 @@ const BlankSpace = ({ onBlankSpacePress }) => {
       }}
     />
   )
-};
+}; */
 
 // RenderBlockTree
-function RenderTree() {
+function RenderTree() : React.JSX.Element {
   const { blockTypes } = useBlockRegistrationContext();
-  const { blocks, blocksOrder } = useBlocksContext();
-  console.log("Blocks order", blocksOrder);
+  const { blocks, rootBlockId } = useBlocksContext();
+
+  const rootContent = useValue(blocks)[rootBlockId]?.content;
 
   return (
     <>
       {/* Render blocksOrder which is the content of the root block. */}
-      {blocksOrder.map((blockId: string, index: number) => {
+      {rootContent?.map((blockId: string, index: number) => {
         const Component = blockTypes[blocks[blockId].type].component;
         return (
           <LayoutProvider blockId={blockId} key={`block-${blockId}`}>

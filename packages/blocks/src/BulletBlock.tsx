@@ -19,7 +19,6 @@ export function BulletBlock({ blockId } : Props) {
     const {
         blocks,
         insertBlock,
-        updateBlock,
         updateBlockV2,
         removeBlock
     } = useBlocksContext();

@@ -19,7 +19,6 @@ export function LayoutProvider({
 
   /** Maybe this computation could be workletized (?) */
   const handleOnLayout = () => {
-    console.log("Measuring block", blockId);
     /** 
      * Same story as with DragProvider.
      * This condition will be removed
@@ -43,7 +42,6 @@ export function LayoutProvider({
 
     return () => {
       // Remove the block measure when the block is unmounted.
-      console.log("Removing block measure", blockId);
       removeBlockMeasure(blockId);
     }
   });

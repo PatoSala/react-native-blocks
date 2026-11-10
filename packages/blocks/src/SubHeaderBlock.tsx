@@ -18,7 +18,6 @@ export const SubHeaderBlock = ({ blockId } : Props) => {
         blocks,
         turnBlockInto,
         insertBlock,
-        updateBlock,
         updateBlockV2,
         removeBlock
     } = useBlocksContext();

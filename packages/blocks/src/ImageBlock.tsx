@@ -20,7 +20,7 @@ export const ImageBlock = (props: BlockProps) => {
   const {
     blockId,
   } = props;
-  const { blocks, updateBlock, selectedBlockId, setSelectedBlockId, removeBlock } = useBlocksContext();
+  const { blocks, updateBlockV2, selectedBlockId, setSelectedBlockId, removeBlock } = useBlocksContext();
 
   const [source, setSource] = useState(blocks[blockId]?.properties.source || null);
   const [aspectRatio, setAspectRatio] = useState(blocks[blockId]?.format?.block_aspect_ratio || null);
@@ -46,7 +46,7 @@ export const ImageBlock = (props: BlockProps) => {
         }
       });
 
-      updateBlock(updatedBlock);
+      updateBlockV2(updatedBlock.id, updatedBlock);
     }
   };
 

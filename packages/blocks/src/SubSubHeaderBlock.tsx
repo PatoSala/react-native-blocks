@@ -17,7 +17,6 @@ export function SubSubHeaderBlock({ blockId } : Props) {
         blocks,
         turnBlockInto,
         insertBlock,
-        updateBlock,
         updateBlockV2,
         removeBlock
     } = useBlocksContext();

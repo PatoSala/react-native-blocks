@@ -34,9 +34,7 @@ export function PageBlock({ blockId } : Props) {
         rootBlockId,
         blocks,
         insertBlock,
-        updateBlock,
         updateBlockV2,
-        blocksOrder,
     } = useBlocksContext();
     const {
         inputRefs
@@ -71,7 +69,7 @@ export function PageBlock({ blockId } : Props) {
             }
           });
     
-          updateBlock(updatedBlock);
+          updateBlockV2(updatedBlock.id, updatedBlock);
         }
     }
 
@@ -95,7 +93,7 @@ export function PageBlock({ blockId } : Props) {
             }
           });
     
-          updateBlock(updatedBlock);
+          updateBlockV2(updatedBlock.id, updatedBlock);
         }
       };
 
@@ -110,7 +108,7 @@ export function PageBlock({ blockId } : Props) {
             }
         });
 
-        updateBlock(updatedBlock);
+        updateBlockV2(updatedBlock.id, updatedBlock);
     };
 
     const handleRemoveIcon = () => {
@@ -120,7 +118,7 @@ export function PageBlock({ blockId } : Props) {
         const block = blocks[blockId];
         delete block.format.page_icon;
 
-        updateBlock(block);
+        updateBlockV2(block.id, block);
     };
 
     const handleRemoveCover = () => {
@@ -129,7 +127,7 @@ export function PageBlock({ blockId } : Props) {
         const block = blocks[blockId];
         delete block.format.page_cover;
 
-        updateBlock(block);
+        updateBlockV2(block.id, block);
     };
 
     const handleSubmitEditing = () => {

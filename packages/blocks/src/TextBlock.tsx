@@ -58,6 +58,7 @@ export function TextBlock({ blockId }: Props) {
 
     // if the cursor is at the end:
     if (selection.start === value.length && selection.end === value.length) {
+      // To do: Replace with new Block() (looks more professional)
       const newBlock = createBlock({
         type: "text",
         properties: {
@@ -81,7 +82,6 @@ export function TextBlock({ blockId }: Props) {
      * Split the current block into two blocks.
      */
     const textBeforeSelection = value.substring(0, selection.start);
-    console.log("Text before selection", textBeforeSelection);
     const textAfterSelection = value.substring(selection.end);
 
     const newBlock = createBlock({

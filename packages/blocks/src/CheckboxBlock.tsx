@@ -20,7 +20,6 @@ export function CheckboxBlock({ blockId } : Props) {
     const {
         blocks,
         insertBlock,
-        updateBlock,
         updateBlockV2,
         removeBlock
     } = useBlocksContext();

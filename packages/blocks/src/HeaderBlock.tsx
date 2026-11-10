@@ -19,7 +19,6 @@ export function HeaderBlock({ blockId } : Props) {
         blocks,
         turnBlockInto,
         insertBlock,
-        updateBlock,
         updateBlockV2,
         removeBlock
     } = useBlocksContext();
@@ -98,7 +97,7 @@ export function HeaderBlock({ blockId } : Props) {
             content: []
         });
 
-       updateBlock(updatedBlock);
+       updateBlockV2(updatedBlock.id, updatedBlock);
        insertBlock(newBlock, {
            prevBlockId: blockId
        });
