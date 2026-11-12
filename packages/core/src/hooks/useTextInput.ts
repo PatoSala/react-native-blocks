@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { TextInput, TextInputProps } from "react-native";
-import { useBlocksContext, useBlock } from "../components/BlocksContext";
+import { useBlocksContext } from "../components/BlocksContext";
 import { useTextBlocksContext } from "../components/TextBlocksProvider";
 import { scheduleOnUI } from "react-native-worklets";
 import {
@@ -12,6 +12,9 @@ import { useScrollContext } from "../components/ScrollProvider";
 import { useBlocksMeasuresContext } from "../components/BlocksMeasuresProvider";
 import { useBlockRegistrationContext } from "../components/BlockRegistration";
 
+/**
+ * A hook that provides extended functionality for text input blocks.
+ */
 export function useTextInput(blockId: string) {
   const {
     blocks,
@@ -39,13 +42,22 @@ export function useTextInput(blockId: string) {
       ? true
       : false;
 
+  /**
+   * This api gets registered in a ref to easily manipulate the text input from other blocks.
+   * 
+   * To do:
+   * [ ] Right now block's text is synced through this api in order to prevent rerendering. Try using legend-state instead and see if it works better.
+   * [ ] Keep selection, focus and blur handling with this api.
+   */
   const api = {
     current: {
-      getText: () => valueRef.current,
+      // getText() and setText() should be deprecated.
+      /* getText: () => valueRef.current,
       setText: (text: string) => {
         valueRef.current = text;
         inputRef.current?.setNativeProps({ text: valueRef.current });
-      },
+      }, */
+
       focus: () => {
         inputRef.current?.focus();
       },
@@ -56,22 +68,9 @@ export function useTextInput(blockId: string) {
         inputRef.current?.setSelection(selection.start, selection.end);
         selectionRef.current = selection;
       },
-      focusWithSelection: (selection: { start: number; end: number }, text?: string) => {
-        /** Find a better way to sync value on block update */
-        if (text !== undefined) {
-          inputRef.current?.setNativeProps({ text });
-          /* valueRef.current = text; */
-        }
 
-        inputRef.current?.setSelection(selection.start, selection.end); // Sync native input with selection state
-        selectionRef.current = selection;
-        inputRef.current?.focus();
-      },
-      getPosition: () => {
-        inputRef.current?.measureInWindow((x, y, width, height) => {
-          console.log(x, y, width, height);
-        })
-      }
+      // I think its not in use by any block.
+      // Its better to first use setSelection() and the focus() in order to focus with a predefined selection.
     }
   };
 
@@ -100,11 +99,11 @@ export function useTextInput(blockId: string) {
   const getTextInputProps: () => TextInputProps = () => {
     return {
       ref: inputRef,
-      defaultValue: valueRef.current,
+      /* defaultValue: valueRef.current, */
       /** Disable multiline text input scrolling. */
       scrollEnabled: false,
       multiline: true,
-      selectionColor: "black",
+      
       /** Prevents keyboard from flickering when focusing a new block. */
       submitBehavior: "submit",
       selectTextOnFocus: false,
@@ -114,8 +113,10 @@ export function useTextInput(blockId: string) {
 
       onSelectionChange: handleSelectionChange,
       showSoftInputOnFocus: showSoftInputOnFocus,
-      onChangeText: handleChangeText,
-      onBlur: handleOnBlur,
+      
+      /* onChangeText: handleChangeText,
+      onBlur: handleOnBlur, */
+
       onFocus: handleOnFocus,
     }
   }

@@ -10,3 +10,5 @@ export * from "./src/QuoteBlock";
 export * from "./src/CheckboxBlock";
 export * from "./src/BulletBlock";
 export * from "./src/components/Footer/Footer";
+
+export * from "./src/v2/TextBlock";

@@ -2,7 +2,6 @@ import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Pressable, View } from "react-native";
 import { LayoutProvider } from "./LayoutProvider";
-import { useKeyboardStatus } from "../hooks/useKeyboardStatus";
 import { BlocksProvider, useBlocksContext } from "./BlocksContext";
 import { BlockRegistration, useBlockRegistrationContext } from "./BlockRegistration";
 import { TextBlocksProvider, useTextBlocksContext } from "./TextBlocksProvider";
@@ -12,51 +11,18 @@ import { Block } from "../interfaces/Block.interface";
 
 import { useValue } from "@legendapp/state/react";
 
-/**
- * Blank space component.
- * Review the handleOnBlankSpacePress function. Add necessary documentation and clean up the code.
- */
-
-/**
- * Blank space is no longer used.
- * Keeping it here for the moment in case we need to use it again.
- */
-/* const BlankSpace = ({ onBlankSpacePress }) => {
-  const { keyboardHeight } = useKeyboardStatus();
-  const {
-    blocks,
-    blocksOrder,
-    insertBlock,
-    updateBlockV2,
-    removeBlock
-  } = useBlocksContext();
-  const { inputRefs } = useTextBlocksContext();
-
-  const handleBlankSpacePress = () => onBlankSpacePress({
-    blocks,
-    blocksOrder,
-    insertBlock,
-    inputRefs
-  });
-
-  return (
-    <Pressable
-      onPress={handleBlankSpacePress}
-      style={{
-        flexGrow: 1,
-        minHeight: keyboardHeight + 64,
-        backgroundColor: "transparent"
-      }}
-    />
-  )
-}; */
+import { blocks$ } from "../context/blocks$";
 
 // RenderBlockTree
 function RenderTree() : React.JSX.Element {
   const { blockTypes } = useBlockRegistrationContext();
-  const { blocks, rootBlockId } = useBlocksContext();
+  const { rootBlockId } = useBlocksContext();
 
+  const blocks = useValue(blocks$.blocks);
   const rootContent = useValue(blocks)[rootBlockId]?.content;
+
+  console.log("Blocks to render", JSON.stringify(blocks, null, 2));
+
 
   return (
     <>

@@ -23,6 +23,9 @@ interface BlockMeasuresContext {
 
 const BlocksMeasuresContext = createContext<BlockMeasuresContext | null>(null);
 
+/**
+ * Context used for everything related to block measuring and rearranging blocks(dragging).
+ */
 export function useBlocksMeasuresContext() {
   const context = useContext(BlocksMeasuresContext);
   if (context === null) {

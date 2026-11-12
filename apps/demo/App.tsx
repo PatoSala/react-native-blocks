@@ -1,11 +1,37 @@
+import { useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TextInput, View, Pressable } from 'react-native';
 import { Editor, Block } from '@react-native-blocks/core';
-import { TextBlock } from '@react-native-blocks/blocks';
+import { TextBlockV2 } from '@react-native-blocks/blocks';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
+  const inputRef = useRef<TextInput>(null);
 
+  /*
+    const rootBlock = new Block({
+      ...properties
+    });
+
+    const {
+      // Both blocks and types should be undefined until the store is initialized.
+      blocks, // All blocks
+      types, // Array of block types. Should also be undefined until the Editor registers the provided blocks.
+
+      init // Function to initialize the store. Receives the root block as an argument.
+      reset // Clears the blocks store. Should be used within the cleanup function of the useEffect hook.
+
+      // CRUD operations
+      insertBlock,
+      updateBlock,
+      removeBlock
+
+      // Text input related operations
+      focus
+    } = useBlocks();
+
+    const currentBlock = blocks.get(rootBlock.id); // To do: implement .get(). Should return a reactive block object.
+  */
   const handleBlankSpacePress = () => {
     console.log("Blank space pressed");
   }
@@ -20,6 +46,12 @@ export default function App() {
     parent: null
   };
 
+  const splitBlock = () => {}
+
+  const handleSubmitEditing = () => {
+    // Check selection start and end. If 
+  }
+
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1 }}>
@@ -31,6 +63,7 @@ export default function App() {
             - Be able to merge and split the Heading of the page with the first block in the Editor.
            */}
           <TextInput
+            ref={inputRef}
             placeholder="Type something"
             value={rootBlock.properties.title}
             style={{
@@ -57,10 +90,10 @@ export default function App() {
           >
             <Block
               type="text"
-              component={TextBlock}
+              component={TextBlockV2}
               options={{
                 isTextBased: true,
-                name: "Text"
+                name: "text"
               }}
             />
           </Editor>

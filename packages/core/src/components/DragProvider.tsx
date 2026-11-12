@@ -1,7 +1,7 @@
 
 /**
  * Maybe this component should be renamed to something like BlockGestureHandler
- * and be exported from the coree library so that users could decide whether fi theey want
+ * and be exported from the core library so that users could decide whether if they want
  * a certain block to have the drag or longpressed gestures.
  */
 
@@ -17,6 +17,7 @@ import { useBlocksMeasuresContext } from "./BlocksMeasuresProvider";
 import { useScrollContext } from "./ScrollProvider";
 import { useRef } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { insertBlockIdIntoContent, updateBlockData } from "../..";
 
 const { height: screenHeight } = Dimensions.get("screen");
 
@@ -24,6 +25,19 @@ const { height: screenHeight } = Dimensions.get("screen");
 const TOP_THRESHOLD = 100;
 const BOTTOM_THRESHOLD = screenHeight - 100;
 
+/**
+ * A component that provides drag and drop functionality for blocks.
+ * Its an optional component that users can import to wrap their custom blocks to give them out of the box drag and drop functionality.
+ * 
+ * ## Usage
+ * Wrap your custom block component with the DragProvider and pass the blockId as a prop.
+ * ```tsx
+ * <DragProvider blockId={blockId}>
+ *   <View>
+ *    <Text>My custom block</Text>
+ *   </View>
+ * </DragProvider>
+ */
 export function DragProvider({
   children,
   blockId,
@@ -31,10 +45,11 @@ export function DragProvider({
   const {
     movingBlockId,
     setMovingBlockId,
-    moveBlock,
     blocks,
     setSelectedBlockId,
+    updateBlockV2
   } = useBlocksContext();
+
   const {
     // Offset is actually ghost block poosition
     setOffset,
@@ -134,6 +149,22 @@ export function DragProvider({
       blockId: null,
       closestTo: null
     };
+  }
+
+  const moveBlock = (blockId: string, parentId: string, targetId: string, closestTo: "start" | "end") => {
+    const blockIndexInContent = blocks[parentId].content?.indexOf(blockId);
+    const parentContent = blocks[parentId].content;
+
+    parentContent.splice(blockIndexInContent, 1);
+    const updatedBlock = updateBlockData(blocks[parentId], {
+      content: insertBlockIdIntoContent(
+        parentContent,
+        blockId,
+        closestTo === "start" ? { nextBlockId: targetId } : { prevBlockId: targetId }
+      )
+    });
+
+    updateBlockV2(parentId, updatedBlock);
   }
 
   const handleMoveBlock = () => {

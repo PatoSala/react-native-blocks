@@ -6,7 +6,10 @@ import {
   createBlock,
   DragProvider
 } from "@react-native-blocks/core";
-import { View, TextInput, StyleSheet, Platform } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
+import { batch } from "@legendapp/state";
+
+import { TextInput } from "@react-native-blocks/core";
 
 /**
  * It could be a good idea to create a way to define a block's strucuture (like an interface) and
@@ -31,14 +34,18 @@ export function TextBlock({ blockId }: Props) {
     blocks,
     insertBlock,
     updateBlockV2,
-    removeBlock
+    removeBlock,
+    rootBlockId
   } = useBlocksContext();
+
+  const block = blocks[blockId];
+  console.log("Block", block);
 
   const handleSubmitEditing = () => {
     const value = getValue();
     const selection = getSelection();
 
-    // if the cursor is at the beginning and there is no text:
+    // if the cursor is at the beginning of the input:
     if (selection.start === 0 && selection.end === 0) {
       const newBlock = createBlock({
         type: "text",
@@ -49,10 +56,13 @@ export function TextBlock({ blockId }: Props) {
         content: []
       });
 
-
-      insertBlock(newBlock, {
-        nextBlockId: blockId
-      });
+      // Insert a new block above the current block to push the current block down while keeping it focused.
+      insertBlock(
+        newBlock,
+        {
+          nextBlockId: blockId
+        }
+      );
       return;
     }
 
@@ -93,20 +103,23 @@ export function TextBlock({ blockId }: Props) {
       content: []
     });
 
-    // 1. update the current block with the text before the selection
-    updateBlockV2(blockId, {
-      properties: {
-        title: textBeforeSelection
-      }
-    });
+    // Use legend state batch to make all the updates at once
+    batch(() => {
+      // 1. update the current block with the text before the selection
+      updateBlockV2(blockId, {
+        properties: {
+          title: textBeforeSelection
+        }
+      });
 
-    // 2. insert a new block with the text after the selection
-    insertBlock(newBlock, {
-      prevBlockId: blockId
+      // 2. insert a new block with the text after the selection
+      insertBlock(newBlock, {
+        prevBlockId: blockId
+      });
     });
 
     requestAnimationFrame(() => {
-      inputRefs.current[blockId]?.current.setText(textBeforeSelection);
+      /* inputRefs.current[blockId]?.current.setText(textBeforeSelection); */
       inputRefs.current[newBlock.id]?.current.setSelection({
         start: 0,
         end: 0
@@ -119,6 +132,7 @@ export function TextBlock({ blockId }: Props) {
     const value = getValue();
     const selection = getSelection();
 
+    /** If the user pressed backspace and the cursor is at the beginning of the input. */
     if (event.nativeEvent.key === "Backspace" && selection.start === 0 && selection.end === 0) {
       // findPrevTextBlock
       const previousTextBlock = findPrevTextBlockInContent(blockId, blocks, textBasedBlocks);
@@ -129,16 +143,18 @@ export function TextBlock({ blockId }: Props) {
         const parentBlock = blocks[blocks[blockId].parent];
         const isTextBased = textBasedBlocks.includes(parentBlock.type);
 
-        if (isTextBased) {
-          updateBlockV2(parentBlock.id, {
-            properties: {
-              title: parentBlock.properties.title + value
-            }
+        if (isTextBased && parentBlock.id !== rootBlockId) {
+          batch(() => {
+            updateBlockV2(parentBlock.id, {
+              properties: {
+                title: parentBlock.properties.title + value
+              }
+            });
+            removeBlock(blockId);
           });
-          removeBlock(blockId);
 
           requestAnimationFrame(() => {
-            inputRefs.current[parentBlock.id]?.current.setText(parentBlock.properties.title + value);
+            /* inputRefs.current[parentBlock.id]?.current.setText(parentBlock.properties.title + value); */
             inputRefs.current[parentBlock.id]?.current.setSelection({
               start: parentBlock.properties.title.length,
               end: parentBlock.properties.title.length
@@ -149,15 +165,17 @@ export function TextBlock({ blockId }: Props) {
         return;
       }
 
-      updateBlockV2(previousTextBlock.id, {
-        properties: {
-          title: previousTextBlock.properties.title + value
-        }
+      batch(() => {
+        updateBlockV2(previousTextBlock.id, {
+          properties: {
+            title: previousTextBlock.properties.title + value
+          }
+        });
+        removeBlock(blockId);
       });
-      removeBlock(blockId);
 
       requestAnimationFrame(() => {
-        inputRefs.current[previousTextBlock.id]?.current.setText(previousTextBlock.properties.title + value);
+        /* inputRefs.current[previousTextBlock.id]?.current.setText(previousTextBlock.properties.title + value); */
         inputRefs.current[previousTextBlock.id]?.current.setSelection({
           start: previousTextBlock.properties.title.length,
           end: previousTextBlock.properties.title.length
@@ -167,6 +185,15 @@ export function TextBlock({ blockId }: Props) {
     }
   };
 
+  const handleOnChangeText = (text: string) => {
+    // Add debouncing
+    updateBlockV2(blockId, {
+      properties: {
+        title: text
+      }
+    });
+  }
+
   return (
     <DragProvider blockId={blockId}>
       <View style={styles.container}>
@@ -174,7 +201,12 @@ export function TextBlock({ blockId }: Props) {
           // ref={inputRef} ??? 
           key={`input-${blockId}`}   // Really important to pass the key prop
           style={styles.text}
-          {...getTextInputProps()}
+          /* {...getTextInputProps()} */
+          /* value={block.properties.title} */
+
+          blockId={blockId}
+
+          onChangeText={handleOnChangeText}
 
           onKeyPress={handleOnKeyPress}
           onSubmitEditing={handleSubmitEditing}

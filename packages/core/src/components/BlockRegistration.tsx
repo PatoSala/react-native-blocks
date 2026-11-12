@@ -2,9 +2,12 @@ import React, { useContext, createContext, useRef, RefObject } from "react";
 import { Block, BlockOptionsProps, BlockProps } from "./Block";
 
 interface BlockRegistrationProviderProps {
+    /** Key value pair of block types and their corresponding component. */
     blockTypes: RefObject<Record<string, React.FunctionComponent>>;
+
+    /** Array of block types that are text-based. */
+    // To do: deprecate
     textBasedBlocks: Array<string>;
-    dfaultBlockType: string,
 }
 
 const BlockRegistrationContext = createContext<BlockRegistrationProviderProps | {}>({});
@@ -24,6 +27,7 @@ export function BlockRegistration(props: any) {
     } = props;
 
     const blocksMapRef = useRef({});
+    // Deprecate
     const textBasedBlocksRef = useRef([]);
 
     const register = React.useCallback(({ type, component, options } : { type: string; component: Function; options?: BlockOptionsProps }) => {
@@ -31,6 +35,7 @@ export function BlockRegistration(props: any) {
             component,
             options
         };
+        // To do: deprecate
         if (options?.isTextBased) {
             textBasedBlocksRef.current = [...textBasedBlocksRef.current, type];
         }

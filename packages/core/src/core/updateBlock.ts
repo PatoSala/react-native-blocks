@@ -1,5 +1,7 @@
 import { Block } from "../interfaces/Block.interface";
 
+// The below functions are just utils. Should be moved out of the 'core' folder.
+
 /**
  * @param block Block to update
  * @param updatedData Updated block data

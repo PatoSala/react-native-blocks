@@ -6,6 +6,8 @@ import * as Crypto from 'expo-crypto';
 import { observable } from "@legendapp/state";
 import { useValue } from "@legendapp/state/react";
 
+import { blocks$ } from "../context/blocks$";
+
 interface BlocksContext {
   rootBlockId: string;
   blocks: RefObject<Record<string, Block>>;
@@ -59,31 +61,22 @@ function useBlock(blockId: string): Block {
   return blocks[blockId];
 }
 
-const blocksStore = observable({
-  blocks: {}
-});
-
 function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: any) {
   // To do: the root block should be the new prop "rootBlock".
   // No longer use this mocked "root" block.
   const rootBlockId = rootBlock.id;
-  /* const blocksRef = useRef({
-    // This block should never be removed nor updated.
-    [rootBlock.id]: rootBlock,
-    ...defaultBlocks
-  }); */
+  const blocks = useValue(blocks$).blocks;
 
+  console.log("Root block id:", rootBlock);
   useEffect(() => {
-    blocksStore.set({
-      blocks: {
+    if (rootBlock && blocks[rootBlock.id] === undefined) {
+      blocks$.blocks.set({
         [rootBlock.id]: rootBlock,
         ...defaultBlocks
-      }
-    });
+      });
+    }
   }, []);
 
-  const blocks = useValue(blocksStore.blocks);
-  console.log("BlocksProvider blocks", blocks);
 
   // To do: deprecate textBasedBlocks.
   const { textBasedBlocks, blockTypes } = useBlockRegistrationContext();
@@ -92,67 +85,53 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
    * The order in which the blocks inside the root block content are rendered. It is a flat array of block IDs.
    */
   const [focusedBlockId, setFocusedBlockId] = useState(null); // Maybe this was to be able to insert by default on the rootBlock?
+
+  /**
+   * Moving block id could be moved to the BlocksMeasuresProvider, since it is only used for dragging and dropping blocks.
+   */
   const [movingBlockId, setMovingBlockId] = useState<string | null>(null);
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [shouldUpdate, setShouldUpdate] = useState([]);
 
   /**
    *  Inserts a block into the content array of the parent block. If a position object is provided, the block will be inserted at the specified position.
    */
-  function insertBlock(newBlock: Block, position?: { prevBlockId?: string | undefined, nextBlockId?: string | undefined }) {
+  /* function insertBlock(newBlock: Block, position?: { prevBlockId?: string | undefined, nextBlockId?: string | undefined }) {
+    // Update the parent block's content to include the new block's ID at the specified position.
     const updatedBlock = updateBlockData(blocks[newBlock.parent], {
       content: insertBlockIdIntoContent(blocks[newBlock.parent].content, newBlock.id, {
         prevBlockId: position?.prevBlockId,
         nextBlockId: position?.nextBlockId
       })
     });
-    blocksStore.set({
-      blocks: {
-        ...blocks,
-        [newBlock.parent]: updatedBlock,
-        [newBlock.id]: newBlock
-      }
-    });
-  }
 
-  function removeBlock(blockId: string) {
+    // Update the blocks state to include the new block and the updated parent block.
+    blocks$.blocks.set({
+      ...blocks,
+      [newBlock.parent]: updatedBlock,
+      [newBlock.id]: newBlock
+    });
+    });
+  } */
+
+  /* function removeBlock(blockId: string) {
     const block = blocks[blockId];
     const parentBlock = blocks[block.parent];
     const updatedParentBlock = updateBlockData(parentBlock, {
       content: parentBlock.content.filter((id: string) => id !== blockId)
     });
 
-    /* blocksStore.blocks[parentBlock.id] = updatedParentBlock;
-    delete blocksStore.blocks[blockId]; */
     const copyBlocks = { ...blocks };
     delete copyBlocks[blockId];
 
-    blocksStore.set({
+    blocks$.blocks.set({
       blocks: {
         ...copyBlocks,
         [parentBlock.id]: updatedParentBlock
       }
     });
-
-    /* setBlocksOrder(prevState => prevState.filter((id: string) => id !== blockId)); */
-  }
-
-  /* const moveBlock = (blockId: string, parentId: string, targetId: string, closestTo: "start" | "end") => {
-    const blockIndexInContent = blocksStore.blocks[parentId].content?.indexOf(blockId);
-    const parentContent = blocksStore.blocks[parentId].content;
-
-    parentContent.splice(blockIndexInContent, 1);
-    const updatedBlock = updateBlockData(blocksStore.blocks[parentId], {
-      content: insertBlockIdIntoContent(
-        parentContent,
-        blockId,
-        closestTo === "start" ? { nextBlockId: targetId } : { prevBlockId: targetId }
-      )
-    });
-
-    blocksStore.blocks[parentId] = updatedBlock;
-    
   } */
+
+
 
   /**
    * Note: Only text based blocks can be turned into other text based block types (Maybe a better way to define which blocks can be turned into other blocks are those who have the "title" property?).
@@ -172,39 +151,41 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
   } */
 
 
-  function updateBlockV2(blockId: string, blockData: Partial<Block>) {
+  /* function updateBlockV2(blockId: string, blockData: Partial<Block>) {
     const updatedBlock = updateBlockData(blocks[blockId], blockData);
-    blocksStore.set({
-      blocks: {
-        ...blocks,
-        [updatedBlock.id]: updatedBlock
-      }
-    });
-  }
+    // Could use assign to update the specific properties of the block instead of replacing the whole block object.
+    blocks$.blocks[blockId].set(updatedBlock);
+  } */
+
+
 
   const value = {
     rootBlockId,
+
+    /**
+     * NOTE: As far as I understand, the blocks object will trigger a rerender each time it gets updated.
+     * This makes me think, a specific block might want to read other blocks but not get rerendered when other blocks change. Onlye 
+     * when he gets updated. Maybe here .peek() should be used.
+     */
     blocks: blocks,
-    /*  blocksOrder, */
+
     focusedBlockId,
     movingBlockId,
-    shouldUpdate,
-    setShouldUpdate,
     selectedBlockId,
     setSelectedBlockId,
     setMovingBlockId,
     setFocusedBlockId,
 
-    insertBlock,
-    removeBlock,
-
-    /* moveBlock: moveBlock, */
+    insertBlock: blocks$.insertBlock,
+    removeBlock: blocks$.removeBlock,
+    updateBlockV2: blocks$.updateBlock,
 
     getBlockSnapshot: (blockId: string) => blocks[blockId],
-    updateBlockV2,
     textBasedBlocks,
     blockTypes
   }
+
+  /* if (blocks[rootBlockId] === undefined) return null */
 
   return (
     <BlocksContext.Provider value={value}>
