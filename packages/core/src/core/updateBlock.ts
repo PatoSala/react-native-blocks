@@ -47,7 +47,7 @@ export function updateBlockData(block: Block, updatedData: Partial<Block>) {
   return contentArray;
 } */
 
-  // New version mutates the array to trigger a rerender on legend state.
+/** @deprecated */
 export function insertBlockIdIntoContent(
   contentArray: string[],
   newBlockId: string,
