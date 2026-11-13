@@ -1,6 +1,7 @@
 import { observable, batch, endBatch } from "@legendapp/state";
 import { insertBlockIdIntoContent, updateBlockData } from "../..";
 import { Block } from "../interfaces/Block.interface";
+import { isEqual } from "lodash";
 
 interface Store {
   blocks: Record<string, Block>;
@@ -11,7 +12,7 @@ interface Store {
   ) => void;
   updateBlock: (blockId: string, blockData: Partial<Block>) => void;
   removeBlock: (blockId: string) => void;
-  
+
 }
 
 const blocks$ = observable<Store>({
@@ -28,32 +29,43 @@ const blocks$ = observable<Store>({
     position?: { prevBlockId?: string | undefined, nextBlockId?: string | undefined }
   ) => {
     console.log("Block to insert", block)
+    if (!block) return;
+
     const blocks = blocks$.blocks.peek();
     const parentBlock = blocks[block.parent];
-    const updatedParentBlock = {
-      ...parentBlock,
-      /* content: parentBlock.content?.splice(index, 0, block.id) */
-      content: insertBlockIdIntoContent(blocks[block.parent].content, block.id, {
-        prevBlockId: position?.prevBlockId,
-        nextBlockId: position?.nextBlockId
-      })
-    }
+
+    const updatedParentBlockContent = insertBlockIdIntoContent(parentBlock.content, block.id, {
+      prevBlockId: position?.prevBlockId,
+      nextBlockId: position?.nextBlockId
+    });
 
     batch(() => {
-      blocks$.blocks[parentBlock.id].set(updatedParentBlock);
+      // 1. Add new block to store
       blocks$.blocks[block.id].set(block);
+      // 2. Update the content array of the parent block
+      blocks$.blocks[parentBlock.id].content.set([...updatedParentBlockContent]);
     });
-    endBatch();
   },
 
   /**
    * Updates a specific block in the blocks object.
    */
   updateBlock: (blockId: string, blockData: Partial<Block>) => {
-    const block = blocks$.get().blocks[blockId];
+    const block = blocks$.peek().blocks[blockId];
     const updatedBlock = updateBlockData(block, blockData);
-    // Could use assign to update the specific properties of the block instead of replacing the whole block object.
-    blocks$.blocks[blockId].set(updatedBlock);
+
+    // Collect only the properties whose values actually changed
+    const changes: Partial<Block> = {};
+    for (const key of Object.keys(updatedBlock) as (keyof Block)[]) {
+      if (!isEqual(block[key], updatedBlock[key])) {
+        changes[key] = updatedBlock[key] as any;
+      }
+    }
+
+    // Nothing changed, so skip the write (and any listener notifications)
+    if (Object.keys(changes).length === 0) return;
+
+    blocks$.blocks[blockId].assign(changes);
   },
 
   /**
@@ -71,7 +83,9 @@ const blocks$ = observable<Store>({
     }
 
     batch(() => {
-      blocks$.blocks[parentBlock.id].set(updatedParentBlock);
+      blocks$.blocks[parentBlock.id].assign({
+        content: updatedParentBlock.content
+      });
       blocks$.blocks[blockId].delete();
     });
   }

@@ -1,13 +1,13 @@
 import React from "react";
 import { $TextInput } from "@legendapp/state/react-native";
-import { TextInputProps } from "react-native";
+import { TextInputProps, StyleSheet } from "react-native";
 import { useValue, useObservable } from "@legendapp/state/react";
-import { batch, observable } from "@legendapp/state";
-
+import { batch, observable, observe } from "@legendapp/state";
 
 
 // IMPORTANT: The below shouldnt be imported from "react-native-blocks/core". Use a hook instead.
 import { blocks$ } from "../context/blocks$";
+import { inputs$ } from "../context/inputs$";
 import { createBlock } from "../..";
 
 interface Props {
@@ -23,11 +23,15 @@ interface Props {
  * Analyze:
  * [ ] Instead of handling selection locally via useRef, use input$ store + TextInput's selection prop to sync cursor position.
  */
-function TextInput(props: Props) : React.JSX.Element {
+function TextInput(props: Props): React.JSX.Element {
   const { blockId, rest } = props;
-  console.log("Block id", blockId);
-  const title = useValue(blocks$.blocks[blockId].properties.title);
-  console.log("Title", title);
+
+  const title = useObservable(blocks$.blocks[blockId].properties.title);
+
+  observe(() => {
+    console.log("Title changed", title.get());
+  });
+
   const inputRef = React.useRef<TextInput>(null);
   const selectionRef = React.useRef({ start: /* title.length */0, end: /* title.length */0 });
   // Use blockId to register TextInput api in the text inputs store.
@@ -35,6 +39,10 @@ function TextInput(props: Props) : React.JSX.Element {
   const selection$ = useObservable({
     start: 0,
     end: 0
+  });
+
+  observe(() => {
+    console.log("Selection changed", selection$.get());
   });
 
   /**
@@ -60,8 +68,10 @@ function TextInput(props: Props) : React.JSX.Element {
         inputRef.current?.blur();
       },
       setSelection: (selection: { start: number; end: number }) => {
-        inputRef.current?.setSelection(selection.start, selection.end);
-        selectionRef.current = selection;
+        /* inputRef.current?.setSelection(selection.start, selection.end);
+        selectionRef.current = selection; */
+
+        selection$.set(selection);
       },
 
       // I think its not in use by any block.
@@ -69,54 +79,40 @@ function TextInput(props: Props) : React.JSX.Element {
     }
   };
 
-  const inputProps = {
-    selection: {
-      start: 0,
-      end: 0
-    }
-  }
-
-  const handleOnTextChange = (text: string) =>{
+  /* const handleOnTextChange = (text: string) =>{
     blocks$.updateBlock(blockId, {
       properties: {
         title: text
       }
     });
-  }
+  } */
 
   const handleSubmitEditing = () => {
+    console.count("handleOnSubmitEditing");
     const block = blocks$.get().blocks[blockId];
     const selection = selection$.get();
 
-    if (selection.start === title.length && selection.end === title.length) {
-      // Insert new block below
-      const newBlock = createBlock({
-        type: "text",
-        properties: {
-          title: ""
-        },
-        parent: block.parent,
-        content: []
-      });
+    const newBlock = createBlock({
+      type: "text",
+      properties: {
+        title: ""
+      },
+      parent: block.parent,
+      content: []
+    });
 
+    // If cursor is at the end, insert new block below
+    if (selection.start === title.get().length && selection.end === title.get().length) {
+      // Insert new block below
       blocks$.insertBlock(newBlock, {
         prevBlockId: blockId
       });
 
       // Focus new block
+      return;
     }
 
     if (selection.start === 0 && selection.end === 0) {
-      // Insert new block above
-      const newBlock = createBlock({
-        type: "text",
-        properties: {
-          title: ""
-        },
-        parent: block.parent,
-        content: []
-      });
-
       blocks$.insertBlock(newBlock, {
         nextBlockId: blockId
       });
@@ -125,20 +121,14 @@ function TextInput(props: Props) : React.JSX.Element {
       // When the new block is inserted, the focus is lost because of the rerender.
       // Study: Previous Text Block did not need to re focus. Focus was never lost, that means the current block did not get rerendered.
       // If im correct I think this was because the text of the block was updated through a ref. Blocks where only rerendered when there order was rearranged.
+      return;
     }
 
     // If cursos is not at the beginning or end, split the block in half, cutting out the selected text.
-    const textBeforeSelection = title.substring(0, selection.start);
-    const textAfterSelection = title.substring(selection.end);
+    const textBeforeSelection = title.get().substring(0, selection.start);
+    const textAfterSelection = title.get().substring(selection.end);
 
-    const newBlock = createBlock({
-      type: "text",
-      properties: {
-        title: textAfterSelection
-      },
-      parent: block.parent,
-      content: []
-    });
+    newBlock.properties.title = textAfterSelection;
 
     batch(() => {
       blocks$.updateBlock(blockId, {
@@ -150,7 +140,10 @@ function TextInput(props: Props) : React.JSX.Element {
       blocks$.insertBlock(newBlock, {
         prevBlockId: blockId
       });
-    })
+    });
+
+    console.log(JSON.stringify(blocks$.blocks.get(), null, 2));
+    return;
   }
 
   const handleOnDeleteKeyPress = () => {
@@ -161,7 +154,6 @@ function TextInput(props: Props) : React.JSX.Element {
       const block = blocks$.blocks[blockId];
       const parentBlock = blocks$.blocks[block.parent].get();
       const blockIndex = parentBlock.content.indexOf(blockId);
-      console.log("block index", blockIndex);
       // 1. Check if the block has a previous block in the content array of the parent.
       if (blockIndex > 0) {
         // Find the previous block in the content array of the parent.
@@ -169,29 +161,53 @@ function TextInput(props: Props) : React.JSX.Element {
         const prevBlock = blocks$.blocks[prevBlockId].get();
 
         // if current block's text is empty, just delete this block and focus prev.
-
+        if (title.peek().length === 0) {
+          blocks$.removeBlock(blockId);
+          return;
+        }
 
         // Else, merge current block's text with prev block's text.
-        
+        batch(() => {
+          blocks$.updateBlock(prevBlockId, {
+            properties: {
+              title: prevBlock.properties.title + title.peek()
+            }
+          });
+          blocks$.removeBlock(blockId);
+        });
+
+        // Focus prev block
       }
     }
   }
 
   return (
     <$TextInput
-      $value={title}
+      style={styles.text}
+      $value={title} // No need to use an onChange handler. $TextInput already updates the value on the store.
       $selection={selection$}
-      onSelectionChange={(e) => selection$.set(e.nativeEvent.selection)}
-      onChangeText={(text) => handleOnTextChange(text)}
-
+      onSelectionChange={(e) => {
+        selection$.set(e.nativeEvent.selection);
+      }}
       onSubmitEditing={handleSubmitEditing}
       onKeyPress={(e) => {
         if (e.nativeEvent.key === "Backspace") {
           handleOnDeleteKeyPress();
         }
       }}
+
+      autoCorrect={false}
+      multiline={true}
+      scrollEnabled={false}
+      submitBehavior="submit"
     />
   );
 }
 
 export { TextInput };
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 17
+  }
+});

@@ -9,8 +9,8 @@ import { ScrollProvider } from "./ScrollProvider";
 import { BlocksMeasuresProvider } from "./BlocksMeasuresProvider";
 import { Block } from "../interfaces/Block.interface";
 
-import { useValue } from "@legendapp/state/react";
 
+import { useValue } from "@legendapp/state/react";
 import { blocks$ } from "../context/blocks$";
 
 // RenderBlockTree
@@ -18,17 +18,15 @@ function RenderTree() : React.JSX.Element {
   const { blockTypes } = useBlockRegistrationContext();
   const { rootBlockId } = useBlocksContext();
 
-  const blocks = useValue(blocks$.blocks);
-  const rootContent = useValue(blocks)[rootBlockId]?.content;
+  const rootContent = useValue(blocks$.blocks[rootBlockId].content);
 
-  console.log("Blocks to render", JSON.stringify(blocks, null, 2));
-
-
+  console.log("rootContent", rootContent);
+  
   return (
     <>
       {/* Render blocksOrder which is the content of the root block. */}
       {rootContent?.map((blockId: string, index: number) => {
-        const Component = blockTypes[blocks[blockId].type].component;
+        const Component = blockTypes[blocks$.blocks[blockId].type.peek()].component;
         return (
           <LayoutProvider blockId={blockId} key={`block-${blockId}`}>
             <View style={{ backgroundColor: "transparent" }}>

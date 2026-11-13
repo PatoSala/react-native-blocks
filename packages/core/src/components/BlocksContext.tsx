@@ -65,18 +65,12 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
   // To do: the root block should be the new prop "rootBlock".
   // No longer use this mocked "root" block.
   const rootBlockId = rootBlock.id;
-  const blocks = useValue(blocks$).blocks;
+  /* const blocks = useValue(blocks$).blocks; */
 
-  console.log("Root block id:", rootBlock);
-  useEffect(() => {
-    if (rootBlock && blocks[rootBlock.id] === undefined) {
-      blocks$.blocks.set({
-        [rootBlock.id]: rootBlock,
-        ...defaultBlocks
-      });
-    }
-  }, []);
-
+  blocks$.blocks.set({
+    [rootBlock.id]: rootBlock,
+    ...defaultBlocks
+  });
 
   // To do: deprecate textBasedBlocks.
   const { textBasedBlocks, blockTypes } = useBlockRegistrationContext();
@@ -131,8 +125,6 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
     });
   } */
 
-
-
   /**
    * Note: Only text based blocks can be turned into other text based block types (Maybe a better way to define which blocks can be turned into other blocks are those who have the "title" property?).
    * Future note: If a block has nested blocks, does blocks should be popped out of it and place right under it when turnning it into a different block type.
@@ -157,8 +149,6 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
     blocks$.blocks[blockId].set(updatedBlock);
   } */
 
-
-
   const value = {
     rootBlockId,
 
@@ -167,7 +157,7 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
      * This makes me think, a specific block might want to read other blocks but not get rerendered when other blocks change. Onlye 
      * when he gets updated. Maybe here .peek() should be used.
      */
-    blocks: blocks,
+    blocks: blocks$.blocks.get(),
 
     focusedBlockId,
     movingBlockId,
@@ -180,7 +170,7 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
     removeBlock: blocks$.removeBlock,
     updateBlockV2: blocks$.updateBlock,
 
-    getBlockSnapshot: (blockId: string) => blocks[blockId],
+    getBlockSnapshot: (blockId: string) => blocks$.blocks[blockId].peek(),
     textBasedBlocks,
     blockTypes
   }

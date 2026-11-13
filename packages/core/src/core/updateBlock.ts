@@ -10,8 +10,8 @@ import { Block } from "../interfaces/Block.interface";
 
 // Temporary: Must find a dynic way to find out this types in case a custom text based block is also added.
 export function updateBlockData(block: Block, updatedData: Partial<Block>) {
-    const updatedBlock = { ...block, ...updatedData };
-    return updatedBlock;
+  const updatedBlock = { ...block, ...updatedData };
+  return updatedBlock;
 }
 
 /** 
@@ -20,7 +20,7 @@ export function updateBlockData(block: Block, updatedData: Partial<Block>) {
  * NOTE: Rename prevBlockId to afterBlock and nextBlockId to beforeBlock
  * @returns Updated contentArray (same reference as the original)
  * */
-export function insertBlockIdIntoContent(
+/* export function insertBlockIdIntoContent(
   contentArray: string[],
   newBlockId: string,
   options: { prevBlockId?: string; nextBlockId?: string }
@@ -45,6 +45,35 @@ export function insertBlockIdIntoContent(
   // Default: append to the end
   contentArray.push(newBlockId);
   return contentArray;
+} */
+
+  // New version mutates the array to trigger a rerender on legend state.
+export function insertBlockIdIntoContent(
+  contentArray: string[],
+  newBlockId: string,
+  options: { prevBlockId?: string; nextBlockId?: string }
+): string[] {
+  const next = [...contentArray];
+
+  if (options?.prevBlockId !== undefined) {
+    const index = next.indexOf(options.prevBlockId);
+    if (index !== -1) {
+      next.splice(index + 1, 0, newBlockId);
+      return next;
+    }
+  }
+
+  if (options?.nextBlockId !== undefined) {
+    const index = next.indexOf(options.nextBlockId);
+    if (index !== -1) {
+      next.splice(index, 0, newBlockId);
+      return next;
+    }
+  }
+
+  // Default: append to the end
+  next.push(newBlockId);
+  return next;
 }
 
 /* export function rearrangeContent(parentBlock: Block, blockId: string, index: number) {
@@ -71,7 +100,7 @@ export function findPrevTextBlockInContent(blockId: string, blocks: Record<strin
 export function getPreviousBlockInContent(blockId: string, blocks: Record<string, Block>) {
   const block = blocks[blockId];
   const content = blocks[block.parent].content;
-  
+
   const blockIndexInContent = content.indexOf(blockId);
   const prevBlockId = content[blockIndexInContent - 1];
   return blocks[prevBlockId];

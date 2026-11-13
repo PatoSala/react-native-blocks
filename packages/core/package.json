@@ -16,7 +16,8 @@
   ],
   "main": "index.ts",
   "dependencies": {
-    "@legendapp/state": "^3.0.0-beta.48"
+    "@legendapp/state": "^3.0.0-beta.48",
+    "lodash": "^4.18.1"
   },
   "peerDependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@expo/vector-icons": "^15.0.2",
+    "@types/lodash": "^4.17.27",
     "@types/react": "~19.1.0",
     "expo": "~54.0.10",
     "expo-crypto": "~15.0.7",
