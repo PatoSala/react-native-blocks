@@ -1,27 +1,18 @@
 import { observable } from "@legendapp/state";
 
-interface Input {
-  selection: {
-    start: number,
-    end: number
+export const inputs$ = observable({
+  refs: {},
+  register: (id: string, ref: any) => {
+    if (!inputs$.refs[blockId].peek()) {
+      inputs$.refs[blockId].set({
+        [id]: ref
+      });
+    }
   },
-  focused: boolean
-}
-
-interface Store {
-  inputs: Record<string, Input> | {},
-  registerInput: (blockId: string, input: Input) => void,
-  unregisterInput: (blockId: string) => void
-}
-
-export const inputs$ = observable<Store>({
-  inputs: {},
-  registerInput: (blockId: string, input: Input) => {
-    inputs$.inputs.assign({
-      [blockId]: input
-    });
-  },
-  unregisterInput: (blockId: string) => {
+  unregister: (id: string) => {
     inputs$.inputs[blockId].delete();
+  },
+  focus: (id: string) => {
+    inputs$.refs[blockId][id].current?.focus();
   }
 });

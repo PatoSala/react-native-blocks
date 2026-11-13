@@ -28,56 +28,13 @@ function TextInput(props: Props): React.JSX.Element {
 
   const title = useObservable(blocks$.blocks[blockId].properties.title);
 
-  observe(() => {
-    console.log("Title changed", title.get());
-  });
-
   const inputRef = React.useRef<TextInput>(null);
-  const selectionRef = React.useRef({ start: /* title.length */0, end: /* title.length */0 });
   // Use blockId to register TextInput api in the text inputs store.
 
   const selection$ = useObservable({
     start: 0,
     end: 0
   });
-
-  observe(() => {
-    console.log("Selection changed", selection$.get());
-  });
-
-  /**
-   * This api gets registered in a ref to easily manipulate the text input from other blocks.
-   * 
-   * To do:
-   * [ ] Right now block's text is synced through this api in order to prevent rerendering. Try using legend-state instead and see if it works better.
-   * [ ] Keep selection, focus and blur handling with this api.
-   */
-  const api = {
-    current: {
-      // getText() and setText() should be deprecated.
-      /* getText: () => valueRef.current,
-      setText: (text: string) => {
-        valueRef.current = text;
-        inputRef.current?.setNativeProps({ text: valueRef.current });
-      }, */
-
-      focus: () => {
-        inputRef.current?.focus();
-      },
-      blur: () => {
-        inputRef.current?.blur();
-      },
-      setSelection: (selection: { start: number; end: number }) => {
-        /* inputRef.current?.setSelection(selection.start, selection.end);
-        selectionRef.current = selection; */
-
-        selection$.set(selection);
-      },
-
-      // I think its not in use by any block.
-      // Its better to first use setSelection() and the focus() in order to focus with a predefined selection.
-    }
-  };
 
   /* const handleOnTextChange = (text: string) =>{
     blocks$.updateBlock(blockId, {
@@ -103,9 +60,23 @@ function TextInput(props: Props): React.JSX.Element {
 
     // If cursor is at the end, insert new block below
     if (selection.start === title.get().length && selection.end === title.get().length) {
+      newBlock.properties.title = title.peek();
       // Insert new block below
-      blocks$.insertBlock(newBlock, {
-        prevBlockId: blockId
+      batch(() => {
+        blocks$.insertBlock(newBlock, {
+          nextBlockId: blockId
+        });
+
+        blocks$.updateBlock(blockId, {
+          properties: {
+            title: ""
+          }
+        });
+
+        selection$.set({
+          start: 0,
+          end: 0
+        });
       });
 
       // Focus new block
@@ -140,15 +111,15 @@ function TextInput(props: Props): React.JSX.Element {
       blocks$.insertBlock(newBlock, {
         nextBlockId: blockId
       });
-      selection$.set({ start: 0, end: 0 });
     });
 
-    console.log(JSON.stringify(blocks$.blocks.get(), null, 2));
+    selection$.set({ start: 0, end: 0 });
     return;
   }
 
   const handleOnDeleteKeyPress = () => {
     const selection = selection$.get();
+    console.log("Delete key pressed");
 
     if (selection.start === 0 && selection.end === 0) {
       // Merge with prev block
@@ -182,12 +153,16 @@ function TextInput(props: Props): React.JSX.Element {
               title: prevBlock.properties.title + title.peek()
             }
           });
-          
+
 
           selection$.set({ start: prevBlock.properties.title.length, end: prevBlock.properties.title.length });
         });
 
         // Focus prev block
+      } else {
+        console.log("No prev block");
+        null;
+        // Merge with parent block (This is notion like behavior between text blocks)
       }
     }
   }
