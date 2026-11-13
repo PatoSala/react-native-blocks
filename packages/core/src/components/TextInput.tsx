@@ -128,18 +128,19 @@ function TextInput(props: Props): React.JSX.Element {
     const textBeforeSelection = title.get().substring(0, selection.start);
     const textAfterSelection = title.get().substring(selection.end);
 
-    newBlock.properties.title = textAfterSelection;
+    newBlock.properties.title = textBeforeSelection;
 
     batch(() => {
       blocks$.updateBlock(blockId, {
         properties: {
-          title: textBeforeSelection
+          title: textAfterSelection
         }
       });
 
       blocks$.insertBlock(newBlock, {
-        prevBlockId: blockId
+        nextBlockId: blockId
       });
+      selection$.set({ start: 0, end: 0 });
     });
 
     console.log(JSON.stringify(blocks$.blocks.get(), null, 2));
@@ -161,19 +162,29 @@ function TextInput(props: Props): React.JSX.Element {
         const prevBlock = blocks$.blocks[prevBlockId].get();
 
         // if current block's text is empty, just delete this block and focus prev.
-        if (title.peek().length === 0) {
+        /* if (title.peek().length === 0) {
           blocks$.removeBlock(blockId);
           return;
-        }
+        } */
 
         // Else, merge current block's text with prev block's text.
         batch(() => {
-          blocks$.updateBlock(prevBlockId, {
+          /* blocks$.updateBlock(prevBlockId, {
             properties: {
               title: prevBlock.properties.title + title.peek()
             }
           });
-          blocks$.removeBlock(blockId);
+          blocks$.removeBlock(blockId); */
+
+          blocks$.removeBlock(prevBlockId);
+          blocks$.updateBlock(blockId, {
+            properties: {
+              title: prevBlock.properties.title + title.peek()
+            }
+          });
+          
+
+          selection$.set({ start: prevBlock.properties.title.length, end: prevBlock.properties.title.length });
         });
 
         // Focus prev block
