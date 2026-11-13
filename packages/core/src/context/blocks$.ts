@@ -7,8 +7,8 @@ interface Store {
   blocks: Record<string, Block>;
   insertBlock: (
     block: Block,
-    /* index: number */
-    position: { prevBlockId?: string | undefined, nextBlockId?: string | undefined }
+    /* The place where the block will be inserted in the parent block's content array */
+    position: number
   ) => void;
   updateBlock: (blockId: string, blockData: Partial<Block>) => void;
   removeBlock: (blockId: string) => void;
@@ -26,24 +26,19 @@ const blocks$ = observable<Store>({
   insertBlock: (
     block: Block,
     /* index: number */
-    position?: { prevBlockId?: string | undefined, nextBlockId?: string | undefined }
+    position?: number
   ) => {
-    console.log("Block to insert", block)
     if (!block) return;
-
+    
     const blocks = blocks$.blocks.peek();
     const parentBlock = blocks[block.parent];
-
-    const updatedParentBlockContent = insertBlockIdIntoContent(parentBlock.content, block.id, {
-      prevBlockId: position?.prevBlockId,
-      nextBlockId: position?.nextBlockId
-    });
+    const newContent = parentBlock.content.toSpliced(position, 0, block.id);;
 
     batch(() => {
       // 1. Add new block to store
       blocks$.blocks[block.id].set(block);
       // 2. Update the content array of the parent block
-      blocks$.blocks[parentBlock.id].content.set([...updatedParentBlockContent]);
+      blocks$.blocks[parentBlock.id].content.set(newContent);
     });
   },
 

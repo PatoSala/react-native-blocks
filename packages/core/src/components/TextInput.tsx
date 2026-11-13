@@ -47,7 +47,12 @@ function TextInput(props: Props): React.JSX.Element {
   const handleSubmitEditing = () => {
     console.count("handleOnSubmitEditing");
     const block = blocks$.get().blocks[blockId];
+    const parentBlock = blocks$.get().blocks[block.parent];
+    const blockIndex = parentBlock.content.indexOf(blockId);
     const selection = selection$.get();
+
+    const newBlockIndex = blockIndex > 0 ? blockIndex : 0;
+
 
     const newBlock = createBlock({
       type: "text",
@@ -58,14 +63,12 @@ function TextInput(props: Props): React.JSX.Element {
       content: []
     });
 
-    // If cursor is at the end, insert new block below
+    // If cursor is at the end
     if (selection.start === title.get().length && selection.end === title.get().length) {
       newBlock.properties.title = title.peek();
-      // Insert new block below
+      
       batch(() => {
-        blocks$.insertBlock(newBlock, {
-          nextBlockId: blockId
-        });
+        blocks$.insertBlock(newBlock, newBlockIndex);
 
         blocks$.updateBlock(blockId, {
           properties: {
@@ -84,9 +87,8 @@ function TextInput(props: Props): React.JSX.Element {
     }
 
     if (selection.start === 0 && selection.end === 0) {
-      blocks$.insertBlock(newBlock, {
-        nextBlockId: blockId
-      });
+
+      blocks$.insertBlock(newBlock, newBlockIndex);
 
       // Re focus current block.
       // When the new block is inserted, the focus is lost because of the rerender.
@@ -102,14 +104,12 @@ function TextInput(props: Props): React.JSX.Element {
     newBlock.properties.title = textBeforeSelection;
 
     batch(() => {
+      blocks$.insertBlock(newBlock, blockIndex);
+
       blocks$.updateBlock(blockId, {
         properties: {
           title: textAfterSelection
         }
-      });
-
-      blocks$.insertBlock(newBlock, {
-        nextBlockId: blockId
       });
     });
 
