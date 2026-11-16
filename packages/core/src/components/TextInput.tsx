@@ -87,7 +87,6 @@ function TextInput(props: Props): React.JSX.Element {
     }
 
     if (selection.start === 0 && selection.end === 0) {
-
       blocks$.insertBlock(newBlock, newBlockIndex);
 
       // Re focus current block.

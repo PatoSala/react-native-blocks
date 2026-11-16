@@ -8,7 +8,9 @@ export * from "./src/components/DragProvider";
 export * from "./src/hooks/useKeyboardStatus";
 export { createBlock } from "./src/interfaces/Block.interface";
 
+// Experimental
 export * from "./src/components/TextInput";
+export * from "./src/components/RenderNestedBlocks";
 
 
 // Maybe I could export the blocks store.

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TextInput, View, Pressable } from 'react-native';
 import { Editor, Block } from '@react-native-blocks/core';
-import { TextBlockV2 } from '@react-native-blocks/blocks';
+import { TextBlockV2, CalloutBlockV2 } from '@react-native-blocks/blocks';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function App() {
@@ -42,7 +42,7 @@ export default function App() {
     properties: {
       title: "Nueva Pagina"
     },
-    content: ["2"],
+    content: ["2", "3"],
     parent: null
   };
 
@@ -85,6 +85,24 @@ export default function App() {
                 },
                 content: [],
                 parent: "1"
+              },
+              "3": {
+                id: "3",
+                type: "callout",
+                properties: {
+                  title: ""
+                },
+                content: ["4"],
+                parent: "1"
+              },
+              "4": {
+                id: "4",
+                type: "text",
+                properties: {
+                  title: "Hello world"
+                },
+                content: [],
+                parent: "3"
               }
             }}
           >
@@ -93,7 +111,18 @@ export default function App() {
               component={TextBlockV2}
               options={{
                 isTextBased: true,
-                name: "text"
+
+                // A human readable name for the block.
+                name: "Text"
+              }}
+            />
+
+            <Block
+              type="callout"
+              component={CalloutBlockV2}
+              options={{
+                isTextBased: true,
+                name: "Callout"
               }}
             />
           </Editor>

@@ -1,13 +1,7 @@
 import {
-  useTextInput,
-  useBlocksContext,
-  findPrevTextBlockInContent,
-  useTextBlocksContext,
-  createBlock,
   DragProvider
 } from "@react-native-blocks/core";
 import { View, StyleSheet, Platform } from "react-native";
-import { batch } from "@legendapp/state";
 
 import { TextInput } from "@react-native-blocks/core";
 
@@ -28,18 +22,6 @@ interface Props {
 }
 
 export function TextBlockV2({ blockId }: Props) {
-  /* const { getTextInputProps, getValue, getSelection } = useTextInput(blockId); */
- /*  const { inputRefs, textBasedBlocks } = useTextBlocksContext(); */
-  /* const {
-    blocks,
-    insertBlock,
-    updateBlockV2,
-    removeBlock,
-    rootBlockId
-  } = useBlocksContext(); */
-
-  /* const block = blocks[blockId]; */
-
   return (
     <DragProvider blockId={blockId}>
       <View style={styles.container}>
