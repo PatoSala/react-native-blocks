@@ -4,6 +4,7 @@ import { TextInputProps, StyleSheet } from "react-native";
 import { useValue, useObservable } from "@legendapp/state/react";
 import { batch, observable, observe } from "@legendapp/state";
 
+import { findClosestPreviousBlock, updateBlockData } from "../..";
 
 // IMPORTANT: The below shouldnt be imported from "react-native-blocks/core". Use a hook instead.
 import { blocks$ } from "../context/blocks$";
@@ -30,11 +31,22 @@ function TextInput(props: Props): React.JSX.Element {
 
   const inputRef = React.useRef<TextInput>(null);
   // Use blockId to register TextInput api in the text inputs store.
-
   const selection$ = useObservable({
     start: 0,
     end: 0
   });
+
+  const api = {
+    focus: (selection: { start: number; end: number }) => {
+      if (selection) {
+        selection$.set(selection);
+      }
+
+      inputRef.current?.focus();
+    }
+  }
+
+  
 
   /* const handleOnTextChange = (text: string) =>{
     blocks$.updateBlock(blockId, {
@@ -45,7 +57,6 @@ function TextInput(props: Props): React.JSX.Element {
   } */
 
   const handleSubmitEditing = () => {
-    console.count("handleOnSubmitEditing");
     const block = blocks$.get().blocks[blockId];
     const parentBlock = blocks$.get().blocks[block.parent];
     const blockIndex = parentBlock.content.indexOf(blockId);
@@ -127,6 +138,7 @@ function TextInput(props: Props): React.JSX.Element {
       const blockIndex = parentBlock.content.indexOf(blockId);
       // 1. Check if the block has a previous block in the content array of the parent.
       if (blockIndex > 0) {
+        /** ATTENTION: The below is assumming that the previous block is always a text block. */
         // Find the previous block in the content array of the parent.
         const prevBlockId = parentBlock.content[blockIndex - 1];
         const prevBlock = blocks$.blocks[prevBlockId].get();
@@ -159,15 +171,67 @@ function TextInput(props: Props): React.JSX.Element {
 
         // Focus prev block
       } else {
-        console.log("No prev block");
-        null;
+        console.log("Fetching closest previous text block");
         // Merge with parent block (This is notion like behavior between text blocks)
+        // Check its not the root block
+        // 1. Fetch closest previous text block
+        const prevTextBlock = findClosestPreviousBlock(blockId, blocks$.blocks.peek(), ["text"]); //findPrevTextBlockInContent(blockId, blocks$.blocks.peek(), ["text"]);
+        
+        if (!prevTextBlock) {
+          console.log("No prev text block");
+          return;
+        }
+
+        const prevBlockParent = blocks$.blocks[prevTextBlock.parent].peek();
+        
+        // 2. Copy prev text block title to current block
+        // 4. Change the parent of the current block to the parent of the prev text block
+        // 5. Change current block's type to the previous text block's type
+        const updatedPrevBlock = updateBlockData(prevTextBlock, {
+          properties: {
+            title: prevTextBlock.properties.title + title.peek()
+          },
+        });
+
+        // Remove current block from its parent content array
+        const updatedParentBlockContent = parentBlock.content.toSpliced(blockIndex, 1);
+        // Remove prev text block from its parent content array and insert in its place the current block
+        /* const updatedPrevBlockParentContent = prevBlockParent.content.toSpliced(prevTextBlockIndex, 1);
+        updatedPrevBlockParentContent.splice(prevTextBlockIndex, 0, blockId); */
+
+        batch(() => {
+          blocks$.updateBlock(prevTextBlock.id, updatedPrevBlock);
+          blocks$.removeBlock(blockId);
+
+          blocks$.blocks[parentBlock.id].content.set(updatedParentBlockContent);
+          /* blocks$.blocks[prevBlockParent.id].content.set(updatedPrevBlockParentContent); */
+
+        });
+
+        /* selection$.set({ start: prevTextBlock.properties.title.length, end: prevTextBlock.properties.title.length }); */
+        // 3. Delete prev text block
+        // 6. Remove current block from its parent content array
+        const prevTextBlockInput = inputs$.refs[prevTextBlock.id].peek();
+        console.log("prevTextBlockInput", prevTextBlockInput);
+        if (prevTextBlockInput) {
+          prevTextBlockInput.focus({
+            start: prevTextBlock.properties.title.length,
+            end: prevTextBlock.properties.title.length
+          });
+        }
       }
     }
   }
 
+  React.useEffect(() => {
+    if (inputRef.current) {
+      inputs$.register(blockId, api);
+    }
+  }, []);
+
   return (
     <$TextInput
+      ref={inputRef}
       style={styles.text}
       $value={title} // No need to use an onChange handler. $TextInput already updates the value on the store.
       $selection={selection$}

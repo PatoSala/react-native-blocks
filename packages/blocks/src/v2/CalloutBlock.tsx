@@ -40,6 +40,8 @@ export function CalloutBlockV2({ blockId }: Props) {
   // Get callout content
   // If callout has no content, add a nested text block by default
 
+  // If a callout gets all of its children removed, remove the callout too.
+
   return (
     <DragProvider blockId={blockId}>
       <View style={styles.container}>

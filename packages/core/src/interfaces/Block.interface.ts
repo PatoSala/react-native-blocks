@@ -20,7 +20,7 @@ class Block {
     content = [],
     parent,
   }: Block) {
-    this.id = Crypto.randomUUID();;
+    this.id = Crypto.randomUUID();
     this.type = type;
     this.properties = properties;
     this.content = content;

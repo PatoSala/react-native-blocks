@@ -106,4 +106,51 @@ export function getPreviousBlockInContent(blockId: string, blocks: Record<string
   return blocks[prevBlockId];
 }
 
+export function findClosestPreviousBlock(
+  /** The block to find the closest previous block for */
+  blockId: string,
+  /** The blocks object */
+  blocks: Record<string, Block>,
+  /** An array of block types. */
+  ofTypes: string[]
+): Block | undefined {
+  const types = new Set(ofTypes);
+
+  /** Deepest last descendant of a block (or the block itself if it has no children). */
+  const lastDescendantId = (id: string): string => {
+    let current = id;
+    while (true) {
+      const children = blocks[current]?.content;
+      const lastChild = children?.[children.length - 1];
+      if (!lastChild || !blocks[lastChild]) return current;
+      current = lastChild;
+    }
+  };
+
+  /** The block that comes immediately before `id` in document order. */
+  const previousId = (id: string): string | undefined => {
+    const parentId = blocks[id]?.parent;
+    const parent = parentId ? blocks[parentId] : undefined;
+    if (!parentId || !parent) return undefined; // top of the tree
+
+    const siblings = parent.content ?? [];
+    const index = siblings.indexOf(id);
+
+    return index > 0 ? lastDescendantId(siblings[index - 1]) : parentId;
+  };
+
+  const visited = new Set<string>([blockId]); // guards against cycles
+  let current = previousId(blockId);
+
+  while (current && !visited.has(current)) {
+    visited.add(current);
+    const block = blocks[current];
+    if (!block) return undefined;
+    if (types.has(block.type)) return block;
+    current = previousId(current);
+  }
+
+  return undefined;
+}
+
 
