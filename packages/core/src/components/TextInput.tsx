@@ -30,40 +30,31 @@ function TextInput(props: Props): React.JSX.Element {
   const title = useObservable(blocks$.blocks[blockId].properties.title);
 
   const inputRef = React.useRef<TextInput>(null);
-  // Use blockId to register TextInput api in the text inputs store.
   const selection$ = useObservable({
     start: 0,
     end: 0
   });
 
+  const onFocusCallback = React.useRef(() => {});
+
   const api = {
-    focus: (selection: { start: number; end: number }) => {
-      if (selection) {
+    focus: (selection?: { start: number; end: number }) => {
+      if (selection) onFocusCallback.current = () => {
         selection$.set(selection);
-      }
+      };
 
       inputRef.current?.focus();
+
     }
   }
-
-  
-
-  /* const handleOnTextChange = (text: string) =>{
-    blocks$.updateBlock(blockId, {
-      properties: {
-        title: text
-      }
-    });
-  } */
 
   const handleSubmitEditing = () => {
     const block = blocks$.get().blocks[blockId];
     const parentBlock = blocks$.get().blocks[block.parent];
     const blockIndex = parentBlock.content.indexOf(blockId);
-    const selection = selection$.get();
-
     const newBlockIndex = blockIndex > 0 ? blockIndex : 0;
 
+    const selection = selection$.get();
 
     const newBlock = createBlock({
       type: "text",
@@ -77,7 +68,7 @@ function TextInput(props: Props): React.JSX.Element {
     // If cursor is at the end
     if (selection.start === title.get().length && selection.end === title.get().length) {
       newBlock.properties.title = title.peek();
-      
+
       batch(() => {
         blocks$.insertBlock(newBlock, newBlockIndex);
 
@@ -129,9 +120,8 @@ function TextInput(props: Props): React.JSX.Element {
 
   const handleOnDeleteKeyPress = () => {
     const selection = selection$.get();
-    console.log("Delete key pressed");
 
-    if (selection.start === 0 && selection.end === 0) {
+    if (selection?.start === 0 && selection?.end === 0) {
       // Merge with prev block
       const block = blocks$.blocks[blockId];
       const parentBlock = blocks$.blocks[block.parent].get();
@@ -151,13 +141,6 @@ function TextInput(props: Props): React.JSX.Element {
 
         // Else, merge current block's text with prev block's text.
         batch(() => {
-          /* blocks$.updateBlock(prevBlockId, {
-            properties: {
-              title: prevBlock.properties.title + title.peek()
-            }
-          });
-          blocks$.removeBlock(blockId); */
-
           blocks$.removeBlock(prevBlockId);
           blocks$.updateBlock(blockId, {
             properties: {
@@ -165,25 +148,26 @@ function TextInput(props: Props): React.JSX.Element {
             }
           });
 
-
-          selection$.set({ start: prevBlock.properties.title.length, end: prevBlock.properties.title.length });
+          selection$.set({
+            start: prevBlock.properties.title.length,
+            end: prevBlock.properties.title.length
+          });
         });
 
         // Focus prev block
       } else {
+
         console.log("Fetching closest previous text block");
         // Merge with parent block (This is notion like behavior between text blocks)
         // Check its not the root block
         // 1. Fetch closest previous text block
         const prevTextBlock = findClosestPreviousBlock(blockId, blocks$.blocks.peek(), ["text"]); //findPrevTextBlockInContent(blockId, blocks$.blocks.peek(), ["text"]);
-        
+
         if (!prevTextBlock) {
           console.log("No prev text block");
           return;
         }
 
-        const prevBlockParent = blocks$.blocks[prevTextBlock.parent].peek();
-        
         // 2. Copy prev text block title to current block
         // 4. Change the parent of the current block to the parent of the prev text block
         // 5. Change current block's type to the previous text block's type
@@ -202,23 +186,19 @@ function TextInput(props: Props): React.JSX.Element {
         batch(() => {
           blocks$.updateBlock(prevTextBlock.id, updatedPrevBlock);
           blocks$.removeBlock(blockId);
-
           blocks$.blocks[parentBlock.id].content.set(updatedParentBlockContent);
           /* blocks$.blocks[prevBlockParent.id].content.set(updatedPrevBlockParentContent); */
-
         });
 
         /* selection$.set({ start: prevTextBlock.properties.title.length, end: prevTextBlock.properties.title.length }); */
         // 3. Delete prev text block
         // 6. Remove current block from its parent content array
         const prevTextBlockInput = inputs$.refs[prevTextBlock.id].peek();
-        console.log("prevTextBlockInput", prevTextBlockInput);
-        if (prevTextBlockInput) {
-          prevTextBlockInput.focus({
-            start: prevTextBlock.properties.title.length,
-            end: prevTextBlock.properties.title.length
-          });
-        }
+
+        prevTextBlockInput?.focus({
+          start: 25,
+          end: 25
+        });
       }
     }
   }
@@ -237,6 +217,12 @@ function TextInput(props: Props): React.JSX.Element {
       $selection={selection$}
       onSelectionChange={(e) => {
         selection$.set(e.nativeEvent.selection);
+      }}
+      onFocus={() => {
+        // Execute the onFocusCallback only once
+        onFocusCallback.current?.();
+        // Clean up onFocusCallback
+        onFocusCallback.current = () => {};
       }}
       onSubmitEditing={handleSubmitEditing}
       onKeyPress={(e) => {
