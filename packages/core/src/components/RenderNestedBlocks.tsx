@@ -13,7 +13,7 @@ function RenderNestedBlocks(props: { blockId: string }) : React.JSX.Element {
   const rootContent = useValue(blocks$.blocks[props.blockId].content);
 
   console.log("rootContent", rootContent);
-  
+
   return (
     <>
       {/* Render blocksOrder which is the content of the root block. */}

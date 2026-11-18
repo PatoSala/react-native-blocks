@@ -12,6 +12,12 @@ import { useBlockRegistrationContext } from "../components/BlockRegistration";
  * @param blockId Block id
  * @returns Block object
  */
+
+/**
+ * Add a "subscribe" method which is basically a wrapper around legend-state .get() method.
+ * This way users could just read the current value of the store, and if they want to listen to changes in the store,
+ * they could use a .subscribe() method.
+ */
 function useBlocks(blockId: string) {
   const { blockTypes } = useBlockRegistrationContext();
   const { blocks, insertBlock, updateBlock, removeBlock } = blocks$.peek();

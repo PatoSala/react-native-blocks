@@ -3,11 +3,11 @@ import { Block } from "../interfaces/Block.interface";
 import { updateBlockData, insertBlockIdIntoContent } from "../core";
 import { useBlockRegistrationContext } from "./BlockRegistration";
 import * as Crypto from 'expo-crypto';
-import { observable } from "@legendapp/state";
+import { observable, batch } from "@legendapp/state";
 import { useValue } from "@legendapp/state/react";
 
 import { blocks$ } from "../context/blocks$";
-
+// TO DO: Deprecate blocks context. Not needed anymore with legend-state.
 interface BlocksContext {
   rootBlockId: string;
   blocks: RefObject<Record<string, Block>>;
@@ -67,10 +67,13 @@ function BlocksProvider({ children, defaultBlocks, extractBlocks, rootBlock }: a
   const rootBlockId = rootBlock.id;
   /* const blocks = useValue(blocks$).blocks; */
 
-  blocks$.blocks.set({
-    [rootBlock.id]: rootBlock,
-    ...defaultBlocks
-  });
+  batch(() => {
+    blocks$.rootBlockId.set(rootBlockId);
+    blocks$.blocks.set({
+      [rootBlock.id]: rootBlock,
+      ...defaultBlocks
+    });
+  })
 
   // To do: deprecate textBasedBlocks.
   const { textBasedBlocks, blockTypes } = useBlockRegistrationContext();

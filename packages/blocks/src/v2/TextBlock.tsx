@@ -26,12 +26,7 @@ export function TextBlockV2({ blockId }: Props) {
     <DragProvider blockId={blockId}>
       <View style={styles.container}>
         <TextInput
-          // ref={inputRef} ??? 
           key={`input-${blockId}`}   // Really important to pass the key prop
-          style={styles.text}
-          /* {...getTextInputProps()} */
-          /* value={block.properties.title} */
-
           blockId={blockId}
         />
       </View>
@@ -41,13 +36,7 @@ export function TextBlockV2({ blockId }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 8
-  },
-  text: {
-    fontSize: 16,
-    fontWeight: "normal",
-    paddingVertical: 6,
-    lineHeight: 24,
-    flexWrap: "wrap"
+    paddingHorizontal: 8,
+    paddingVertical: 4
   }
 });

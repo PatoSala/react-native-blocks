@@ -4,6 +4,7 @@ import { Block } from "../interfaces/Block.interface";
 import { isEqual } from "lodash";
 
 interface Store {
+  rootBlockId: string;
   blocks: Record<string, Block>;
   insertBlock: (
     block: Block,
@@ -16,6 +17,7 @@ interface Store {
 }
 
 const blocks$ = observable<Store>({
+  rootBlockId: "",
   blocks: {},
 
   /**

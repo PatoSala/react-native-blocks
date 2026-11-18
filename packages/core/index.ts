@@ -11,6 +11,7 @@ export { createBlock } from "./src/interfaces/Block.interface";
 // Experimental
 export * from "./src/components/TextInput";
 export * from "./src/components/RenderNestedBlocks";
+export * from "./src/context/blocks$";
 
 
 // Maybe I could export the blocks store.

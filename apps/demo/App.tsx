@@ -1,40 +1,13 @@
 import { useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TextInput, View, Pressable } from 'react-native';
-import { Editor, Block } from '@react-native-blocks/core';
-import { TextBlockV2, CalloutBlockV2 } from '@react-native-blocks/blocks';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+import { Editor, Block, blocks$, createBlock, TextInput } from '@react-native-blocks/core';
+import { TextBlockV2, CalloutBlockV2 } from '@react-native-blocks/blocks';
 
 export default function App() {
   const inputRef = useRef<TextInput>(null);
-
-  /*
-    const rootBlock = new Block({
-      ...properties
-    });
-
-    const {
-      // Both blocks and types should be undefined until the store is initialized.
-      blocks, // All blocks
-      types, // Array of block types. Should also be undefined until the Editor registers the provided blocks.
-
-      init // Function to initialize the store. Receives the root block as an argument.
-      reset // Clears the blocks store. Should be used within the cleanup function of the useEffect hook.
-
-      // CRUD operations
-      insertBlock,
-      updateBlock,
-      removeBlock
-
-      // Text input related operations
-      focus
-    } = useBlocks();
-
-    const currentBlock = blocks.get(rootBlock.id); // To do: implement .get(). Should return a reactive block object.
-  */
-  const handleBlankSpacePress = () => {
-    console.log("Blank space pressed");
-  }
 
   const rootBlock = {
     id: "1",
@@ -45,6 +18,20 @@ export default function App() {
     content: ["2", "3"],
     parent: null
   };
+
+  const handleBlankSpacePress = () => {
+    console.log("Blank space pressed");
+    const newBlock = createBlock({
+      type: "callout",
+      properties: {
+        title: ""
+      },
+      content: [],
+      parent: rootBlock.id
+    });
+
+    blocks$.insertBlock(newBlock, rootBlock.content.length);
+  }
 
   const splitBlock = () => {}
 
@@ -63,9 +50,9 @@ export default function App() {
             - Be able to merge and split the Heading of the page with the first block in the Editor.
            */}
           <TextInput
+            blockId={rootBlock.id}
             ref={inputRef}
             placeholder="Type something"
-            value={rootBlock.properties.title}
             style={{
               fontSize: 32,
               fontWeight: "bold",
